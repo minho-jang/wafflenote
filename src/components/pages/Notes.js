@@ -1,10 +1,11 @@
-import React from 'react'
+import React from 'react';
+import SlideList from '../modules/SlideList';
 
 const Note = () => {
   return (
-    <div>
-      Note
-    </div>
+    <React.Fragment>
+      <SlideList />
+    </React.Fragment>
   );
 }
 
