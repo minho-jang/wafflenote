@@ -1,10 +1,12 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
 
-router.use('/slide-recognition', require('./imageProcessing/slideRecognition'))
+const router = express.Router();
 
-router.get('/', (req, res, next) => {
-    res.send("<h1>Hello api index page !</h1>")
-})
+router.use("/frame", require("./imageProcessing/slideRecognition"));
+router.use("/stt", require("./stt/googleSpeechApi"));
 
-module.exports = router
+router.get("/", (req, res, next) => {
+	res.send("<h1>Hello api index page !</h1>");
+});
+
+module.exports = router;
