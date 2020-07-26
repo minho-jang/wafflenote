@@ -1,15 +1,14 @@
 const express = require("express");
 const request = require("request");
 const fs = require("fs");
+const multer = require("multer");
+const path = require("path");
 
 const router = express.Router();
 
 // multer setting
 // 파일 업로드 관리
 // 만약 S3에 업로드해야 한다면 multer-s3 패키지를 고려한다.
-const multer = require("multer");
-const path = require("path");
-
 const storage = multer.diskStorage({
 	// 파일 저장 경로
 	destination(req, file, cb) {
@@ -74,7 +73,7 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 	.catch((err) => {
 		console.error(err);
 		res.status(400).json({
-			message: "Something wrong!",
+			message: "Image processing error",
 			error: err
 		});
 	});
