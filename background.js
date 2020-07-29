@@ -1,76 +1,89 @@
-// let desktopMediaRequestId = '';
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-undef */
+const desktopMediaRequestId = "";
 
-// chrome.runtime.onConnect.addListener(port => {
-//   port.onMessage.addListener(msg => {
-//     if (msg.type === 'SS_UI_REQUEST') {
-//       requestScreenSharing(port, msg);
-//     }
-//     if (msg.type === 'SS_UI_CANCEL') {
-//       cancelScreenSharing(msg);
-//     }
-//   });
-// });
+chrome.runtime.onConnect.addListener(port => {
+  port.onMessage.addListener(msg => {
+    if (msg.type === "waffleNoteStart") {
+      requestScreenSharing(port, msg);
+    } else if (msg.type === "changeSlide") {
+      // 1
+    } else if (msg.type === "waffleNoteEnd") {
+      cancelScreenSharing(msg);
+    }
+  });
+});
 
-// function requestScreenSharing(port, msg) {
-//   // https://developer.chrome.com/extensions/desktopCapture
-//   // params:
-//   //  - 'data_sources' Set of sources that should be shown to the user.
-//   //  - 'targetTab' Tab for which the stream is created.
-//   //  - 'streamId' String that can be passed to getUserMedia() API
-//   // Also available:
-//   //  ['screen', 'window', 'tab', 'audio']
-//   const sources = ['screen', 'window', 'tab', 'audio'];
-//   const tab = port.sender.tab;
+function requestScreenSharing(port, msg) {
+  if (port.recorderPlaying) {
+    console.log("Ignoring second play, already playing");
+    return;
+  }
+  port.recorderPlaying = true;
+  const tab = port.sender.tab;
 
-//   desktopMediaRequestId = chrome.desktopCapture.chooseDesktopMedia(
-//     sources,
-//     port.sender.tab,
-//     streamId => {
-//       if (streamId) {
-//         msg.type = 'SS_DIALOG_SUCCESS';
-//         msg.streamId = streamId;
-//       } else {
-//         msg.type = 'SS_DIALOG_CANCEL';
-//       }
-//       port.postMessage(msg);
-//     }
-//   );
-// }
+  chrome.desktopCapture.chooseDesktopMedia(
+    ["screen", "window", "tab", "audio"],
+    tab,
+    streamId => {
+    // Get the stream
+      navigator.webkitGetUserMedia({
+        audio: false,
+        video: {
+          mandatory: {
+            chromeMediaSource: "desktop",
+            chromeMediaSourceId: streamId,
+            minWidth: 1280,
+            maxWidth: 1280,
+            minHeight: 720,
+            maxHeight: 720,
+            minFrameRate: 60,
+          },
+        },
+      }, stream => {
+        const chunks = [];
 
-// function cancelScreenSharing(msg) {
-//   if (desktopMediaRequestId) {
-//     chrome.desktopCapture.cancelChooseDesktopMedia(desktopMediaRequestId);
-//   }
-// }
+        recorder = new MediaRecorder(stream, {
+          videoBitsPerSecond: 2500000,
+          ignoreMutedMedia: true,
+          mimeType: "video/webm",
+        });
+        recorder.ondataavailable = function(event) {
+          if (event.data.size > 0) {
+            chunks.push(event.data);
+          }
+        };
 
-// function flatten(arr) {
-//   return [].concat.apply([], arr);
-// }
+        recorder.onstop = function() {
+          const superBuffer = new Blob(chunks, {
+            type: "video/webm",
+          });
 
-// // This avoids a reload after an installation
-// chrome.windows.getAll({ populate: true }, windows => {
-//   const details = { file: 'content-script.js', allFrames: true };
+          const url = URL.createObjectURL(superBuffer);
+          // var a = document.createElement('a');
+          // document.body.appendChild(a);
+          // a.style = 'display: none';
+          // a.href = url;
+          // a.download = 'test.webm';
+          // a.click();
 
-//   flatten(windows.map(w => w.tabs)).forEach(tab => {
-//     // Skip chrome:// pages
-//     if (tab.url.match(/(chrome):\/\//gi)) {
-//       return;
-//     }
+          chrome.downloads.download({
+            url,
+          // filename: "suggested/filename/with/relative.path" // Optional
+          });
+        };
 
-//     // https://developer.chrome.com/extensions/tabs#method-executeScript
-//     // Unfortunately I don't know how to skip non authorized pages, and
-//     // executeScript doesn't have an error callback.
-//     chrome.tabs.executeScript(tab.id, details, () => {
-//       const { runtime: { lastError } } = chrome;
+        recorder.start();
 
-//       if (
-//         lastError &&
-//         !lastError.message.match(/cannot access contents of url/i)
-//       ) {
-//         console.error(lastError);
-//       }
+        setTimeout(() => {
+          recorder.stop();
+        }, 10000);
+      }, error => console.log("Unable to get user media", error));
+    });
+}
 
-//       console.log('After injection in tab: ', tab);
-//     });
-//   });
-// });
+function cancelScreenSharing(msg) {
+  if (desktopMediaRequestId) {
+    chrome.desktopCapture.cancelChooseDesktopMedia(desktopMediaRequestId);
+  }
+}
