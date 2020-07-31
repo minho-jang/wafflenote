@@ -81,7 +81,7 @@ function requestScreenSharing(port, msg) {
 
           chrome.downloads.download({
             url,
-          // filenwame: "suggested/filename/with/relative.path" // Optional
+          // filename: "suggested/filename/with/relative.path" // Optional
           });
         };
 
