@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { getSlides, setSlide } from '../../actions/slides';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -16,8 +18,19 @@ const Wrapper = styled.div`
   border: 1px ridge darkgray;
 `;
 
-const SlideList = () => {
+const SlideList = (props) => {
+  useEffect(() => {
+    props.setSlide();
+    props.getSlides();
+  }, []);
+
+  if (props.slides == null) {
+    return <div>asd</div>;
+  } else {
+    console.log(props.slides)
+  }
   const renderedList = (arr) => arr.map((item, index) => {
+  
     return (
       <div class="item">
         <div class="ui tiny image">
@@ -46,4 +59,10 @@ const SlideList = () => {
   );
 };
 
-export default SlideList;
+const mapStateToProps = (state) => {
+  return {
+    slides: Object.values(state.slides),
+  }
+}
+
+export default connect(mapStateToProps, { getSlides, setSlide })(SlideList);
