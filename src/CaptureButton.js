@@ -4,15 +4,15 @@ const port = chrome.runtime.connect({
   name: 'WaffleNote',
 });
 
-const CaptureButton = () => {
+const CaptureButton = (props) => {
   const startCapture = () => {
     port.postMessage({ type: 'waffleNoteStart', text: 'start' }, '*');
   };
 
   return (
-    <div onClick={startCapture} className="item">
-      Button
-    </div>
+    <button onClick={startCapture} className="item">
+      {props.children}
+    </button>
   );
 };
 
