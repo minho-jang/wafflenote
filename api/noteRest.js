@@ -3,9 +3,8 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 
-// POST json 데이터 수신
+// For parsing application/json
 router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({extended : true}));
 
 // GET /note
 router.get("/", (req, res, next) => {
