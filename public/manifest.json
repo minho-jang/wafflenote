@@ -11,18 +11,18 @@
     "storage",
     "tabs",
     "desktopCapture",
-    "activeTab", 
-    "declarativeContent", 
+    "activeTab",
+    "declarativeContent",
     "tabCapture",
     "downloads",
     "file://*/*",
     "<all_urls>",
     "unlimitedStorage"
   ],
-  "icons": {
-  },
+  "icons": {},
   "browser_action": {
     "default_icon": "sample_icon.png",
     "default_popup": "popup.html"
-  }
+  },
+  "content_security_policy": "script-src 'self' https://unpkg.com https://cdnjs.cloudflare.com ; object-src 'self'"
 }

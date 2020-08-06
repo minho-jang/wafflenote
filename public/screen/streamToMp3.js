@@ -1,6 +1,6 @@
 let recBuffers = [[], []];
 let recLength = 0;
-let numChannels = 2;
+let numChannels = 1;
 let listening = false;
 let timeout = null;
 let context = {};
@@ -17,14 +17,16 @@ function beginRecording() {
 function endRecording() {
   clearTimeout(timeout);
   timeout = null;
-  exportWAV();
+  encodeMp3();
 }
 
 function init(stream) {
   let audioContext = new AudioContext();
   let source = audioContext.createMediaStreamSource(stream);
   context = source.context;
-  let node = (context.createScriptProcessor || context.createJavaScriptNode).call(context, 4096, numChannels, numChannels);
+  let node = (
+    context.createScriptProcessor || context.createJavaScriptNode
+  ).call(context, 4096, numChannels, numChannels);
   node.onaudioprocess = (e) => {
     if (!listening) return;
 
@@ -49,7 +51,6 @@ function mergeBuffers(buffers, len) {
 }
 
 function interleave(inputL, inputR) {
-  console.log('Test');
   let len = inputL.length + inputR.length;
   let result = new Float32Array(len);
 
@@ -65,22 +66,62 @@ function interleave(inputL, inputR) {
   return result;
 }
 
-function exportWAV() {
+function encodeMp3() {
   let buffers = [];
   for (var i = 0; i < numChannels; i++) {
     buffers.push(mergeBuffers(recBuffers[i], recLength));
   }
 
-  let interleaved = numChannels == 2 ? interleave(buffers[0], buffers[1]) : buffers[0];
+  let interleaved =
+    numChannels == 2 ? interleave(buffers[0], buffers[1]) : buffers[0];
   let dataView = encodeWAV(interleaved);
-  let blob = new Blob([dataView], { type: 'audio/wav' });
-  blob.name = Math.floor(new Date().getTime() / 1000) + '.wav';
+  let blob = new Blob([dataView], { type: "audio/wav" });
+  // blob.name = Math.floor(new Date().getTime() / 1000) + ".wav";
 
-  const url = URL.createObjectURL(blob);
+  const fr = new FileReader();
+  fr.onload = () => {
+    const array = new Int16Array(fr.result);
+    console.log(array);
+    var mp3Data = [];
+    var mp3encoder = new lamejs.Mp3Encoder(1, 48000, 128); //mono 44.1khz encode to 128kbps
+    var mp3Tmp = mp3encoder.encodeBuffer(array); //encode mp3
+    mp3Data.push(mp3Tmp);
+    mp3Tmp = mp3encoder.flush();
+    mp3Data.push(mp3Tmp);
+    var blob = new Blob(mp3Data, { type: "audio/mp3" });
 
-  chrome.downloads.download({
-    url,
-  });
+    const url = URL.createObjectURL(blob);
+    console.log(url);
+    chrome.downloads.download({
+      url: url,
+    });
+  };
+  fr.readAsArrayBuffer(blob);
+
+  // const urlWav = URL.createObjectURL(blob);
+  // var file = new File([blob], "temp.wav");
+
+  // // get
+  // var frm = new FormData();
+  // frm.append("audio", file);
+  // axios
+  //   .post("http://13.125.209.214:3000/api/stt", frm, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   })
+  //   .then((response) => {
+  //     console.log(response);
+  //   })
+  //   .catch((error) => {
+  //     console.error(error);
+  //   });
+
+  // // 크롬 스토리지로 ~
+
+  // chrome.downloads.download({
+  //   url: urlWav,
+  // });
 
   listening = false;
 
@@ -105,13 +146,13 @@ function encodeWAV(samples) {
   var view = new DataView(buffer);
 
   /* RIFF identifier */
-  writeString(view, 0, 'RIFF');
+  writeString(view, 0, "RIFF");
   /* file length */
   view.setUint32(4, 36 + samples.length * 2, true);
   /* RIFF type */
-  writeString(view, 8, 'WAVE');
+  writeString(view, 8, "WAVE");
   /* format chunk identifier */
-  writeString(view, 12, 'fmt ');
+  writeString(view, 12, "fmt ");
   /* format chunk length */
   view.setUint32(16, 16, true);
   /* sample format (raw) */
@@ -127,7 +168,7 @@ function encodeWAV(samples) {
   /* bits per sample */
   view.setUint16(34, 16, true);
   /* data chunk identifier */
-  writeString(view, 36, 'data');
+  writeString(view, 36, "data");
   /* data chunk length */
   view.setUint32(40, samples.length * 2, true);
 
