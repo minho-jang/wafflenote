@@ -35,13 +35,18 @@ const requestScreenSharing = (port, msg) => {
               },
             },
           },
-          (stream) => {
-            init(stream);
-            captureImage(stream);
-            beginRecording();
-            stream.oninactive = function () {
-              port.recorderPlaying = false;
-              /* TODO
+        },
+        (stream) => {
+          init(stream);
+          captureImage(stream);
+          beginRecording();
+          stream.oninactive = function () {
+            port.recorderPlaying = false;
+            chrome.storage.local.get('timerId', (obj) => {
+              clearInterval(obj.timerId);
+              console.log("Suc") 
+            });
+            /* TODO
               1. Stop Set Interval
               2. Store current status (active : true or false) 
             */
