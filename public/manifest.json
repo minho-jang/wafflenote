@@ -1,0 +1,28 @@
+{
+  "name": "Waffle Note",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "Waffle Note",
+  "background": {
+    "page": "background.html",
+    "persistent": false
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "desktopCapture",
+    "activeTab", 
+    "declarativeContent", 
+    "tabCapture",
+    "downloads",
+    "file://*/*",
+    "<all_urls>",
+    "unlimitedStorage"
+  ],
+  "icons": {
+  },
+  "browser_action": {
+    "default_icon": "sample_icon.png",
+    "default_popup": "popup.html"
+  }
+}
