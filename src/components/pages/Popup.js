@@ -20,8 +20,7 @@ const Image = styled.img`
 `;
 
 const Popup = () => {
-  const [curImage, setCurImage] = useState('');
-
+  const [curSlide, setCurSlide] = useState({});
   useEffect(() => {
     setImage();
     setInterval(async () => {
@@ -30,13 +29,15 @@ const Popup = () => {
   }, []);
 
   const setImage = async () => {
-    const imageSrc = await getLastCapturedImage('image');
-    setCurImage(imageSrc.image);
+    const response = await getLastCapturedImage('data');
+    setCurSlide(response.data);
   };
 
   return (
     <Container>
-      <Image src={curImage} />
+      {console.log(curSlide)}
+      {curSlide.id}
+      <Image src={curSlide.image} />
       <Link to="/notes/1" target="_blank" className="ui button">
         Go to classroom
       </Link>
