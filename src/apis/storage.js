@@ -1,18 +1,14 @@
 export const getSlidesFromStorage = (key) => {
-  console.log(key);
   return new Promise((resolve, reject) => {
     if (key != null) {
       chrome.storage.local.get(key, (obj) => {
-        console.log(obj)
         resolve(obj);
       });
     } else {
-      console.log("error")
-        
       reject(null);
     }
   });
-}
+};
 
 export const setSlideToStorage = (key, obj) => {
   const data = {};
@@ -24,4 +20,16 @@ export const setSlideToStorage = (key, obj) => {
       });
     }
   });
-}
+};
+
+export const getLastCapturedImage = (key) => {
+  return new Promise((resolve, reject) => {
+    if (key != null) {
+      chrome.storage.local.get(key, (obj) => {
+        resolve(obj);
+      });
+    } else {
+      reject(null);
+    }
+  });
+};

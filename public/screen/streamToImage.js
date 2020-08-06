@@ -9,14 +9,15 @@ const captureImage = (stream) => {
       const timerId = setInterval(() => {
         var ctx = canvas.getContext('2d');
         ctx.drawImage(this, 0, 0);
-        var url = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        var url = canvas.toDataURL();
         console.log(url);
-        // will open the captured image in a new tab
-        window.open(url);
-      }, 2000);
+        const data = {};
+        data['image'] = url;
+        chrome.storage.local.set(data);
+      }, 100);
       setTimeout(() => {
         clearInterval(timerId);
-      }, 10000);
+      }, 4000);
     },
     false,
   );

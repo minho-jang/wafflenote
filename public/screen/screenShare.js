@@ -33,6 +33,13 @@ const requestScreenSharing = (port, msg) => {
           init(stream);
           captureImage(stream);
           beginRecording();
+          stream.oninactive = function () {
+            port.recorderPlaying = false;
+            /* TODO
+              1. Stop Set Interval
+              2. Store current status (active : true or false) 
+            */
+          };
         },
         (err) => {
           console.log('The following error occured: ' + err.name + ' ' + err.message);
