@@ -35,7 +35,6 @@ const requestScreenSharing = (port, msg) => {
               },
             },
           },
-        },
         (stream) => {
           init(stream);
           captureImage(stream);
@@ -46,10 +45,6 @@ const requestScreenSharing = (port, msg) => {
               clearInterval(obj.timerId);
               console.log("Suc") 
             });
-            /* TODO
-              1. Stop Set Interval
-              2. Store current status (active : true or false) 
-            */
             };
           },
           (err) => {
