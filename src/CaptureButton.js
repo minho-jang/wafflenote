@@ -10,8 +10,8 @@ const CaptureButton = (props) => {
   };
 
   return (
-    <button onClick={startCapture} className="item">
-      {props.children}
+    <button onClick={startCapture}>
+      Start
     </button>
   );
 };

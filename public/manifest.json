@@ -16,7 +16,8 @@
     "tabCapture",
     "downloads",
     "file://*/*",
-    "<all_urls>"
+    "<all_urls>",
+    "unlimitedStorage"
   ],
   "icons": {
   },
