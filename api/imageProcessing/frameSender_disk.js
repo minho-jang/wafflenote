@@ -7,13 +7,25 @@ const path = require("path");
 const router = express.Router();
 
 // multer setting
+// 파일 업로드 관리
+// 만약 S3에 업로드해야 한다면 multer-s3 패키지를 고려한다.
+const storage = multer.diskStorage({
+	// 파일 저장 경로
+	destination(req, file, cb) {
+		cb(null, "api/tmp/frames/");
+	},
+	// 파일 저장 이름
+	filename(req, file, cb) {
+		cb(null, `${Date.now()}_frame${path.extname(file.originalname)}`);
+	},
+});
 const frameUpload = multer({
-	storage: multer.memoryStorage()
+	storage
 });
 
 // GET /api/frame
 router.get("/", (req, res, next) => {
-	res.status(204).send("You need to use POST method...");
+	res.status(200).send("You need to use POST method...");
 });
 
 // POST /api/frame
@@ -23,12 +35,8 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 			message: "No such file",
 		});
 		return;
-	}
+  }
 	
-	console.log(req.file);
-	
-	const streamifier = require('streamifier');
-
 	// 영상처리 API 요청.
 	const options = {
 		method: "POST",
@@ -38,7 +46,7 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 			"Content-Type": "multipart/form-data",
 		},
 		formData: {
-			image: streamifier.createReadStream(req.file.buffer)
+			image: fs.createReadStream(req.file.path),
 		},
 	};
 
@@ -47,8 +55,7 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 			request(opts, (err, res, body) => {
 				if (err) reject(err);
 
-				// TODO image processing call
-				console.log(body);
+				// TODO image processing logic
 
 				resolve(body);
 			});

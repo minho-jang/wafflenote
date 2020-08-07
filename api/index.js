@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-router.use("/frame", require("./imageProcessing/slideRecognition"));
+router.use("/frame", require("./imageProcessing/frameSender"));
 router.use("/stt", require("./stt/googleSpeechApi"));
 router.use("/note", require("./noteRest"))
 

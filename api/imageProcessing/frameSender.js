@@ -7,46 +7,39 @@ const path = require("path");
 const router = express.Router();
 
 // multer setting
-// 파일 업로드 관리
-// 만약 S3에 업로드해야 한다면 multer-s3 패키지를 고려한다.
-const storage = multer.diskStorage({
-	// 파일 저장 경로
-	destination(req, file, cb) {
-		cb(null, "api/tmp/frames/");
-	},
-	// 파일 저장 이름
-	filename(req, file, cb) {
-		cb(null, `${Date.now()}_frame${path.extname(file.originalname)}`);
-	},
-});
 const frameUpload = multer({
-	storage
+	storage: multer.memoryStorage()
 });
 
 // GET /api/frame
 router.get("/", (req, res, next) => {
-	res.status(204).send("You need to use POST method...");
+	res.status(200).send("You need to use POST method...");
 });
 
 // POST /api/frame
-router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
-	if (!req.file) {
+router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
+	if (!req.files) {
 		res.status(400).json({
 			message: "No such file",
 		});
 		return;
-  }
+	}
 	
+	console.log(req.files);
+	// Convert buffer data to integer array
+	const bufToArr0 = Uint8Array.from(Buffer.from(req.files[0].buffer));
+	const bufToArr1 = Uint8Array.from(Buffer.from(req.files[1].buffer));
+
 	// 영상처리 API 요청.
 	const options = {
 		method: "POST",
-		url: "http://localhost:8080",
+		url: "http://localhost:5000/image",
 		headers: {
-			// "Authorization": "Basic " + auth,
 			"Content-Type": "multipart/form-data",
 		},
 		formData: {
-			image: fs.createReadStream(req.file.path),
+			frame0: bufToArr0.toString(),
+			frame1: bufToArr1.toString()
 		},
 	};
 
@@ -55,7 +48,8 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 			request(opts, (err, res, body) => {
 				if (err) reject(err);
 
-				// TODO image processing logic
+				// TODO After image processing call. 'body' is a result.
+				console.log(body);
 
 				resolve(body);
 			});
@@ -69,7 +63,7 @@ router.post("/", frameUpload.single("frameImg"), (req, res, next) => {
 	wait().then((result) => {
 		res.status(200).json({
 			result,
-			message: "Image processing completed"
+			message: "Image processing complete!!"
 		});
 	})
 	.catch((err) => {
