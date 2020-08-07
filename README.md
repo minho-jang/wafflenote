@@ -6,11 +6,11 @@
 2. 슬라이드 추출
 
 ### python version 
-3.5.6
+3.5
 
 ### Start
 ```
 pip install -r requirements.txt
 cd application
-flask run
+python app.py
 ```
