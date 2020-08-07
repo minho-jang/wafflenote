@@ -11,7 +11,7 @@ const speechUpload = multer({
 
 // GET /api/stt
 router.get("/", (req, res, next) => {
-	res.status(204).send("You need to use POST method...");
+	res.status(200).send("You need to use POST method...");
 });
 
 // POST /api/stt
