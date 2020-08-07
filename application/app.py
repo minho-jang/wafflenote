@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import time
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
 
 
@@ -12,41 +11,32 @@ def home():
     return 'Hello Flask !!'
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 @app.route('/image', methods=['POST'])
 def process_image():
-    # Check if the post request has the file part
-    if 'frame' not in request.files:
-        return jsonify({
-            'message': 'No file part'
-        })
+    # Get data. Data is string about integer array for image.
+    frame0 = request.form['frame0']
+    frame1 = request.form['frame1']
 
-    image = request.files['frame']
-
-    # If user does not select file, browser also submit an empty part without filename
-    if image.filename == '':
-        return jsonify({
-            'message': 'No selected file'
-        })
-
-    if image and allowed_file(image.filename):
-        # Read image file string data
-        file_str = image.read()
-        # Convert string data to numpy array
-        np_img = np.fromstring(file_str, np.uint8)
+    if frame0 and frame1:
+        # Convert string to integer list
+        lst_frame0 = list(map(int, frame0.split(',')))
+        lst_frame1 = list(map(int, frame1.split(',')))
+        # Convert integer list to numpy array
+        np_frame0 = np.array(lst_frame0, dtype=np.uint8)
+        np_frame1 = np.array(lst_frame1, dtype=np.uint8)
         # Convert numpy array to image
-        img = cv2.imdecode(np_img, cv2.IMREAD_UNCHANGED)
+        img0 = cv2.imdecode(np_frame0, cv2.IMREAD_UNCHANGED)
+        img1 = cv2.imdecode(np_frame1, cv2.IMREAD_UNCHANGED)
 
-        # cv2 Test. Delete it, if not required
-        cv2.imwrite('images/' + str(time.time()) + '.jpg', img)
+        # Test. If don't need, delete it
+        print('img0 shape is ', img0.shape)
+        print('img1 shape is ', img1.shape)
 
         '''
-        TODO: Image Processing
+        TODO: Image Processing with img0 and img1
         '''
+        cv2.imwrite('./images/img0.png', img0)
+        cv2.imwrite('./images/img1.png', img1)
 
         return jsonify({
             'message': 'Image processing completed!'
@@ -54,4 +44,4 @@ def process_image():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
