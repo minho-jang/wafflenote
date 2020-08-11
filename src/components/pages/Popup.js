@@ -29,15 +29,15 @@ const Popup = () => {
   }, []);
 
   const setImage = async () => {
-    const response = await getLastCapturedImage('data');
-    setCurSlide(response.data);
+    const response = await getLastCapturedImage('note');
+    
+    setCurSlide(response);
   };
 
   return (
     <Container>
-      {console.log(curSlide)}
       {curSlide.id}
-      <Image src={curSlide.image} />
+      <Image src={curSlide.slide} />
       <Link to="/notes/1" target="_blank" className="ui button">
         Go to classroom
       </Link>

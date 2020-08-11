@@ -1,6 +1,6 @@
 const DEV_SERVER = 'http://localhost:3001'
-const PROD_SERVER = null //TODO: Add production server
+const PROD_SERVER = 'http://13.125.209.214:3000' //TODO: Add production server
 
 export default axios.create({
-  baseURL: PROD_SERVER || DEV_SERVER,
+  baseURL: DEV_SERVER,
 });
