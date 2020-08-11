@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
-import { getSlides, setSlide } from '../../actions/slides';
+import { getSlides } from '../../actions/slides';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -20,21 +21,16 @@ const Wrapper = styled.div`
 
 const SlideList = (props) => {
   useEffect(() => {
-    props.setSlide();
     props.getSlides();
+    setInterval(() => {
+      props.getSlides();
+    }, 3000)
   }, []);
-
-  if (props.slides == null) {
-    return <div>asd</div>;
-  } else {
-    console.log(props.slides)
-  }
   const renderedList = (arr) => arr.map((item, index) => {
-  
     return (
-      <div class="item">
+      <Link to={`${index+1}`} class="item">
         <div class="ui tiny image">
-          <img src="https://react.semantic-ui.com/images/wireframe/image.png" />
+          <img src={item.slide} />
         </div>
         <div class="content">
           <div class="header">Slide {index+1}</div>
@@ -43,17 +39,17 @@ const SlideList = (props) => {
             <span class="stay">#keyword</span>
           </div>
           <div class="description">
-            <p>description</p>
+            <p>{item.script}</p>
           </div>
         </div>
-      </div>
+      </Link>
     );
   })
 
   return (
     <Wrapper>
       <div className="ui divided items">
-        {renderedList([1,2,3,4,5,6,7,8,9,10])}
+        {props.slides ? renderedList(props.slides) : ""}
       </div>
     </Wrapper>
   );
@@ -65,4 +61,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { getSlides, setSlide })(SlideList);
+export default connect(mapStateToProps, { getSlides })(SlideList);
