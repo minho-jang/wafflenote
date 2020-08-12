@@ -1,6 +1,6 @@
 import waffle from '../apis/waffle.js';
 import { getSlidesFromStorage } from '../apis/storage.js';
-import { clearRecording, getScripts } from './streamToMp3.js';
+import { getScripts } from './streamToMp3.js';
 
 const captureImage = (stream) => {
   const video = document.createElement('video');
@@ -12,49 +12,58 @@ const captureImage = (stream) => {
       canvas.height = window.screen.height;
       const ctx = canvas.getContext('2d');
 
-      let url;
+      let curr;
       let prev;
-      let id = 0;
+      let id = 1;
 
       const timerId = setInterval(async () => {
-        ctx.drawImage(this, 0, 0);
-        url = canvas.toDataURL();
-        const currBlob = url ? dataURItoBlob(url) : null;
-        const prevBlob = prev ? dataURItoBlob(prev) : null;
-        const fd = new FormData(document.forms[0]);
-        fd.append('frameImg', currBlob);
-        // fd.append('prevImage', prevBlob);
-        if (currBlob != null && id === 0) {
-          const note =  [
-            {
-              slide: url,
-              id: id++,
-              script: null,
-            },
-          ];
-          chrome.storage.local.set({ note });
-        }
-        const response = await waffle.post('/frame', fd, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        try {
+          ctx.drawImage(this, 0, 0);
+          curr = canvas.toDataURL();
+          const currBlob = dataURItoBlob(curr);
+          const prevBlob = dataURItoBlob(prev);
+          prev = curr;
 
-        if (response.data.id % 10 === 0) {
-          const script = await getScripts();
-          const note = await getSlidesFromStorage('note');
-          note[id-1].script = script.id;
-          note[id] = {
-            slide: prev,
-            id: id++,
-            script: null,
+          if (currBlob && prevBlob) {
+            const fd = new FormData();
+            fd.append('frameImg', prevBlob);
+            fd.append('frameImg', currBlob);
+            const response = await waffle.post('/api/frame', fd, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            if (response.data.result === 'True') {
+              const script = await getScripts();
+              const note = await getSlidesFromStorage('note');
+              note.length !== 0 ? (note[note.length - 1].script = script.transcription) : '';
+              note.push({
+                title: `Slide ${id}`,
+                id: id++,
+                slide: curr,
+                script: null,
+                memo: null,
+                tags: null,
+              });
+              chrome.storage.local.set({ note });
+            }
+          } else {
+            const note = [
+              {
+                title: `Slide ${id}`,
+                id: id++,
+                slide: curr,
+                script: null,
+                memo: null,
+                tags: null,
+              }
+            ]
+            chrome.storage.local.set({ note })
           }
-          chrome.storage.local.set({ note });
-          clearRecording();
+        } catch (error) {
+          console.log(error);
         }
-
-        prev = url;
-      }, 1000);
+      }, 3000);
       chrome.storage.local.set({ timerId });
     },
     false,
@@ -65,6 +74,7 @@ const captureImage = (stream) => {
 };
 
 function dataURItoBlob(dataURI) {
+  if (!dataURI) return null;
   // convert base64/URLEncoded data component to raw binary data held in a string
   var byteString;
   if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);

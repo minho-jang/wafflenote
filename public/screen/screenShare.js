@@ -43,8 +43,8 @@ const requestScreenSharing = (port, msg) => {
             port.recorderPlaying = false;
             chrome.storage.local.get('timerId', (obj) => {
               clearInterval(obj.timerId);
-              getScripts(); 
             });
+            window.open("popup.html#/notes/1", "_blank")
             };
           },
           (err) => {
