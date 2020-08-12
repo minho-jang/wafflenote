@@ -24,7 +24,8 @@ async function getScripts() {
     var file = new File([blob], 'temp.mp3');
     var frm = new FormData();
     frm.append('audio', file);
-    const response = await waffle.post('/stt', frm, config);
+    clearRecording();
+    const response = await waffle.post('/api/stt', frm, config);
     return response.data
   } catch (error) {
     console.log(error);
