@@ -84,7 +84,7 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 	.then((transcription) => {
 		res.status(200).json({
 			transcription,
-			message: "STT completed!",
+			message: "STT complete!",
 		});
 	}).catch((err) => {
 		console.log(err);
