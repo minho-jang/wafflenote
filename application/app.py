@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 import cv2
 import numpy as np
 import time
@@ -14,10 +14,18 @@ def home():
 @app.route('/image', methods=['POST'])
 def process_image():
     # Get data. Data is string about integer array for image.
-    frame0 = request.form['frame0']
-    frame1 = request.form['frame1']
+    data = request.get_json()
 
-    if frame0 and frame1:
+    if 'frame0' not in data or 'frame1' not in data:
+        abort(400, 'No image data')
+
+    frame0 = data['frame0']
+    frame1 = data['frame1']
+
+    if len(frame0) == 0 or len(frame1) == 0:
+        abort(400, 'Data length is zero')
+
+    try:
         # Convert string to integer list
         lst_frame0 = list(map(int, frame0.split(',')))
         lst_frame1 = list(map(int, frame1.split(',')))
@@ -37,10 +45,13 @@ def process_image():
         '''
         cv2.imwrite('./images/img0.png', img0)
         cv2.imwrite('./images/img1.png', img1)
+    except:
+        abort(400, 'OpenCV error')
 
-        return jsonify({
-            'message': 'Image processing completed!'
-        })
+    return jsonify({
+        'message': 'OK',
+        'result': {}
+    })
 
 
 if __name__ == "__main__":
