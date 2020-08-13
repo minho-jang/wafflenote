@@ -5,10 +5,23 @@ const multer = require("multer");
 const path = require("path");
 
 const router = express.Router();
+const IMAGE_PROCESSING_SERVER_URL = "http://localhost:5000/image"
 
 // multer setting
 const frameUpload = multer({
-	storage: multer.memoryStorage()
+	storage: multer.memoryStorage(),
+	limits: {
+		fileSize: 10000000	// 10,000,000 Bytes = 10 MB
+	},
+	fileFilter(req, file, cb) {
+		if (!file) {
+			return cb(new Error("Must be image"))
+		}
+		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+			return cb(new Error("Must be png, jpg or jpeg"))
+		}
+		cb(undefined, true)
+	}
 });
 
 // GET /api/frame
@@ -18,13 +31,14 @@ router.get("/", (req, res, next) => {
 
 // POST /api/frame
 router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
-	if (!req.files) {
+	if (!req.files[0] || !req.files[1]) {
 		res.status(400).json({
 			message: "No such file",
 		});
 		return;
 	}
 	
+	console.log('[frameSender.js]: frame image info from client...');
 	console.log(req.files);
 	// Convert buffer data to integer array
 	const bufToArr0 = Uint8Array.from(Buffer.from(req.files[0].buffer));
@@ -33,7 +47,7 @@ router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
 	// 영상처리 API 요청.
 	const options = {
 		method: "POST",
-		url: "http://localhost:5000/image",
+		url: IMAGE_PROCESSING_SERVER_URL,
 		headers: {
 			"Content-Type": "multipart/form-data",
 		},
@@ -56,11 +70,7 @@ router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
 		});
 	}
 
-	const wait = async function waitForResponse() {
-		return await call(options);
-	}
-
-	wait().then((result) => {
+	call(options).then((result) => {
 		res.status(200).json({
 			result,
 			message: "Image processing complete!!"

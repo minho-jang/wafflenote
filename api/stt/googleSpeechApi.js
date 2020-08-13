@@ -22,14 +22,16 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 			message: "No such file",
 		});
 		return;
-	}
+	}  
+	console.log('[googleSpeechApi.js]: recorded audio info from client...');
+	console.log(req.file);
 
 	// Google Speech API 호출로 음성파일 전달.
 	const encoding = 'MP3';
 	const sampleRateHertz = 48000;
 	const languageCode = 'ko';
 
-	// 즉시 실행 함수 표현(IIFE, Immediately Invoked Function Expression). 함수를 선언하고 바로 사용
+	// IIFE. 함수를 선언하고 바로 사용
 	(async function streamingRecognize(
 		encoding,
 		sampleRateHertz,
@@ -72,7 +74,7 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 					resolve(transcription);
 				});
 
-				// File data(in memory) To Stream
+				// File data(in memory) to Stream
 				streamifier.createReadStream(req.file.buffer).pipe(recognizeStream);
 			})
 		}
