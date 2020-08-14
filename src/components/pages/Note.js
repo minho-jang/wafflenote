@@ -26,8 +26,9 @@ const Note = (props) => {
   const renderedBody = (cur) => {
     return (
       <>
-        <TitleText>Slide {cur.id + 1}</TitleText>
+        <TitleText>{cur.title}</TitleText>
         <Image src={cur.slide} />
+        {cur.script}
       </>
     );
   };

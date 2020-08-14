@@ -1,4 +1,4 @@
-import { clearRecording, getScripts, init } from "./streamToMp3.js";
+import { clearRecording, getScripts, init, onended } from "./streamToMp3.js";
 import { captureImage } from "./streamToImage.js";
 
 const requestScreenSharing = (port, msg) => {
@@ -39,12 +39,13 @@ const requestScreenSharing = (port, msg) => {
           init(stream);
           captureImage(stream);
           clearRecording();
-          stream.oninactive = function () {
-            port.recorderPlaying = false;
-            chrome.storage.local.get('timerId', (obj) => {
-              clearInterval(obj.timerId);
-            });
-            window.open("popup.html#/notes/1", "_blank")
+            stream.oninactive = function () {
+              port.recorderPlaying = false;
+              chrome.storage.local.get('timerId', (obj) => {
+                clearInterval(obj.timerId);
+              });
+              clearRecording();
+              onended()
             };
           },
           (err) => {

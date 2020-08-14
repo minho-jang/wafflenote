@@ -1,11 +1,13 @@
 import waffle from '../apis/waffle.js';
 
-let recBuffers = [[], []];
+let recBuffers = [[]];
 let recLength = 0;
 let numChannels = 1;
-let listening = false;
+let listening;
+let audioContext;
 let context = {};
-
+let source;
+let node;
 const config = {
   headers: {
     'Content-Type': 'multipart/form-data',
@@ -13,70 +15,85 @@ const config = {
 };
 
 function clearRecording() {
-  recBuffers = [[], []];
+  recBuffers = [[]];
   recLength = 0;
   listening = true;
 }
 
 async function getScripts() {
   try {
-    const blob = await encodeMp3();
+    const blob = await getWav();
     var file = new File([blob], 'temp.mp3');
     var frm = new FormData();
     frm.append('audio', file);
-    clearRecording();
     const response = await waffle.post('/api/stt', frm, config);
+    clearRecording();
     return response.data
   } catch (error) {
     console.log(error);
   }
 }
 
-function encodeMp3() {
-  return new Promise((resolve, reject) => {
-    try {
-      let buffers = [];
-      for (var i = 0; i < numChannels; i++) {
-        buffers.push(mergeBuffers(recBuffers[i], recLength));
-      }
+// TODO : Keeping
+// const mp3encoder = new lamejs.Mp3Encoder(1, 48000, 128); //mono 44.1khz encode to 128kbps
 
-      let interleaved = numChannels == 2 ? interleave(buffers[0], buffers[1]) : buffers[0];
-      let dataView = encodeWAV(interleaved);
-      let blob = new Blob([dataView], { type: 'audio/wav' });
-      const fr = new FileReader();    
-      fr.onload = async () => {
-        const array = new Int16Array(fr.result);
-        const mp3Data = [];
-        const mp3encoder = new lamejs.Mp3Encoder(1, 48000, 128); //mono 44.1khz encode to 128kbps
-        let mp3Tmp = mp3encoder.encodeBuffer(array); //encode mp3
-        mp3Data.push(mp3Tmp);
-        mp3Tmp = mp3encoder.flush();
-        mp3Data.push(mp3Tmp);
-        resolve(new Blob(mp3Data, { type: 'audio/mp3' }));
-      };
-      fr.readAsArrayBuffer(blob);
-      
-    } catch (error) {
-      reject(error)
+// async function encodeMp3() {
+//   try {
+//     let buffers = [];
+//     for (var i = 0; i < numChannels; i++) {
+//       buffers.push(mergeBuffers(recBuffers[i], recLength));
+//     }
+//     let dataView = encodeWAV(buffers[0]);
+//     let blob = new Blob([dataView], { type: 'audio/wav' });   
+//     const aBuffer = await new Response(blob).arrayBuffer()
+//     const array = new Int16Array(aBuffer);
+//     const mp3Data = [];
+//     let mp3Tmp = mp3encoder.encodeBuffer(array); //encode mp3
+//     mp3Data.push(mp3Tmp);
+//     mp3Tmp = mp3encoder.flush();
+//     mp3Data.push(mp3Tmp);
+//     return new Blob(mp3Data, { type: 'audio/mp3' }) 
+    
+//   } catch (error) {
+    
+//   }
+// }
+
+async function getWav() {
+  try {
+    let buffers = [];
+    for (var i = 0; i < numChannels; i++) {
+      buffers.push(mergeBuffers(recBuffers[i], recLength));
     }
-  });
+    let dataView = encodeWAV(buffers[0]);
+    let blob = new Blob([dataView], { type: 'audio/wav' });   
+    return blob
+  }
+  catch (error) {
+    console.log(error)
+  }
 }
-
 function init(stream) {
-  let audioContext = new AudioContext();
-  let source = audioContext.createMediaStreamSource(stream);
+  listening = false;
+  audioContext = new AudioContext();
+  source = audioContext.createMediaStreamSource(stream);
   context = source.context;
-  let node = (context.createScriptProcessor || context.createJavaScriptNode).call(context, 4096, numChannels, numChannels);
+  node = (context.createScriptProcessor || context.createJavaScriptNode).call(context, 4096, numChannels, numChannels);
   node.onaudioprocess = (e) => {
     if (!listening) return;
-
     for (var i = 0; i < numChannels; i++) {
       recBuffers[i].push([...e.inputBuffer.getChannelData(i)]);
     }
     recLength += recBuffers[0][0].length;
   };
+
   source.connect(node);
   node.connect(context.destination);
+}
+
+function onended() {
+  source.disconnect(node);
+  node.disconnect(context.destination);
 }
 
 function mergeBuffers(buffers, len) {
@@ -139,4 +156,4 @@ function encodeWAV(samples) {
   return view;
 }
 
-export { init, clearRecording, getScripts };
+export { init, clearRecording, getScripts, onended };
