@@ -33,13 +33,12 @@ const SlideList = (props) => {
           <img src={item.slide} />
         </div>
         <div class="content">
-          <div class="header">Slide {index+1}</div>
+          <div class="header">{item.title}</div>
           <div class="meta">
             <span class="price">time info</span>
             <span class="stay">#keyword</span>
           </div>
           <div class="description">
-            <p>{item.script}</p>
           </div>
         </div>
       </Link>
