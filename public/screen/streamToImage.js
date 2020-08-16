@@ -35,6 +35,8 @@ const captureImage = (stream) => {
             });
             if (response.data.result === 'True') {
               const script = await getScripts();
+              if (script.transcription === '') return;
+
               const note = await getSlidesFromStorage('note');
               note.length !== 0 ? (note[note.length - 1].script = script.transcription) : '';
               note.push({
@@ -56,14 +58,14 @@ const captureImage = (stream) => {
                 script: null,
                 memo: null,
                 tags: null,
-              }
-            ]
-            chrome.storage.local.set({ note })
+              },
+            ];
+            chrome.storage.local.set({ note });
           }
         } catch (error) {
           console.log(error);
         }
-      }, 3000);
+      }, 5000);
       chrome.storage.local.set({ timerId });
     },
     false,
