@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, abort
 import cv2
 import numpy as np
-import time
+from scipy.linalg import norm
+from scipy import sum, average
+import traceback
 
 app = Flask(__name__)
 
@@ -13,6 +15,29 @@ def home():
 
 @app.route('/image', methods=['POST'])
 def process_image():
+    def to_grayscale(arr):
+        # If arr is a color image (3D array), convert it to grayscale (2D array).
+        if len(arr.shape) == 3:
+            return average(arr, -1)  # average over the last axis (color channels)
+        else:
+            return arr
+
+    def compare_images(im0, im1):
+        # normalize to compensate for exposure difference, this may be unnecessary
+        # consider disabling it
+        tmp0 = normalize(im0)
+        tmp1 = normalize(im1)
+        # calculate the difference and its norms
+        diff = tmp0 - tmp1  # elementwise for scipy arrays
+        m_norm = sum(abs(diff))  # Manhattan norm
+        z_norm = norm(diff.ravel(), 0)  # Zero norm
+        return m_norm, z_norm
+
+    def normalize(arr):
+        rng = arr.max() - arr.min()
+        amin = arr.min()
+        return (arr - amin) * 255 / rng
+
     # Get data. Data is string about integer array for image.
     data = request.get_json()
 
@@ -25,6 +50,7 @@ def process_image():
     if len(frame0) == 0 or len(frame1) == 0:
         abort(400, 'Data length is zero')
 
+    img0, img1 = None
     try:
         # Convert string to integer list
         lst_frame0 = list(map(int, frame0.split(',')))
@@ -35,23 +61,30 @@ def process_image():
         # Convert numpy array to image
         img0 = cv2.imdecode(np_frame0, cv2.IMREAD_UNCHANGED)
         img1 = cv2.imdecode(np_frame1, cv2.IMREAD_UNCHANGED)
+    except Exception:
+        print(traceback.print_exc())
+        abort(400, 'Image load error')
 
-        # Test. If don't need, delete it
-        print('img0 shape is ', img0.shape)
-        print('img1 shape is ', img1.shape)
+    try:
+        # Image Processing with img0 and img1
+        image0 = to_grayscale(img0.astype(float))
+        image1 = to_grayscale(img1.astype(float))
 
-        '''
-        TODO: Image Processing with img0 and img1
-        '''
-        cv2.imwrite('./images/img0.png', img0)
-        cv2.imwrite('./images/img1.png', img1)
-    except:
-        abort(400, 'OpenCV error')
+        n_m, n_0 = compare_images(image0, image1)
+        print("Manhattan norm:", n_m, "/ per pixel:", n_m / image0.size)
+        # print("Zero norm:", n_0, "/ per pixel:", n_0*1.0/image0.size)
 
-    return jsonify({
-        'message': 'OK',
-        'result': {}
-    })
+        # cv2.imwrite('./images/img0.png', img0)
+        # cv2.imwrite('./images/img1.png', img1)
+
+        result = "False"
+        if n_m / image0.size > 18:
+            result = "True"
+
+        return result
+    except Exception:
+        print(traceback.print_exc())
+        abort(400, 'Image process error')
 
 
 if __name__ == "__main__":
