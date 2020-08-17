@@ -1,4 +1,45 @@
-export const getSlidesFromStorage = (key) => {
+export const getSlidesFromStorage = async (noteName) => {
+  try {
+    const slides = [];
+    const lastIndex = await getLastIndex();
+    console.log(lastIndex)
+    for (let i = 1; i <= lastIndex; i++) {
+      const cur = await getOneSlideFromStorage(noteName, i);
+      if (cur != null) {
+        slides.push(cur);
+      }
+    }
+    return slides;
+  } catch (error) {
+    throw(error);
+  }
+};
+
+export const getLastIndex = () => {
+  return new Promise((resolve, reject) => {
+    const lastIndex = 'lastIndex';
+    chrome.storage.local.get([lastIndex], (obj) => {
+      if (!obj[lastIndex]) reject(null)
+      resolve(obj[lastIndex]);
+    })
+  })
+}
+
+export const setSlideToStorage = (noteName, index, obj) => {
+  const data = {};
+  const key = noteName + index;
+  data[key] = obj;
+  return new Promise((resolve, reject) => {
+    if (key != null && index != null) {
+      chrome.storage.local.set(data, () => {
+        console.log('save');
+      });
+    }
+  });
+};
+
+export const getOneSlideFromStorage = (noteName, index) => {
+  const key = noteName + index;
   return new Promise((resolve, reject) => {
     if (key != null) {
       chrome.storage.local.get(key, (obj) => {
@@ -10,26 +51,17 @@ export const getSlidesFromStorage = (key) => {
   });
 };
 
-export const setSlideToStorage = (key, obj) => {
-  const data = {};
-  data[key] = obj;
-  return new Promise((resolve, reject) => {
-    if (key != null) {
-      chrome.storage.local.set(data, () => {
-        console.log('save');
-      });
-    }
-  });
-};
-
-export const getLastCapturedImage = (key) => {
-  return new Promise((resolve, reject) => {
-    if (key != null) {
+export const getLastCapturedImage = (noteName) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const lastIndex = await getLastIndex();
+      const key = noteName + lastIndex;
       chrome.storage.local.get(key, (obj) => {
-        resolve(obj);
-      });
-    } else {
-      reject(null);
+        if (!obj[key]) resolve({});
+        else resolve(obj[key]);
+      }); 
+    } catch (error) {
+      reject(error)
     }
   });
 };

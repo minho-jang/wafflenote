@@ -1,6 +1,6 @@
 import waffle from '../apis/waffle';
 import { GET_SLIDES, GET_SLIDE, EDIT_SLIDE } from './types';
-import { getSlidesFromStorage, getSlideFromStorage, setSlideToStorage } from '../apis/storage';
+import { getSlidesFromStorage, getOneSlideFromStorage, setSlideToStorage } from '../apis/storage';
 
 export const getSlides = () => async (dispatch) => {
   // TODO(DONGCHEOL): Add getting data from local storage
@@ -18,7 +18,7 @@ export const setSlide = () => async (dispatch) => {
 };
 
 export const getSlide = (index) => async (dispatch) => {
-  const response = await getSlideFromStorage('note', index);
+  const response = await getOneSlideFromStorage('note', index);
 
   dispatch({ type: GET_SLIDE, payload: response.data });
 };
