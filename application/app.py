@@ -50,7 +50,8 @@ def process_image():
     if len(frame0) == 0 or len(frame1) == 0:
         abort(400, 'Data length is zero')
 
-    img0, img1 = None
+    img0 = None
+    img1 = None
     try:
         # Convert string to integer list
         lst_frame0 = list(map(int, frame0.split(',')))
