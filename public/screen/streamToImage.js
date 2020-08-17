@@ -1,5 +1,5 @@
 import waffle from '../apis/waffle.js';
-import { getSlidesFromStorage } from '../apis/storage.js';
+import { getOneSlideFromStorage, setSlideToStorage } from '../apis/storage.js';
 import { getScripts } from './streamToMp3.js';
 
 const captureImage = (stream) => {
@@ -26,8 +26,8 @@ const captureImage = (stream) => {
 
           if (currBlob && prevBlob) {
             const fd = new FormData();
-            fd.append('frameImg', prevBlob);
-            fd.append('frameImg', currBlob);
+            fd.append('frameImg', prevBlob, 'image1.png');
+            fd.append('frameImg', currBlob, 'image2.png');
             const response = await waffle.post('/api/frame', fd, {
               headers: {
                 'Content-Type': 'multipart/form-data',
@@ -36,31 +36,32 @@ const captureImage = (stream) => {
             if (response.data.result === 'True') {
               const script = await getScripts();
               if (script.transcription === '') return;
-
-              const note = await getSlidesFromStorage('note');
-              note.length !== 0 ? (note[note.length - 1].script = script.transcription) : '';
-              note.push({
+              const prevSlide = await getOneSlideFromStorage('note', id-1);
+              prevSlide.script = script.transcription
+              setSlideToStorage('note', id-1, prevSlide);
+              
+              const slide = {
                 title: `Slide ${id}`,
-                id: id++,
+                id: id,
                 slide: curr,
                 script: null,
                 memo: null,
                 tags: null,
-              });
-              chrome.storage.local.set({ note });
+              }
+              chrome.storage.local.set({ lastIndex: id });
+              setSlideToStorage('note', id++, slide);
             }
           } else {
-            const note = [
-              {
-                title: `Slide ${id}`,
-                id: id++,
-                slide: curr,
-                script: null,
-                memo: null,
-                tags: null,
-              },
-            ];
-            chrome.storage.local.set({ note });
+            const slide = {
+              title: `Slide ${id}`,
+              id,
+              slide: curr,
+              script: null,
+              memo: null,
+              tags: null,
+            }
+            chrome.storage.local.set({ lastIndex: id });
+            setSlideToStorage('note', id++, slide);
           }
         } catch (error) {
           console.log(error);

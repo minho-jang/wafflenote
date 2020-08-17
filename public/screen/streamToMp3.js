@@ -13,7 +13,8 @@ const config = {
     'Content-Type': 'multipart/form-data',
   },
 };
-
+const worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
+      
 function clearRecording() {
   recBuffers = [[]];
   recLength = 0;
@@ -23,19 +24,17 @@ function clearRecording() {
 function getScripts() {
   return new Promise((resolve, reject) => {
     try {
-      const worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
-      worker.addEventListener('message', function (e) {
+      worker.addEventListener('message', function post(e) {
         const blob = e.data;
         const file = new File([blob], 'temp.mp3');
         const frm = new FormData();
         frm.append('audio', file);
         waffle.post('/api/stt', frm, config).then((res) => {
+          worker.removeEventListener('message', post)
           resolve(res.data);
         });
-        worker.terminate();
       });
-      const { sampleRate } = context;
-      worker.postMessage({ recBuffers, recLength, sampleRate });
+      worker.postMessage({ recBuffers, recLength, sampleRate: context.sampleRate });
       clearRecording();
     } catch (error) {
       reject(error);
@@ -64,6 +63,7 @@ function init(stream) {
 function onended() {
   source.disconnect(node);
   node.disconnect(context.destination);
+  worker.terminate();
 }
 
 export { init, clearRecording, getScripts, onended };
