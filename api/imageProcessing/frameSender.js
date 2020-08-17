@@ -40,30 +40,58 @@ router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
 	
 	console.log('[frameSender.js]: frame image info from client...');
 	console.log(req.files);
-	// Convert buffer data to integer array
-	const bufToArr0 = Uint8Array.from(Buffer.from(req.files[0].buffer));
-	const bufToArr1 = Uint8Array.from(Buffer.from(req.files[1].buffer));
+	// Convert Buffer to String(Integer array)
+	const bufToStr0 = Uint8Array.from(Buffer.from(req.files[0].buffer)).toString();
+	const bufToStr1 = Uint8Array.from(Buffer.from(req.files[1].buffer)).toString();
+	console.log('[frameSender.js]: string0 length: ', bufToStr0.length);
+	console.log('[frameSender.js]: string1 length: ', bufToStr1.length);
 
 	// 영상처리 API 요청.
-	Axios.post(IMAGE_PROCESSING_SERVER_URL, {
-		frame0: bufToArr0.toString(),
-		frame1: bufToArr1.toString()
+	Axios({
+		method: 'post',
+		url: IMAGE_PROCESSING_SERVER_URL, 
+		data: {
+			frame0: bufToStr0,
+			frame1: bufToStr1
+		},
+		maxContentLength: 50000000,
+		maxBodyLength: 50000000
 	})
 	.then((response) => {
-		console.log(response.status);
-		console.log(response.data);
+		console.log('[frameSender.js]: response status: ', response.status);
+		console.log('[frameSender.js]: response data: ', response.data);
 		res.status(200).json({
 			result: response.data,
 			message: "Image processing complete"
 		});
 	})
-	.catch((err) => {
-		console.error(err.response.status);
-		console.error(err.response.data);
-		res.status(400).json({
-			message: "Image processing error",
-			error: err.response.data
-		});
+	.catch((error) => {
+		if (error.response) {
+			// 요청이 이루어졌으나 서버가 2xx의 범위를 벗어나는 상태 코드로 응답
+			console.log(error.response.status);
+			console.log(error.response.headers);
+			console.error('[frameSender.js]: error code: ', error.code);
+			console.error('[frameSender.js]: error response status: ', error.status);
+			console.error('[frameSender.js]: error response data: ', error.response.data);
+			res.status(400).json({
+				message: "Image processing error",
+				error: error.response.data
+			});
+		} else if (error.request) {
+			// 요청이 이루어졌으나 응답을 받지 못함
+			console.error('[frameSender.js]: error request: ', error.request);
+			res.status(400).json({
+				message: "Image processing error",
+				error: "Request is good, but no response"
+			});
+		} else {
+			// 요청 처리 중 에러 발생
+			console.error('[frameSender.js]: error message: ', error.message);
+			res.status(400).json({
+				message: "Image processing error",
+				error: "Error in request" 
+			}); 
+		}
 	});
 
 });
