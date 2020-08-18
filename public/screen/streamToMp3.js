@@ -13,13 +13,14 @@ const config = {
     'Content-Type': 'multipart/form-data',
   },
 };
-const worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
       
 function clearRecording() {
   recBuffers = [[]];
   recLength = 0;
   listening = true;
 }
+
+const worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
 
 function getScripts() {
   return new Promise((resolve, reject) => {
