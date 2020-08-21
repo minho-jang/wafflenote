@@ -5,20 +5,57 @@ import { connect } from 'react-redux';
 import { getSlides } from '../../actions/slides';
 
 const Wrapper = styled.div`
-  height: 100%;
-  width: 400px;
-  position: fixed;
+  height: 100vh;
+  width: 346px;
+  position: relative;
   z-index: 1;
   top: 0;
   left: 0;
   overflow-x: hidden;
-  padding-top: 20px;
-  padding-bottom: 50px;
-  padding-left: 10px;
-  margin-top: 40px;
-  border: 1px ridge darkgray;
 `;
-
+const SlideCard = styled.div`
+  width: 336px;
+  height: 132px;
+  border-radius: 20px;
+  box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.16);
+  border: solid 1px #ffbc3e;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 13px;
+`
+const SlideImage = styled.img`
+  width: 89.5px;
+  height: 89.5px;
+  margin: 20.5px;
+`
+const SlideContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 20.5px 0;
+  margin-right: 30.5px;
+  color: #b3b3b3;
+`
+const SlideTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.45;
+  letter-spacing: normal;
+  color: #9b9b9b;
+`
+const SlideScript = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap:break-word; 
+  line-height: 1.2em;
+  height: 2.4em;
+ 
+`
 const SlideList = (props) => {
   useEffect(() => {
     props.getSlides();
@@ -28,19 +65,20 @@ const SlideList = (props) => {
   }, []);
   const renderedList = (arr) => arr.map((item, index) => {
     return (
-      <Link to={`${index+1}`} class="item">
-        <div class="ui tiny image">
-          <img src={item.slide} />
-        </div>
-        <div class="content">
-          <div class="header">{item.title}</div>
-          <div class="meta">
-            <span class="price">time info</span>
-            <span class="stay">#keyword</span>
-          </div>
-          <div class="description">
-          </div>
-        </div>
+      <Link to={`${index+1}`}>
+        <SlideCard>
+          <SlideImage src={item.slide} />
+          <SlideContent>
+            <SlideTitle>{item.title}</SlideTitle>
+            <div>
+              <span>time info </span>
+              <span>#keyword</span>
+            </div>
+            <SlideScript>
+              {item.script}
+            </SlideScript>
+          </SlideContent>
+        </SlideCard>
       </Link>
     );
   })
