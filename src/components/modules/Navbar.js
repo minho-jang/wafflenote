@@ -1,20 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import waffle from '../../static/WaffleLogo.png';
+import menuIcon from '../../static/Menu.png';
+
+const Wrapper = styled.div`
+  height: 64px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  background-color: #fbb93a;
+`
+const Container = styled.div`
+  width: 1300px;
+  margin: auto;
+  padding: 15px 0;
+`
+const ItemRight = styled.div`
+  float: right;
+`
+const MenuIcon = styled.img`
+  height: 23px;
+  margin-top: 3px;
+`
+const WaffleLogo = styled.img`
+`
 
 const Navbar = () => (
-  <div className="ui top fixed menu">
-    <Link to="/notes/1" className="item">
-      와플노트
-    </Link>
-    <div className="right menu">
-      <Link to="/signin" className="item">
-        로그인
-      </Link>
-      <Link to="/" className="item">
-        <i className="icon large align justify" />
-      </Link>
-    </div>
-  </div>
+  <Wrapper>
+    <Container>
+      <WaffleLogo src={waffle} />
+
+      <ItemRight>
+        <MenuIcon src={menuIcon} />
+      </ItemRight>
+    </Container>
+  </Wrapper>
 );
 
 export default Navbar;
