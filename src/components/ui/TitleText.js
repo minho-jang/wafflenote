@@ -1,19 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Text = styled.div`
-  margin-bottom: 10px;
-  margin-left: 2px;
-  font-size: 23px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-`
-
-const TitleText = (props) => {
-  return (
-    <Text>
-      {props.children}
-    </Text>
-  );
-}
+const TitleText = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #9b9b9b;
+`;
 
 export default TitleText;

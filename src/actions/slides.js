@@ -19,8 +19,7 @@ export const setSlide = () => async (dispatch) => {
 
 export const getSlide = (index) => async (dispatch) => {
   const response = await getOneSlideFromStorage('note', index);
-
-  dispatch({ type: GET_SLIDE, payload: response.data });
+  dispatch({ type: GET_SLIDE, payload: response });
 };
 
 export const editSlide = (id, formValues) => async (dispatch) => {

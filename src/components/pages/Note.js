@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import SlideList from '../modules/SlideList';
-import { getSlides } from '../../actions/slides';
-import TitleText from '../ui/TitleText';
+import { getSlide } from '../../actions/slides';
 import Navbar from '../modules/Navbar';
+import MainBoard from '../modules/MainBoard';
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,42 +12,26 @@ const Wrapper = styled.div`
   width: 1300px;
   margin: 30px auto;
 `;
-const Image = styled.img`
-  width: 700px;
-  height: auto;
-`;
-const Body = styled.div`
-  margin: 0 auto;
-`
 const Note = (props) => {
   useEffect(() => {
-    props.getSlides();
+    props.getSlide(props.match.params.id);
   }, []);
 
-  const renderedBody = (cur) => {
-    return (
-      <Body>
-        <TitleText>{cur.title}</TitleText>
-        <Image src={cur.slide} />
-        {/* {cur.script} */}
-      </Body>
-    );
-  };
   return (
     <React.Fragment>
       <Navbar />
       <Wrapper>
         <SlideList />
-        {props.slides && props.slides.length !== 0 ? renderedBody(props.slides[props.match.params.id - 1]) : ''}
+        <MainBoard curSlide={props.slide} />
       </Wrapper>
     </React.Fragment>
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    slides: Object.values(state.slides),
+    slide: state.slides[ownProps.match.params.id],
   };
 };
 
-export default connect(mapStateToProps, { getSlides })(Note);
+export default connect(mapStateToProps, { getSlide })(Note);
