@@ -22,7 +22,7 @@ const SlideCard = styled.div`
   background-color: #ffffff;
   display: flex;
   flex-direction: row;
-  margin-bottom: 13px;
+  margin-bottom: 10px;
 `
 const SlideImage = styled.img`
   width: 89.5px;

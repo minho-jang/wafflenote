@@ -65,3 +65,32 @@ export const getLastCapturedImage = (noteName) => {
     }
   });
 };
+
+export const getState = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      const key = "state"
+      chrome.storage.local.get(key, (obj) => {
+        if (obj[key] === null) resolve(false)
+        resolve(obj[key]);
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export const setState = (state) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const data = {};
+      const key = "state"
+      data[key] = state
+      chrome.storage.local.set(data, (obj) => {
+        console.log("state save", state)
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
