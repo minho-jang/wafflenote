@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import SlideList from '../modules/SlideList';
-import { getSlide } from '../../actions/slides';
-import Navbar from '../modules/Navbar';
-import MainBoard from '../modules/MainBoard';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
+import SlideList from "../modules/SlideList";
+import { getSlide } from "../../actions/slides";
+import Navbar from "../modules/Navbar";
+import MainBoard from "../modules/MainBoard";
 
 const Wrapper = styled.div`
   display: flex;
