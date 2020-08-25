@@ -13,16 +13,13 @@ const Wrapper = styled.div`
   margin: 30px auto;
 `;
 const Note = (props) => {
-  useEffect(() => {
-    props.getSlide(props.match.params.id);
-  }, []);
 
   return (
     <React.Fragment>
       <Navbar />
       <Wrapper>
         <SlideList />
-        <MainBoard curSlide={props.slide} />
+        <MainBoard id={props.match.params.id} />
       </Wrapper>
     </React.Fragment>
   );

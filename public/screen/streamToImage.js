@@ -1,5 +1,5 @@
 import waffle from '../apis/waffle.js';
-import { getOneSlideFromStorage, setSlideToStorage } from '../apis/storage.js';
+import { getOneSlideFromStorage, setSlideToStorage, setAudioToStorage, getAudioFromStorage } from '../apis/storage.js';
 import { getScripts } from './streamToMp3.js';
 
 const captureImage = (stream) => {
@@ -33,11 +33,17 @@ const captureImage = (stream) => {
                 'Content-Type': 'multipart/form-data',
               },
             });
+            
             if (response.data.result === 'True') {
               const script = await getScripts();
               if (script.transcription === '') return;
+              
               const prevSlide = await getOneSlideFromStorage('note', id-1);
               prevSlide.script = script.transcription
+              console.log(script)
+              await setAudioToStorage('note', id-1, script.audioBlob)
+              const as = await getAudioFromStorage('note', id-1);
+              console.log(as)
               setSlideToStorage('note', id-1, prevSlide);
               
               const slide = {
@@ -45,7 +51,7 @@ const captureImage = (stream) => {
                 id: id,
                 slide: curr,
                 script: null,
-                memo: null,
+                note: null,
                 tags: null,
               }
               chrome.storage.local.set({ lastIndex: id });
@@ -57,7 +63,7 @@ const captureImage = (stream) => {
               id,
               slide: curr,
               script: null,
-              memo: null,
+              note: null,
               tags: null,
             }
             chrome.storage.local.set({ lastIndex: id });

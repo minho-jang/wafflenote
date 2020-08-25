@@ -94,3 +94,47 @@ export const setState = (state) => {
     }
   })
 }
+
+export const setAudioToStorage = (noteName, index, obj) => {
+  const data = {};
+  const key = noteName + "audio" + index;
+  
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (key != null && index != null) {
+        const arrBuffer =  await new Response(obj).arrayBuffer();
+        data[key] = JSON.stringify(new Int16Array(arrBuffer)); 
+        chrome.storage.local.set(data, () => {
+          console.log('savemp3', data);
+          resolve(true);
+        })
+      }
+      
+    } catch (error) {
+      reject(error)
+    }
+  });
+};
+
+export const getAudioFromStorage = (noteName, index) => {
+  const key = noteName + "audio" + index;
+  return new Promise((resolve, reject) => {
+    try {
+     
+      if (key != null && index != null) {
+        chrome.storage.local.get(key, (obj) => {
+          const result = JSON.parse(obj[key])
+          const array = Object.values(result);
+          const blob = new Blob([new Int16Array(array)], {
+            type: "audio/mp3",
+          })
+          resolve(blob);
+        });
+      } else {
+        reject(null);
+      } 
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

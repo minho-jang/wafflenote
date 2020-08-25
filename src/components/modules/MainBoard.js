@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import TitleText from '../ui/TitleText';
-import NormalText from '../ui/NormalText';
 import ContentBoard from '../ui/ContentBoard';
+import { getSlide, editSlide } from '../../actions/slides';
+import { getAudioFromStorage } from '../../apis/storage';
+import Player from './Player';
 
 const Body = styled.div`
   margin: 0 auto;
@@ -14,30 +17,59 @@ const Image = styled.img`
 `;
 
 const MainBoard = (props) => {
-  if (!props.curSlide) {
+  if (!props.slide) {
     return (
       <div>
         Loading
       </div>
     )
   }
-  const curSlide = props.curSlide;
+  useEffect(() => {
+    props.getSlide(props.id);
+  }, []);
+
+  const [audio, setAudio] = useState(null);
+  const [curSlide, setCurSlide] = useState({});
+
+  useEffect(() => {
+    getAudioFromStorage('note', props.id).then((result) => {
+      setAudio(window.URL.createObjectURL(result));
+    })
+    setCurSlide(props.slide);
+  }, [props.slide])
+
+  const scriptOnBlur = (editedScript) => {
+    const editedCurSlide = {
+      ...curSlide,
+      script: editedScript,
+    }
+    props.editSlide(editedCurSlide.id,editedCurSlide)
+    props.getSlide(props.id);
+  }
+  const noteOnBlur = (editedNote) => {
+    const editedCurSlide = {
+      ...curSlide,
+      note: editedNote,
+    }
+    props.editSlide(editedCurSlide.id,editedCurSlide)
+    props.getSlide(props.id);
+  }
   return (
     <Body>
       <TitleText>
         {curSlide.title}
       </TitleText>
       <Image src={curSlide.slide} />
+      {audio ? 
+      <Player url={audio} /> : "loading mp3"}
       <TitleText>
         스크립트
       </TitleText>
-      <NormalText>
-        {curSlide.script}
-      </NormalText>
+      <ContentBoard input={curSlide.script} title="스크립트" onBlur={scriptOnBlur} />
       <TitleText>
         노트
       </TitleText>
-      <ContentBoard input={curSlide.script} />
+      <ContentBoard input={curSlide.note} title="노트" onBlur={noteOnBlur} />
       <TitleText>
         태그
       </TitleText>
@@ -45,4 +77,10 @@ const MainBoard = (props) => {
   );
 }
 
-export default MainBoard;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    slide: state.slides[ownProps.id],
+  };
+};
+
+export default connect(mapStateToProps, { getSlide, editSlide })(MainBoard);

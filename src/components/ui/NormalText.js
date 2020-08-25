@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 const NormalText = styled.div`
-  margin: 24px 0;
+  margin: 0 auto;
   width: 805px;
   font-size: 16px;
   font-weight: 500;
@@ -11,6 +11,7 @@ const NormalText = styled.div`
   letter-spacing: normal;
   text-align: left;
   color: #b3b3b3;
+  cursor: pointer;
   ${(props) =>
     props.isClicked &&
     css`

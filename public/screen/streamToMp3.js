@@ -29,10 +29,11 @@ function getScripts() {
         const blob = e.data;
         const file = new File([blob], 'temp.mp3');
         const frm = new FormData();
+        console.log(blob)
         frm.append('audio', file);
         waffle.post('/api/stt', frm, config).then((res) => {
           worker.removeEventListener('message', post)
-          resolve(res.data);
+          resolve({...res.data, audioBlob: blob});
         });
       });
       worker.postMessage({ recBuffers, recLength, sampleRate: context.sampleRate });
