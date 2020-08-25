@@ -149,3 +149,32 @@ export const getAudioFromStorage = (noteName, index) => {
     }
   });
 };
+
+export const getStartTime = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      const key = "currentTime"
+      chrome.storage.local.get(key, (obj) => {
+        if (obj[key] === null) resolve(false)
+        resolve(obj[key]);
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export const setStartTime = (currentTime) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const data = {};
+      const key = "currentTime"
+      data[key] = currentTime
+      chrome.storage.local.set(data, (obj) => {
+        console.log("state save")
+      })
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

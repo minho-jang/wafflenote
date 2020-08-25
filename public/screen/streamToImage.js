@@ -1,5 +1,5 @@
 import waffle from '../apis/waffle.js';
-import { getOneSlideFromStorage, setSlideToStorage, setAudioToStorage, getAudioFromStorage } from '../apis/storage.js';
+import { getOneSlideFromStorage, setSlideToStorage, setAudioToStorage, setStartTime } from '../apis/storage.js';
 import { getScripts } from './streamToMp3.js';
 
 const captureImage = (stream) => {
@@ -24,6 +24,7 @@ const captureImage = (stream) => {
           const prevBlob = dataURItoBlob(prev);
           prev = curr;
           const curTime = new Date();
+          setStartTime(curTime.toUTCString());
           if (currBlob && prevBlob) {
             const fd = new FormData();
             fd.append('frameImg', prevBlob, 'image1.png');
