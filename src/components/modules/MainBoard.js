@@ -58,6 +58,9 @@ const MainBoard = (props) => {
     <Body>
       <TitleText>
         {curSlide.title}
+        {curSlide.endTimeInfo !== null ?
+          " " + curSlide.startTimeInfo + " ~ " + curSlide.endTimeInfo : 
+          " " +  curSlide.startTimeInfo + " ~"}
       </TitleText>
       <Image src={curSlide.slide} />
       {audio ? 
