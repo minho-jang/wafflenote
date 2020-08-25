@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { getState } from '../../apis/storage';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { getState, getStartTime } from "../../apis/storage";
 
-import CaptureButton from './CaptureButton';
-import StopButton from './StopButton';
-import { getLastCapturedImage } from '../../apis/storage';
-import waffleLogo from '../../static/waffleLogo.png';
+import CaptureButton from "./CaptureButton";
+import StopButton from "./StopButton";
+import { getLastCapturedImage } from "../../apis/storage";
+import waffleLogo from "../../static/waffleLogo.png";
 
 const Button = styled(Link)`
   margin-top: 12px;
@@ -28,7 +28,8 @@ const Button = styled(Link)`
 `;
 
 const InfoTrue = styled.div`
-  margin-top:50px;
+  margin-top: 50px;
+  margin-left: 50px;
   width: 171px;
   height: 18px;
   font-size: 12px;
@@ -42,8 +43,8 @@ const InfoTrue = styled.div`
 `;
 
 const InfoFalse = styled.div`
-  margin-top:10px;
-  margin-left:50px;
+  margin-top: 10px;
+  margin-left: 50px;
   width: 171px;
   height: 18px;
   font-size: 12px;
@@ -91,36 +92,57 @@ const ImageFalse = styled.img`
 `;
 
 const Time = styled.div`
-margin-top:10px;
-margin-left:120px;
-width: 30px;
-height: 18px;
-font-family: NotoSansKR;
-font-size: 12px;
-font-weight: normal;
-font-stretch: normal;
-font-style: normal;
-line-height: 1.5;
-letter-spacing: normal;
-text-align: center;
-color: #ffffff;
+  margin-top: 10px;
+  margin-left: 110px;
+  width: 30px;
+  height: 18px;
+  font-family: NotoSansKR;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
 `;
 
 const Popup = () => {
   const [curSlide, setCurSlide] = useState({});
   const [curState, setCurState] = useState(false);
+  const [curTime, setCurTime] = useState("");
 
   useEffect(() => {
     setImage();
     setInterval(async () => {
       setImage();
-    }, 2000);
+    }, 1000);
   }, []);
 
   const setImage = async () => {
-    const response = await getLastCapturedImage('note');
+    const response = await getLastCapturedImage("note");
+    const startTime = await getStartTime();
 
     setCurSlide(response);
+    setCurTime(dateDiffToString(new Date(), new Date(startTime)));
+  };
+
+  const dateDiffToString = (a, b) => {
+    let diff = Math.abs(a - b);
+
+    let ms = diff % 1000;
+    diff = (diff - ms) / 1000;
+    let ss = diff % 60;
+    diff = (diff - ss) / 60;
+    let mm = diff % 60;
+    diff = (diff - mm) / 60;
+    let hh = diff % 24;
+
+    if (ss < 10) ss = "0" + ss;
+    if (mm < 10) mm = "0" + mm;
+    if (hh < 10) hh = "0" + hh;
+
+    return hh + ":" + mm + ":" + ss;
   };
 
   getState().then((state) => {
@@ -135,7 +157,7 @@ const Popup = () => {
         {curSlide.id}
         <InfoTrue>현재 슬라이드</InfoTrue>
         <ImageTrue src={curSlide.slide} />
-        <Time> 00:00 </Time>
+        <Time> {curTime} </Time>
         <StopButton />
         <Button to="/notes/1" target="_blank">
           요약중인 노트보기
