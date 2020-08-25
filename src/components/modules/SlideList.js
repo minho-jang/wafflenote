@@ -69,7 +69,7 @@ const SlideList = (props) => {
             <SlideTitle>{item.title}</SlideTitle>
             <div>
               <span>{item.endTimeInfo !== null ?
-                item.startTimeInfo + " ~ " + item.endTimeInfo : 
+                item.startTimeInfo + " ~ " + item.endTimeInfo + " ": 
                 item.startTimeInfo + " ~ "}</span>
               <span>#keyword</span>
             </div>
