@@ -23,7 +23,7 @@ const captureImage = (stream) => {
           const currBlob = dataURItoBlob(curr);
           const prevBlob = dataURItoBlob(prev);
           prev = curr;
-
+          const curTime = new Date().toUTCString();
           if (currBlob && prevBlob) {
             const fd = new FormData();
             fd.append('frameImg', prevBlob, 'image1.png');
@@ -40,10 +40,10 @@ const captureImage = (stream) => {
               
               const prevSlide = await getOneSlideFromStorage('note', id-1);
               prevSlide.script = script.transcription
-              console.log(script)
+              prevSlide.endTimeInfo = curTime
+              console.log(prevSlide)
               await setAudioToStorage('note', id-1, script.audioBlob)
-              const as = await getAudioFromStorage('note', id-1);
-              console.log(as)
+              
               setSlideToStorage('note', id-1, prevSlide);
               
               const slide = {
@@ -53,6 +53,8 @@ const captureImage = (stream) => {
                 script: null,
                 note: null,
                 tags: null,
+                startTimeInfo: curTime,
+                endTimeInfo: null,
               }
               chrome.storage.local.set({ lastIndex: id });
               setSlideToStorage('note', id++, slide);
@@ -65,6 +67,8 @@ const captureImage = (stream) => {
               script: null,
               note: null,
               tags: null,
+              startTimeInfo: curTime,
+              endTimeInfo: null,
             }
             chrome.storage.local.set({ lastIndex: id });
             setSlideToStorage('note', id++, slide);
