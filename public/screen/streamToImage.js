@@ -15,7 +15,7 @@ const captureImage = (stream) => {
       let curr;
       let prev;
       let id = 1;
-
+      let startTime = new Date();
       const timerId = setInterval(async () => {
         try {
           ctx.drawImage(this, 0, 0);
@@ -23,7 +23,7 @@ const captureImage = (stream) => {
           const currBlob = dataURItoBlob(curr);
           const prevBlob = dataURItoBlob(prev);
           prev = curr;
-          const curTime = new Date().toUTCString();
+          const curTime = new Date();
           if (currBlob && prevBlob) {
             const fd = new FormData();
             fd.append('frameImg', prevBlob, 'image1.png');
@@ -33,14 +33,15 @@ const captureImage = (stream) => {
                 'Content-Type': 'multipart/form-data',
               },
             });
-            
+
+            const diffTime = dateDiffToString(startTime, curTime).toString()
             if (response.data.result === 'True') {
               const script = await getScripts();
               if (script.transcription === '') return;
               
               const prevSlide = await getOneSlideFromStorage('note', id-1);
               prevSlide.script = script.transcription
-              prevSlide.endTimeInfo = curTime
+              prevSlide.endTimeInfo = diffTime
               console.log(prevSlide)
               await setAudioToStorage('note', id-1, script.audioBlob)
               
@@ -53,7 +54,7 @@ const captureImage = (stream) => {
                 script: null,
                 note: null,
                 tags: null,
-                startTimeInfo: curTime,
+                startTimeInfo: diffTime,
                 endTimeInfo: null,
               }
               chrome.storage.local.set({ lastIndex: id });
@@ -67,7 +68,7 @@ const captureImage = (stream) => {
               script: null,
               note: null,
               tags: null,
-              startTimeInfo: curTime,
+              startTimeInfo: "0:00",
               endTimeInfo: null,
             }
             chrome.storage.local.set({ lastIndex: id });
@@ -103,6 +104,22 @@ function dataURItoBlob(dataURI) {
   }
 
   return new Blob([ia], { type: mimeString });
+}
+
+function dateDiffToString(a, b){
+
+  let diff = Math.abs(a - b);
+
+  let ms = diff % 1000;
+  diff = (diff - ms) / 1000
+  let ss = diff % 60;
+  diff = (diff - ss) / 60
+  let mm = diff % 60;
+  diff = (diff - mm) / 60
+  let hh = diff % 24;
+  if (hh === 0) return mm+":"+ss; 
+  return hh+":"+mm+":"+ss;
+
 }
 
 export { captureImage };
