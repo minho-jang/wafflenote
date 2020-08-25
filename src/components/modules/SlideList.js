@@ -59,9 +59,6 @@ const SlideScript = styled.div`
 const SlideList = (props) => {
   useEffect(() => {
     props.getSlides();
-    setInterval(() => {
-      props.getSlides();
-    }, 3000)
   }, []);
   const renderedList = (arr) => arr.map((item, index) => {
     return (

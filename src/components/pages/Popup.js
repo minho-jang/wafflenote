@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { getState } from "../../apis/storage";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import { getState } from '../../apis/storage';
 
-import CaptureButton from "./CaptureButton";
-import StopButton from "./StopButton";
-import { getLastCapturedImage } from "../../apis/storage";
-import waffleLogo from "../../static/waffleLogo.png";
+import CaptureButton from './CaptureButton';
+import StopButton from './StopButton';
+import { getLastCapturedImage } from '../../apis/storage';
+import waffleLogo from '../../static/waffleLogo.png';
 
 const Button = styled(Link)`
   margin-top: 12px;
@@ -19,24 +19,18 @@ const Button = styled(Link)`
   border: 0px;
   outline: 0px;
   text-align: center;
-  font-family: NotoSansKR;
   font-size: 14px;
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
   line-height: 30px;
   color: #ffbc3e;
-  &:hover: {
-    color: #ffbc3e;
-  }
 `;
 
 const InfoTrue = styled.div`
   margin-top:50px;
-  margin-left:px
   width: 171px;
   height: 18px;
-  font-family: NotoSansKR;
   font-size: 12px;
   font-weight: normal;
   font-stretch: normal;
@@ -49,10 +43,9 @@ const InfoTrue = styled.div`
 
 const InfoFalse = styled.div`
   margin-top:10px;
-  margin-left:50px
+  margin-left:50px;
   width: 171px;
   height: 18px;
-  font-family: NotoSansKR;
   font-size: 12px;
   font-weight: normal;
   font-stretch: normal;
@@ -99,7 +92,7 @@ const ImageFalse = styled.img`
 
 const Time = styled.div`
 margin-top:10px;
-margin-left:120px
+margin-left:120px;
 width: 30px;
 height: 18px;
 font-family: NotoSansKR;
@@ -125,7 +118,7 @@ const Popup = () => {
   }, []);
 
   const setImage = async () => {
-    const response = await getLastCapturedImage("note");
+    const response = await getLastCapturedImage('note');
 
     setCurSlide(response);
   };
