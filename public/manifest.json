@@ -19,7 +19,11 @@
     "<all_urls>",
     "unlimitedStorage"
   ],
-  "icons": {},
+  "icons": {
+    "16": "WaffleLogo.png",
+    "48": "WaffleLogo.png",
+    "128": "WaffleLogo.png"
+  },
   "browser_action": {
     "default_icon": "WaffleLogo.png",
     "default_popup": "popup.html"
