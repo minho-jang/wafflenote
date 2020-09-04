@@ -10,6 +10,7 @@ const cancelScreenSharing = () => {
     currentStream.getTracks().forEach(track => {
       console.log(track)
       track.stop();
+      setState(false);
     })
   }
 };
