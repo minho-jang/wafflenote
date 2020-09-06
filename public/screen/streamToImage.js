@@ -28,7 +28,6 @@ const captureImage = (stream) => {
           curr = canvas.toDataURL();
           const currBlob = dataURItoBlob(curr);
           const prevBlob = dataURItoBlob(prev);
-          prev = curr;
           const curTime = new Date();
           if (currBlob && prevBlob) {
             const fd = new FormData();
@@ -44,41 +43,13 @@ const captureImage = (stream) => {
             if (response.data.result === "True") {
               const script = await getScripts();
               if (script.transcription === "") return;
-
-              const prevSlide = await getOneSlideFromStorage("note", id - 1);
-              prevSlide.script = script.transcription;
-              prevSlide.endTimeInfo = diffTime;
-              console.log(prevSlide);
-              await setAudioToStorage("note", id - 1, script.audioBlob);
-
-              setSlideToStorage("note", id - 1, prevSlide);
-
-              const slide = {
-                title: `Slide ${id}`,
-                id: id,
-                slide: curr,
-                script: null,
-                note: null,
-                tags: null,
-                startTimeInfo: diffTime,
-                endTimeInfo: null,
-              };
-              chrome.storage.local.set({ lastIndex: id });
-              setSlideToStorage("note", id++, slide);
+              await storePrevSlide(id-1, diffTime, script);
+              await storeCurrSlide(id++, diffTime, curr);
+              prev = curr;
             }
           } else {
-            const slide = {
-              title: `Slide ${id}`,
-              id,
-              slide: curr,
-              script: null,
-              note: null,
-              tags: null,
-              startTimeInfo: "0:00",
-              endTimeInfo: null,
-            };
-            chrome.storage.local.set({ lastIndex: id });
-            setSlideToStorage("note", id++, slide);
+            await storeCurrSlide(id++, "00:00", curr);
+            prev = curr;
           }
         } catch (error) {
           console.log(error);
@@ -92,6 +63,37 @@ const captureImage = (stream) => {
   video.muted = true;
   video.play();
 };
+
+async function storeCurrSlide(id, startTime, currImage) {
+  try{
+    const slide = {
+      title: `Slide ${id}`,
+      id: id,
+      slide: currImage,
+      script: null,
+      note: null,
+      tags: null,
+      startTimeInfo: startTime,
+      endTimeInfo: null,
+    };
+    chrome.storage.local.set({ lastIndex: id });
+    await setSlideToStorage("note", id, slide);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function storePrevSlide(id, endTime, script) {
+  try {
+    const prevSlide = await getOneSlideFromStorage("note", id);
+    prevSlide.script = script.transcription;
+    prevSlide.endTimeInfo = endTime;
+    await setAudioToStorage("note", id, script.audioBlob);
+    await setSlideToStorage("note", id, prevSlide);
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 function dataURItoBlob(dataURI) {
   if (!dataURI) return null;

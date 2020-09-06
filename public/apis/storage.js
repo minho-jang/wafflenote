@@ -32,6 +32,7 @@ export const setSlideToStorage = (noteName, index, obj) => {
   return new Promise((resolve, reject) => {
     if (key != null && index != null) {
       chrome.storage.local.set(data, () => {
+        resolve(true);
         console.log('save');
       });
     }
