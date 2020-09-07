@@ -38,6 +38,18 @@ def process_image():
         amin = arr.min()
         return (arr - amin) * 255 / rng
 
+    def run_sift(img0, img1):
+        sift = cv2.xfeatures2d.SIFT_create()
+        kp0, des0 = sift.detectAndCompute(img0, None)
+        kp1, des1 = sift.detectAndCompute(img1, None)
+        bf = cv2.BFMatcher()
+        hit = 0
+        matches = bf.knnMatch(des0, des1, k=2)
+        for m, n in matches:
+            if m.distance < 0.3 * n.distance:
+                hit += 1
+        return hit
+
     # Get data. Data is string about integer array for image.
     data = request.get_json()
 
@@ -71,18 +83,23 @@ def process_image():
         image0 = to_grayscale(img0.astype(float))
         image1 = to_grayscale(img1.astype(float))
 
+        # Calculation Norm1
         n_m, n_0 = compare_images(image0, image1)
         print("Manhattan norm:", n_m, "/ per pixel:", n_m / image0.size)
         # print("Zero norm:", n_0, "/ per pixel:", n_0*1.0/image0.size)
+
+        # Pattern matching algorithm
+        same_feature = run_sift(img0, img1)
+        print("Pattern matching result:", same_feature)
 
         # cv2.imwrite('./images/img0.png', img0)
         # cv2.imwrite('./images/img1.png', img1)
 
         result = "False"
-        if n_m / image0.size > 18:
+        if n_m / image0.size > 25 and same_feature < 1718 :
             result = "True"
-
         return result
+        # return str(n_m/image0.size)
     except Exception:
         print(traceback.print_exc())
         abort(400, 'Image process error')
