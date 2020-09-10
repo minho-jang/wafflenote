@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, jsonify
 from my_konlpy.keyword_extraction import cleaning_text, text_analysis, remove_stopwords_in_words
 from my_konlpy.stopword import get_stopwords
