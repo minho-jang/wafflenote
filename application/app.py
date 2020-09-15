@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify
-import text_analysis_beta.keyword_extraction as keyword_extraction
-import text_analysis_beta.summarization as summarize
+from text_analysis_beta.keyword_extraction import cleaning_text, text_analysis
+from text_analysis_beta.summarization import summarize
 
 app = Flask(__name__)
 
@@ -16,8 +16,8 @@ def keyword_extraction():
     data = request.get_json()
     text = data['text']
 
-    text = keyword_extraction.cleaning_text(text)            # 텍스트 전처리
-    keywords = keyword_extraction.text_analysis(text)        # 빈도수 기반 단어 리스트
+    text = cleaning_text(text)            # 텍스트 전처리
+    keywords = text_analysis(text)        # 빈도수 기반 단어 리스트
 
     return jsonify({
         'keywords': keywords
@@ -33,7 +33,7 @@ def summarization():
     except KeyError:
         num_summaries = None
 
-    summary = summarize.summarize(text, num_summaries)
+    summary = summarize(text, num_summaries)
 
     return jsonify({
         'summary': summary
