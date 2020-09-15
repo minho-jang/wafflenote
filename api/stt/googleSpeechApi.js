@@ -4,6 +4,8 @@ const path = require("path");
 
 const router = express.Router();
 
+const TAG = "[googleSpeechApi.js] ";
+
 // multer setting
 const speechUpload = multer({
 	storage: multer.memoryStorage(),
@@ -23,7 +25,7 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 		});
 		return;
 	}  
-	console.log('[googleSpeechApi.js]: recorded audio info from client...');
+	console.log(TAG + 'recorded audio info from client...');
 	console.log(req.file);
 
 	// Google Speech API 호출로 음성파일 전달.
@@ -64,14 +66,14 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 					reject();
 				})
 				.on('data', (data) => {
-					console.log('[googleSpeechApi.js]: traslation interim result');
+					console.log(TAG + 'traslation interim result');
 					console.log(data.results[0]);
 					const trans = data.results[0].alternatives[0].transcript;
 					transcription = transcription.concat(trans);
 				})
 				.on('end', () => {
 					// 해당 오디오 데이터에 대한 STT가 완료된 후에 resolve하여 클라이언트에게 응답한다.
-					console.log('[googleSpeechApi.js]: traslation end');
+					console.log(TAG + 'traslation end');
 					resolve(transcription);
 				});
 
@@ -88,7 +90,7 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 			message: "Speech-to-Text complete",
 		});
 	}).catch((err) => {
-		console.log('[googleSpeechApi.js]: error occured');
+		console.log(TAG + 'error occured');
 		console.error(err);
 		res.status(400).json({
 			message: "Speech-to-Text error",

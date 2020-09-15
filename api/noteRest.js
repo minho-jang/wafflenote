@@ -1,10 +1,6 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 
 const router = express.Router();
-
-// For parsing application/json
-router.use(bodyParser.json());
 
 // GET /note
 router.get("/", (req, res, next) => {
