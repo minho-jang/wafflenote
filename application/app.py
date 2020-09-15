@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from flask import Flask, request, jsonify
-from my_konlpy.keyword_extraction import cleaning_text, text_analysis, remove_stopwords_in_words
-from my_konlpy.stopword import get_stopwords
+import text_analysis_beta.keyword_extraction as keyword_extraction
+import text_analysis_beta.summarization as summarize
 
 app = Flask(__name__)
 
@@ -17,14 +16,27 @@ def keyword_extraction():
     data = request.get_json()
     text = data['text']
 
-    text = cleaning_text(text)
-    keywords = text_analysis(text)   # 빈도수 기반 단어 리스트
-    keywords = [k[0] for k in keywords]   # 리스트 속 튜플 ('단어', 빈도수)에서 빈도수를 제외한 단어만 리스트로 만듦
-    keywords = remove_stopwords_in_words(keywords, get_stopwords())   # 불용어. 쓸데 없는 단어 제거
-    print('keywords : ', keywords)
+    text = keyword_extraction.cleaning_text(text)            # 텍스트 전처리
+    keywords = keyword_extraction.text_analysis(text)        # 빈도수 기반 단어 리스트
 
     return jsonify({
-        'keywords': keywords[:10]
+        'keywords': keywords
+    })
+
+
+@app.route('/summarization', methods=['POST'])
+def summarization():
+    data = request.get_json()
+    text = data['text']
+    try:
+        num_summaries = data['num']
+    except KeyError:
+        num_summaries = None
+
+    summary = summarize.summarize(text, num_summaries)
+
+    return jsonify({
+        'summary': summary
     })
 
 

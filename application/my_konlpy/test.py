@@ -1,7 +1,4 @@
 from keyword_extraction import load_data, text_analysis
-from stopword import remove_stopwords_in_words, get_stopwords
-
-stopwords = get_stopwords()
 
 # TEST 1
 # result1_many = remove_stopwords_in_words(word_list1, stopwords)
@@ -27,7 +24,8 @@ stopwords = get_stopwords()
 # TEST 5
 text5 = load_data('../data/test5_chunk.txt')
 result5 = text_analysis(text5)
+print(result5)
 word_list5 = [x[0] for x in result5]
 print(word_list5)
-result5_filtered = remove_stopwords_in_words(word_list5, stopwords)
-print(result5_filtered)
+# result5_filtered = remove_stopwords_in_words(word_list5, stopwords)
+# print(result5_filtered)

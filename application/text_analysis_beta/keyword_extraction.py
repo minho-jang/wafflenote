@@ -24,18 +24,6 @@ def get_common_word_in_three_list(list1, list2, list3):
     return list(result_set)
 
 
-# deprecated. 위 방법이 더 효과 좋음
-# def get_common_word_in_three_list(list1, list2, list3):
-#     s1 = set(list1)
-#     s2 = set(list2)
-#     s3 = set(list3)
-#
-#     tmp = s1.intersection(s2)
-#     result = tmp.intersection(s3)
-#
-#     return list(result)
-
-
 def list_to_file(filename, lst):
     with open(filename, 'w') as f:
         for item in lst:
@@ -148,5 +136,4 @@ def text_analysis(text):
     nouns = post_process(tokens)
     count = text_count(nouns)
     return count
-
 # <<< 텍스트 분석 <<<
