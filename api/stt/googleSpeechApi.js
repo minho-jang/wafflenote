@@ -31,7 +31,7 @@ router.post("/", speechUpload.single("audio"), (req, res, next) => {
 	// Google Speech API 호출로 음성파일 전달.
 	const encoding = 'MP3';
 	const sampleRateHertz = 48000;
-	const languageCode = 'ko';
+	const languageCode = 'ko-KR';
 
 	// IIFE. 함수를 선언하고 바로 사용
 	(async function streamingRecognize(
