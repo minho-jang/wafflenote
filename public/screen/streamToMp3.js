@@ -26,6 +26,7 @@ function getScripts() {
   return new Promise((resolve, reject) => {
     try {
       worker.addEventListener('message', function post(e) {
+        console.log(e)
         const blob = e.data;
         const file = new File([blob], 'temp.mp3');
         const frm = new FormData();
@@ -36,9 +37,12 @@ function getScripts() {
           resolve({...res.data, audioBlob: blob});
         });
       });
+      console.log("Start encode")
       worker.postMessage({ recBuffers, recLength, sampleRate: context.sampleRate });
+      console.log("Requested to Worker")
       clearRecording();
     } catch (error) {
+      console.log(error)
       reject(error);
     }
   });
@@ -63,6 +67,7 @@ function init(stream) {
 }
 
 function onended() {
+  clearRecording()
   source.disconnect(node);
   node.disconnect(context.destination);
   worker.terminate();
