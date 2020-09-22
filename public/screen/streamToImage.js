@@ -7,6 +7,57 @@ import {
 } from "../apis/storage.js";
 import { getScripts } from "./streamToMp3.js";
 
+let currImage;
+let prevImage;
+let id;
+let isPlaying;
+
+function stopCaptureImage() {
+  isPlaying = false;
+}
+
+async function compareImage(video, canvas, ctx, startTime){
+  try {
+    if (!isPlaying) return;
+    ctx.drawImage(video, 0, 0);
+    currImage = canvas.toDataURL();
+
+    const currBlob = dataURItoBlob(currImage);
+    const prevBlob = dataURItoBlob(prevImage);
+
+    const curTime = new Date();
+    if (currBlob && prevBlob) {
+      const fd = new FormData();
+      fd.append("frameImg", prevBlob, "image1.png");
+      fd.append("frameImg", currBlob, "image2.png");
+      const response = await waffle.post("/api/frame", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const diffTime = dateDiffToString(startTime, curTime).toString();
+      if (response.data.result === "True") {
+        console.log("changed!!")
+        const script = await getScripts();
+
+        console.log(script.data);
+        if (script.transcription === "") return;
+        await storePrevSlide(id-1, diffTime, script);
+        await storeCurrSlide(id++, diffTime, currImage);
+        prevImage = currImage;
+      }
+    } else {
+      await storeCurrSlide(id++, "00:00", currImage);
+      prevImage = currImage;
+    }
+    setTimeout(() => {
+      compareImage(video, canvas, ctx, startTime)
+    }, 1000)
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const captureImage = (stream) => {
   const video = document.createElement("video");
   video.addEventListener(
@@ -17,45 +68,13 @@ const captureImage = (stream) => {
       canvas.height = window.screen.height;
       const ctx = canvas.getContext("2d");
 
-      let curr;
-      let prev;
-      let id = 1;
+      currImage = null;
+      prevImage = null;
+      id = 1;
+      isPlaying = true;
       let startTime = new Date();
       setStartTime(startTime.toUTCString());
-      const timerId = setInterval(async () => {
-        try {
-          ctx.drawImage(this, 0, 0);
-          curr = canvas.toDataURL();
-          const currBlob = dataURItoBlob(curr);
-          const prevBlob = dataURItoBlob(prev);
-          const curTime = new Date();
-          if (currBlob && prevBlob) {
-            const fd = new FormData();
-            fd.append("frameImg", prevBlob, "image1.png");
-            fd.append("frameImg", currBlob, "image2.png");
-            const response = await waffle.post("/api/frame", fd, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-
-            const diffTime = dateDiffToString(startTime, curTime).toString();
-            if (response.data.result === "True") {
-              const script = await getScripts();
-              if (script.transcription === "") return;
-              await storePrevSlide(id-1, diffTime, script);
-              await storeCurrSlide(id++, diffTime, curr);
-              prev = curr;
-            }
-          } else {
-            await storeCurrSlide(id++, "00:00", curr);
-            prev = curr;
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }, 5000);
-      chrome.storage.local.set({ timerId });
+      compareImage(video, canvas, ctx, startTime);
     },
     false
   );
@@ -129,4 +148,4 @@ function dateDiffToString(a, b) {
   return hh + ":" + mm + ":" + ss;
 }
 
-export { captureImage };
+export { captureImage, stopCaptureImage };
