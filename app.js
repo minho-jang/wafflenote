@@ -1,5 +1,5 @@
 // ENV
-require('dotenv').config();
+require('dotenv').config({path: __dirname + '/.env'})
 
 // Dependencies
 const express = require("express");
@@ -24,8 +24,7 @@ const opts = {
   sslCA:[fs.readFileSync(process.env.CA_PATH)],
   useNewUrlParser: true
 };
-const MONGO_URI = fs.readFileSync(process.env.MONGO_URI_PATH);
-db(MONGO_URI, opts);
+db(process.env.MONGO_URI, opts);
 
 // Connect to MongoDB (Local)
 // db("mongodb://localhost:27017/wafflenote");

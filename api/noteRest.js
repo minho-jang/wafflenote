@@ -29,7 +29,7 @@ router.put("/:noteid", (req, res, next) => {
 // DELETE /note/:noteid
 router.delete("/:noteid", (req, res, next) => {
   const noteid = req.params.noteid;
-  Note.remove({ noteid })
+  Note.deleteOne({ noteid })
   .then(() => res.sendStatus(200))
   .catch(err => res.status(500).send(err))
 })
