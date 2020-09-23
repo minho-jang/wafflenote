@@ -1,10 +1,11 @@
 const express = require("express");
-const Note = require("./models/note");
+const Note = require("../models/note");
 
 const router = express.Router();
 
 // GET /note
 router.get("/", (req, res, next) => {
+  console.log("GET /note")
   Note.find()
   .then((notes) => res.send(notes))
   .catch(err => res.status(500).send(err));
