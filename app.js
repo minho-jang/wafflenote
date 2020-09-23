@@ -19,15 +19,15 @@ app.use(bodyParser.json());
 mongoose.Promise = global.Promise;
 
 // Connect to MongoDB
-// const opts = { 
-//   sslValidate: true,
-//   sslCA:[fs.readFileSync(process.env.CA_PATH)],
-//   useNewUrlParser: true
-// };
-// db(process.env.MONGO_URI, opts);
+const opts = { 
+  sslValidate: true,
+  sslCA:[fs.readFileSync(process.env.CA_PATH)],
+  useNewUrlParser: true
+};
+db(process.env.MONGO_URI, opts);
 
 // Connect to MongoDB (Local)
-db("mongodb://localhost:27017/wafflenote");
+// db("mongodb://localhost:27017/wafflenote");
 
 // Routes
 app.use("/api", require("./api/index"));
