@@ -67,13 +67,14 @@ def summarize(text, num_summaries):
                                     verbose=False)
     beta = 0.85  # PageRank의 decaying factor beta
     max_iter = 10
-    keywords, rank, graph = wordrank_extractor.extract(text, beta, max_iter, num_keywords=100)
-
-    stopwords = set.union(get_stopwords(), set(stopwords_ko))
-    vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)
-    # tokenizer = MaxScoreTokenizer(vocab_score)
-    tokenizer_mecab = Mecab()
     try:
+        keywords, rank, graph = wordrank_extractor.extract(text, beta, max_iter, num_keywords=100)
+
+        stopwords = set.union(get_stopwords(), set(stopwords_ko))
+        vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)
+        # tokenizer = MaxScoreTokenizer(vocab_score)
+        tokenizer_mecab = Mecab()
+
         sents = keysentence(vocab_score,
                             text,
                             tokenizer_mecab.nouns,  # tokenizer.tokenize
