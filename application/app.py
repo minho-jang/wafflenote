@@ -32,6 +32,8 @@ def summarization():
         num_summaries = data['num']
     except KeyError:
         default_num_summaries = (len(text.split('. '))) // 4
+        if default_num_summaries <= 0:
+            default_num_summaries = 2
         num_summaries = default_num_summaries
 
     try:
