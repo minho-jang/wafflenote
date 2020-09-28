@@ -31,9 +31,16 @@ def summarization():
     try:
         num_summaries = data['num']
     except KeyError:
-        num_summaries = None
+        default_num_summaries = (len(text.split('. '))) // 4
+        num_summaries = default_num_summaries
 
-    summary = summarize(text, num_summaries)
+    try:
+        summary = summarize(text, num_summaries)
+    except RuntimeError as e:
+        return jsonify({
+            'error': str(e),
+            'summary': text
+        })
 
     return jsonify({
         'summary': summary
