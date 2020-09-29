@@ -6,7 +6,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const fs = require('fs');
-const db = require('./db.js');
+const db = require('./db');
 
 const app = express();
 const port = process.env.NOTE_PORT || 3000;
@@ -31,6 +31,6 @@ db(process.env.MONGO_URI, opts);
 
 // Routes
 app.use("/api", require("./api/index"));
-app.use("/note", require("./routes/noteRest"))
+app.use("/note", require("./routes/noteRest"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));

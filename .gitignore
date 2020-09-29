@@ -8,3 +8,5 @@ test.js
 convention.js
 
 .DS_Store
+
+.env

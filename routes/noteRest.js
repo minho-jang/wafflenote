@@ -7,7 +7,22 @@ const router = express.Router();
 router.get("/", (req, res, next) => {
   console.log("GET /note");
   Note.find()
-  .then((notes) => res.send(notes))
+  .then((notes) => {
+    res.send(notes);
+  })
+  .catch(err => res.status(500).send(err));
+});
+
+// GET /note/:noteid
+router.get("/:noteid", (req, res, next) => {
+  console.log("GET /note/:noteid");
+  const noteid = req.params.noteid;
+  Note.find({ note_id: noteid })
+  .then((note) => {
+    console.log(note);
+    console.log(type(note));
+    res.send(note);
+  })
   .catch(err => res.status(500).send(err));
 });
 
@@ -16,7 +31,10 @@ router.post("/", (req, res, next) => {
   console.log("POST /note");
   const note = new Note(req.body);
   note.save()
-  .then(note => res.send(note))
+  .then(result => {
+    console.log(result);
+    res.send(result);
+  })
   .catch(err => res.status(500).send(err));
 });
 
