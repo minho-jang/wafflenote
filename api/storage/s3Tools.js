@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_AUTH_ID,
-  secretAccessKey: proces.env.AWS_AUTH_KEY
+  secretAccessKey: process.env.AWS_AUTH_KEY
 });
 
 const getBucketList = () => {

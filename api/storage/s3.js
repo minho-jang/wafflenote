@@ -8,7 +8,7 @@ const router = express.Router();
 const fileUpload = multer({
 	storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../tmp/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+      cb(null, __dirname + "/../tmp/");
     },
     filename: function (req, file, cb) {
       cb(null, `${Date.now()}_${file.originalname}`)  // filename = "[Timestamp]_[OriginName]"
@@ -42,7 +42,7 @@ router.post("/upload", fileUpload.single("file"), (req, res, next) => {
 		return;
   }
   
-  s3Tools.uploadFile(req.file.filename)
+  s3Tools.uploadFile(req.file.path)
   .then((location) => {
     res.send(location)
   })
