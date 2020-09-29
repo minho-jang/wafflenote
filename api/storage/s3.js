@@ -19,9 +19,17 @@ const fileUpload = multer({
 // GET /api/storage
 router.post("/", (req, res, next) => {
   console.log("GET /api/storage");
-  const result = s3Tools.getBucketList();
-  console.log(result);
-  res.send(result);
+  s3Tools.getBucketList()
+  .then((result) => {
+    console.log(result);
+    res.send(result);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(400).json({
+			error: err,
+		});
+  });
 })
 
 // POST /api/storage/upload
@@ -34,7 +42,16 @@ router.post("/upload", fileUpload.single("file"), (req, res, next) => {
 		return;
   }
   
-  s3Tools.uploadFile(req.file.filename);
+  s3Tools.uploadFile(req.file.filename)
+  .then((location) => {
+    res.send(location)
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(400).json({
+			error: err,
+		});
+  });
 })
 
 module.exports = router;
