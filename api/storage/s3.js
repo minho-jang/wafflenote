@@ -30,7 +30,7 @@ router.post("/", (req, res, next) => {
 			error: err,
 		});
   });
-})
+});
 
 // POST /api/storage/upload
 router.post("/upload", fileUpload.single("file"), (req, res, next) => {
@@ -43,8 +43,10 @@ router.post("/upload", fileUpload.single("file"), (req, res, next) => {
   }
   
   s3Tools.uploadFile(req.file.path)
-  .then((location) => {
-    res.send(location)
+  .then((key) => {
+    res.send({
+      path: key
+    })
   })
   .catch((err) => {
     console.log(err);
@@ -52,6 +54,6 @@ router.post("/upload", fileUpload.single("file"), (req, res, next) => {
 			error: err,
 		});
   });
-})
+});
 
 module.exports = router;

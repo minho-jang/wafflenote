@@ -50,7 +50,8 @@ const uploadFile = (filepath) => {
         reject(err);
       }
       console.log(`File uploaded successfully. ${data.Location}`);
-      resolve(data.Location);
+      
+      resolve(data.Key);
     });
   });
 }
