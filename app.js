@@ -32,5 +32,6 @@ db(process.env.MONGO_URI, opts);
 // Routes
 app.use("/api", require("./api/index"));
 app.use("/note", require("./routes/noteRest"));
+app.use("/slide", require("./routes/slideRest"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));

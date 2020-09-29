@@ -18,9 +18,8 @@ router.get("/:noteid", (req, res, next) => {
   console.log("GET /note/:noteid");
   const noteid = req.params.noteid;
   Note.find({ note_id: noteid })
-  .then((note) => {
-    console.log(note);
-    console.log(type(note));
+  .then((notes) => {
+    const note = notes.pop();
     res.send(note);
   })
   .catch(err => res.status(500).send(err));
@@ -32,7 +31,6 @@ router.post("/", (req, res, next) => {
   const note = new Note(req.body);
   note.save()
   .then(result => {
-    console.log(result);
     res.send(result);
   })
   .catch(err => res.status(500).send(err));
@@ -42,7 +40,7 @@ router.post("/", (req, res, next) => {
 router.put("/:noteid", (req, res, next) => {
   console.log("PUT /note/:noteid");
   const noteid = req.params.noteid;
-  Note.findOneAndUpdate({ noteid }, req.body, { new: true })
+  Note.findOneAndUpdate({ note_id: noteid }, req.body, { new: true })
   .then(note => res.send(note))
   .catch(err => res.status(500).send(err));
 })

@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var slideSchema = new Schema({
-  slide_id: mongoose.Schema.Types.ObjectId,
+const slideSchema = new Schema({
+  slide_id: String,
   title: String,
   thumbnail: String,
   audio: String,
@@ -10,4 +10,8 @@ var slideSchema = new Schema({
   keywords: [String]
 });
 
-module.exports = mongoose.model('slide', slideSchema);
+module.exports = {
+  slideSchema: slideSchema,
+  Slide: mongoose.model('slide', slideSchema)
+}
+
