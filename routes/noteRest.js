@@ -1,6 +1,7 @@
 const express = require("express");
-const Note = require("../models/note");
+const noteModel = require("../models/note");
 
+const Note = noteModel.Note;
 const router = express.Router();
 
 // GET /note

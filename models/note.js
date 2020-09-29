@@ -8,4 +8,7 @@ var noteSchema = new Schema({
   slide_list: [slideModel.slideSchema],
 });
 
-module.exports = mongoose.model('note', noteSchema);
+module.exports = {
+  noteSchema: noteSchema,
+  Note: mongoose.model('note', noteSchema)
+}
