@@ -1,9 +1,10 @@
 const express = require("express");
-const Note = require("../models/note");
+const noteModel = require("../models/note");
 const slideModel = require("../models/slide");
 const s3Tools = require("../api/storage/s3Tools");
 
 const Slide = slideModel.Slide;
+const Note = noteModel.Note;
 const router = express.Router();
 
 // GET /sldie/:noteid
