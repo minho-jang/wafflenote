@@ -17,7 +17,7 @@ const fileUpload = multer({
 });
 
 // GET /api/storage
-router.post("/", (req, res, next) => {
+router.get("/", (req, res, next) => {
   console.log("GET /api/storage");
   s3Tools.getBucketList()
   .then((result) => {
@@ -50,7 +50,7 @@ router.post("/upload", fileUpload.single("file"), (req, res, next) => {
   })
   .catch((err) => {
     console.log(err);
-    res.status(400).json({
+    res.status(err).json({
 			error: err,
 		});
   });
