@@ -7,7 +7,8 @@ const slideSchema = new Schema({
   thumbnail: String,
   audio: String,
   script: String,
-  keywords: [String]
+  keywords: [String],
+  memo: String
 });
 
 module.exports = {
