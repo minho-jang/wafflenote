@@ -77,9 +77,8 @@ const downloadFile = (key) => {
         reject(err);
       }
 
-      const filepath = __dirname + "../tmp/" + key;
+      const filepath = __dirname + "/../tmp/" + key;
       fs.writeFileSync(filepath, data.Body.toString());
-      console.log(data.Body.toString());
       resolve(filepath);
     });
   })
