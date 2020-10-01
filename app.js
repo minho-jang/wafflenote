@@ -11,6 +11,9 @@ const db = require('./db');
 const app = express();
 const port = process.env.NOTE_PORT || 3000;
 
+// public setting
+app.use('/public', express.static('public'));
+
 // Body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

@@ -7,6 +7,15 @@ const Slide = slideModel.Slide;
 const Note = noteModel.Note;
 const router = express.Router();
 
+const mime = {
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    wav: 'audio/wav',
+    mp3: 'audio/mpeg'
+};
+const fs = require("fs");
+const path = require("path");
+
 // GET /sldie/:noteid
 router.get("/:noteid", (req, res, next) => {
   console.log("GET /slide/:noteid");
@@ -43,14 +52,26 @@ router.get("/:noteid/:slideid/thumbnail", (req, res, next) => {
 
   Note.findOne(
     { note_id: req.params.noteid })
+  .select(
+    { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
   .then(doc => {
-    console.log(doc);
-    
-    s3Tools.downloadFile(doc.thumbnail)
-    .then((path) => {
-      console.log(path);
-      res.sendFile(path);
-    }).catch(err => res.status(500).send(err));
+    s3Tools.downloadFile(doc.slide_list[0].thumbnail)
+    .then((filepath) => {
+      const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
+      fs.readFile(filepath, function(err, data) {
+        if (err) {
+          res.set('Content-Type', 'text/plain');
+          res.status(404).end('Not found');
+        }
+
+        res.set('Content-type', type);
+        res.end(data);
+      });
+
+    }).catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 
   }).catch(err => res.status(500).send(err));
 });
@@ -64,12 +85,22 @@ router.get("/:noteid/:slideid/audio", (req, res, next) => {
   .select(
     { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
   .then(doc => {
-    console.log(doc);
     s3Tools.downloadFile(doc.slide_list[0].audio)
-    .then((path) => {
-      console.log(path);
-      res.sendFile(path);
-    }).catch(err => res.status(500).send(err));
+    .then((filepath) => {
+      const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
+      fs.readFile(filepath, function(err, data) {
+        if (err) {
+          res.set('Content-Type', 'text/plain');
+          res.status(404).end('Not Found');
+        }
+      
+        res.set('Content-type', type);
+        res.end(data);
+      });
+    }).catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
 
   }).catch(err => res.status(500).send(err));
 });
