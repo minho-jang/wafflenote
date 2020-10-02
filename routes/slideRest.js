@@ -16,42 +16,45 @@ const mime = {
 const fs = require("fs");
 const path = require("path");
 
-// GET /sldie/:noteid
+// GET /slide/:noteid
 router.get("/:noteid", (req, res, next) => {
   console.log("GET /slide/:noteid");
 
   Note.findOne(
     { note_id: req.params.noteid })
   .then((doc) => {
-    console.log(doc);
     res.send(doc.slide_list);
   })
-  .catch((err) => res.status(500).send(err));
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send(err)
+  });
 });
 
 // POST /slide/:noteid
 router.post("/:noteid", (req, res, next) => {
   console.log("POST /slide/:noteid");
   const newSlide = new Slide(req.body);
-  const noteid = req.params.noteid;
 
   Note.findOneAndUpdate(
-    {note_id: noteid}, 
+    {note_id: req.params.noteid}, 
     {$push: {slide_list: newSlide}}, 
     {new: true})
-  .then(result => {
-    console.log(result);
-    res.send(result);
+  .then(doc => {
+    res.send(doc);
   })
-  .catch(err => res.status(500).send(err));
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err)
+  });
 });
 
-// GET /slide/:noteid/:slideid/thumbnail
-router.get("/:noteid/:slideid/thumbnail", (req, res, next) => {
-  console.log("GET /slide/:noteid/:slideid/thumbnail");
+// GET /slide/:slideid/thumbnail
+router.get("/:slideid/thumbnail", (req, res, next) => {
+  console.log("GET /slide/:slideid/thumbnail");
 
   Note.findOne(
-    { note_id: req.params.noteid })
+    {"slide_list.slide_id": req.params.slideid })
   .select(
     { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
   .then(doc => {
@@ -73,15 +76,18 @@ router.get("/:noteid/:slideid/thumbnail", (req, res, next) => {
       res.status(500).send(err);
     });
 
-  }).catch(err => res.status(500).send(err));
+  }).catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
 });
 
-// GET /slide/:noteid/:slideid/audio
-router.get("/:noteid/:slideid/audio", (req, res, next) => {
-  console.log("GET /slide/:noteid/:slideid/audio");
+// GET /slide/:slideid/audio
+router.get("/:slideid/audio", (req, res, next) => {
+  console.log("GET /slide/:slideid/audio");
   
   Note.findOne(
-    { note_id: req.params.noteid })
+    { "slide_list.slide_id": req.params.slideid })
   .select(
     { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
   .then(doc => {
@@ -102,22 +108,46 @@ router.get("/:noteid/:slideid/audio", (req, res, next) => {
       res.status(500).send(err);
     });
 
-  }).catch(err => res.status(500).send(err));
+  }).catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
 });
 
-// DELETE /slide/:noteid/:slideid
-router.delete("/:noteid/:slideid", (req, res, next) => {
-  console.log("DELETE /slide/:noteid/:slideid");
+// POST /slide/:slideid/delete
+router.post("/:slideid/delete", (req, res, next) => {
+  console.log("POST /slide/:slideid/delete");
   
   Note.findOneAndUpdate(
-    { note_id: req.params.noteid },
-    {$pull: {slide_list: {slide_id: req.params.slideid}}})
-  .then((result) => {
-    console.log(result);
-    res.send(result);
+    {"slide_list.slide_id": req.params.slideid },
+    {$pull: {slide_list: {slide_id: req.params.slideid}}},
+    {new: true})
+  .then((doc) => {
+    res.send(doc);
   })
-  .catch(err => res.status(500).send(err))
-})
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
+
+// POST /slide/:slideid/replace
+router.post("/:slideid/replace", (req, res, next) => {
+  console.log("POST /slide/:slideid/replace");
+
+  Note.findOneAndUpdate(
+    {"slide_list.slide_id": req.params.slideid},
+    {$set: {"slide_list.$[elem]": req.body}},
+    {arrayFilters: [{"elem.slide_id": req.params.slideid}],
+    new: true})
+  .then((doc) => {
+    res.send(doc);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
 
 
 module.exports = router;
