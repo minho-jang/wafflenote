@@ -4,7 +4,7 @@ import styled from "styled-components";
 import SlideList from "../container/SlideList";
 import { getSlide } from "../../actions/slides";
 import Navbar from "../container/Navbar";
-import MainBoard from "../container/MainBoard";
+import ResultBoard from "../container/ResultBoard";
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,23 +12,17 @@ const Wrapper = styled.div`
   width: 1300px;
   margin: 30px auto;
 `;
-const Note = (props) => {
+const Result = (props) => {
 
   return (
     <React.Fragment>
       <Navbar />
       <Wrapper>
         <SlideList />
-        <MainBoard id={props.match.params.id} />
+        <ResultBoard/>
       </Wrapper>
     </React.Fragment>
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    slide: state.slides[ownProps.match.params.id],
-  };
-};
-
-export default connect(mapStateToProps, { getSlide })(Note);
+export default Result;

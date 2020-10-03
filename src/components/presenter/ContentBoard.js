@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NormalText from '../ui/NormalText';
+import NormalText from './NormalText';
 import styled from 'styled-components';
 import TextAreaAutosize from 'react-textarea-autosize';
 

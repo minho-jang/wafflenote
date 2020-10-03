@@ -53,9 +53,29 @@ const SlideScript = styled.div`
   -webkit-box-orient: vertical;
   word-wrap:break-word; 
   line-height: 1.2em;
-  height: 2.4em;
- 
+  height: 2.4em; 
 `
+
+const ResultButton = styled.div`
+  width: 336px;
+  height: 44px;
+  border-radius: 20px;
+  background-color: #fdeed0;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-align: center;
+  color: #fbb93a;
+  font-size: 20px;
+  padding-top: 10px;
+  a {
+    color: #fbb93a;
+  }
+  cursor: pointer;
+`
+
 const SlideList = (props) => {
   useEffect(() => {
     props.getSlides();
@@ -84,9 +104,14 @@ const SlideList = (props) => {
 
   return (
     <Wrapper>
-      <div className="ui divided items">
+      <div>
         {props.slides ? renderedList(props.slides) : ""}
       </div>
+      <ResultButton>
+        <Link to="result">
+          결과
+        </Link>
+      </ResultButton>
     </Wrapper>
   );
 };
