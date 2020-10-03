@@ -1,0 +1,41 @@
+body {
+  background-image: url("../../images/signin-bg.png");
+}
+
+.layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 600px;
+  background: white;
+  margin: -300px 0 0 -250px;
+  box-shadow: 5px 5px 5px 5px #fbb93a;
+}
+
+.img1 {
+  width: 150px;
+  margin: 40px 0 0 175px;
+}
+
+.img2 {
+  width: 300px;
+  margin: 20px 0 0 100px;
+}
+
+.google_btn {
+  margin: 40px 0 0 100px;
+}
+
+.info {
+  width: 300px;
+  height: 40px;
+  margin: 40px 0 0 100px;
+  font-size: 20px;
+}
+
+.signup_btn {
+  width: 300px;
+  height: 40px;
+  font-size: 20px;
+}
