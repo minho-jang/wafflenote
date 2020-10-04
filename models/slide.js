@@ -4,11 +4,14 @@ var Schema = mongoose.Schema;
 const slideSchema = new Schema({
   slide_id: String,
   title: String,
-  thumbnail: String,
+  originImagePath: String,
+  smallImage: String,
   audio: String,
   script: String,
-  keywords: [String],
-  memo: String
+  tags: [String],
+  memo: String,
+  startTime: String,
+  endTime: String,
 });
 
 module.exports = {

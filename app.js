@@ -25,7 +25,8 @@ mongoose.Promise = global.Promise;
 const opts = { 
   sslValidate: true,
   sslCA:[fs.readFileSync(process.env.CA_PATH)],
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useFindAndModify: false
 };
 db(process.env.MONGO_URI, opts);
 

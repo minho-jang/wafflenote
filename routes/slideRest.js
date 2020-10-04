@@ -16,12 +16,14 @@ const mime = {
 const fs = require("fs");
 const path = require("path");
 
-// GET /slide/:noteid
-router.get("/:noteid", (req, res, next) => {
-  console.log("GET /slide/:noteid");
+const mongoose = require("mongoose");
+var ObjectId = mongoose.Types.ObjectId;
 
-  Note.findOne(
-    { note_id: req.params.noteid })
+// GET /slide/all/:noteid
+router.get("/all/:noteid", (req, res, next) => {
+  console.log("GET /slide/all/:noteid");
+
+  Note.findById(req.params.noteid)
   .then((doc) => {
     res.send(doc.slide_list);
   })
@@ -31,13 +33,30 @@ router.get("/:noteid", (req, res, next) => {
   });
 });
 
+// GET /slide/:slideid
+router.get("/:slideid", (req, res, next) => {
+  console.log("GET /slide/:slideid");
+
+  const slideObjectId = new ObjectId(req.params.slideid);
+  Note.findOne(
+    {"slide_list._id": slideObjectId})
+  .select(
+    { slide_list: {$elemMatch: {_id: slideObjectId}} })
+  .then(doc => {
+    res.send(doc.slide_list[0]);
+  }).catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
+
 // POST /slide/:noteid
 router.post("/:noteid", (req, res, next) => {
   console.log("POST /slide/:noteid");
   const newSlide = new Slide(req.body);
 
   Note.findOneAndUpdate(
-    {note_id: req.params.noteid}, 
+    {_id: new ObjectId(req.params.noteid)}, 
     {$push: {slide_list: newSlide}}, 
     {new: true})
   .then(doc => {
@@ -49,16 +68,17 @@ router.post("/:noteid", (req, res, next) => {
   });
 });
 
-// GET /slide/:slideid/thumbnail
-router.get("/:slideid/thumbnail", (req, res, next) => {
-  console.log("GET /slide/:slideid/thumbnail");
+// GET /slide/:slideid/origin-image
+router.get("/:slideid/origin-image", (req, res, next) => {
+  console.log("GET /slide/:slideid/origin-image");
 
+  const slideObjectId = new ObjectId(req.params.slideid);
   Note.findOne(
-    {"slide_list.slide_id": req.params.slideid })
+    {"slide_list._id": slideObjectId})
   .select(
-    { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
+    { slide_list: {$elemMatch: {_id: slideObjectId}} })
   .then(doc => {
-    s3Tools.downloadFile(doc.slide_list[0].thumbnail)
+    s3Tools.downloadFile(doc.slide_list[0].originImagePath)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, function(err, data) {
@@ -86,12 +106,13 @@ router.get("/:slideid/thumbnail", (req, res, next) => {
 router.get("/:slideid/audio", (req, res, next) => {
   console.log("GET /slide/:slideid/audio");
   
+  const slideObjectId = new ObjectId(req.params.slideid);
   Note.findOne(
-    { "slide_list.slide_id": req.params.slideid })
+    { "slide_list._id": slideObjectId })
   .select(
-    { slide_list: {$elemMatch: {slide_id: req.params.slideid}} })
+    { slide_list: {$elemMatch: {_id: slideObjectId}} })
   .then(doc => {
-    s3Tools.downloadFile(doc.slide_list[0].audio)
+    s3Tools.downloadFile(doc.slide_list[0].audioPath)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, function(err, data) {
@@ -118,9 +139,10 @@ router.get("/:slideid/audio", (req, res, next) => {
 router.post("/:slideid/delete", (req, res, next) => {
   console.log("POST /slide/:slideid/delete");
   
+  const slideObjectId = new ObjectId(req.params.slideid);
   Note.findOneAndUpdate(
-    {"slide_list.slide_id": req.params.slideid },
-    {$pull: {slide_list: {slide_id: req.params.slideid}}},
+    {"slide_list._id": slideObjectId },
+    {$pull: {slide_list: {_id: slideObjectId}}},
     {new: true})
   .then((doc) => {
     res.send(doc);
@@ -135,10 +157,11 @@ router.post("/:slideid/delete", (req, res, next) => {
 router.post("/:slideid/replace", (req, res, next) => {
   console.log("POST /slide/:slideid/replace");
 
+  const slideObjectId = new ObjectId(req.params.slideid);
   Note.findOneAndUpdate(
-    {"slide_list.slide_id": req.params.slideid},
+    {"slide_list._id": slideObjectId},
     {$set: {"slide_list.$[elem]": req.body}},
-    {arrayFilters: [{"elem.slide_id": req.params.slideid}],
+    {arrayFilters: [{"elem._id": slideObjectId}],
     new: true})
   .then((doc) => {
     res.send(doc);
