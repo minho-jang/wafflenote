@@ -4,6 +4,9 @@ const noteModel = require("../models/note");
 const Note = noteModel.Note;
 const router = express.Router();
 
+const mongoose = require("mongoose");
+var ObjectId = mongoose.Types.ObjectId;
+
 // GET /note
 router.get("/", (req, res, next) => {
   console.log("GET /note");
@@ -17,42 +20,63 @@ router.get("/", (req, res, next) => {
 // GET /note/:noteid
 router.get("/:noteid", (req, res, next) => {
   console.log("GET /note/:noteid");
-  const noteid = req.params.noteid;
-  Note.find({ note_id: noteid })
-  .then((notes) => {
-    const note = notes.pop();
-    res.send(note);
+
+  const noteObjectId = new ObjectId(req.params.noteid);
+  Note.findById(req.params.noteid)
+  .then((doc) => {
+    res.send(doc);
   })
-  .catch(err => res.status(500).send(err));
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
 });
 
 // POST /note
 router.post("/", (req, res, next) => {
   console.log("POST /note");
+
   const note = new Note(req.body);
   note.save()
   .then(result => {
     res.send(result);
   })
-  .catch(err => res.status(500).send(err));
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
 });
 
-// PUT /note/:noteid
-router.put("/:noteid", (req, res, next) => {
-  console.log("PUT /note/:noteid");
-  const noteid = req.params.noteid;
-  Note.findOneAndUpdate({ note_id: noteid }, req.body, { new: true })
-  .then(note => res.send(note))
-  .catch(err => res.status(500).send(err));
-})
+// POST /note/:noteid/title
+router.post("/:noteid/title", (req, res, next) => {
+  console.log("POST /note/:noteid/title");
 
-// DELETE /note/:noteid
-router.delete("/:noteid", (req, res, next) => {
-  console.log("DELETE /note/:noteid");
-  const noteid = req.params.noteid;
-  Note.deleteOne({ noteid })
-  .then(() => res.sendStatus(200))
-  .catch(err => res.status(500).send(err))
-})
+  Note.findByIdAndUpdate(
+    req.params.noteid, 
+    {$set: {title: req.body.title}},
+    {new: true})
+  .then(doc => {
+    res.send(doc);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
+
+// POST /note/:noteid/delete
+router.post("/:noteid/delete", (req, res, next) => {
+  console.log("POST /note/:noteid/delete");
+
+  const noteObjectId = new ObjectId(req.params.noteid);
+  Note.deleteOne({_id: noteObjectId})
+  .then((result) => {
+    res.send(result);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
 
 module.exports = router;
