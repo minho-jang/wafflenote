@@ -81,11 +81,17 @@ router.get("/:slideid/origin-image", (req, res, next) => {
     s3Tools.downloadFile(doc.slide_list[0].originImagePath)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
-      fs.readFile(filepath, function(err, data) {
+      fs.readFile(filepath, (err, data) => {
         if (err) {
-          res.set('Content-Type', 'text/plain');
-          res.status(404).end('Not found');
+          res.status(500).send(err);
         }
+
+        // remove saved temporary file
+        fs.unlink(filepath, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
 
         res.set('Content-type', type);
         res.end(data);
@@ -112,14 +118,20 @@ router.get("/:slideid/audio", (req, res, next) => {
   .select(
     { slide_list: {$elemMatch: {_id: slideObjectId}} })
   .then(doc => {
-    s3Tools.downloadFile(doc.slide_list[0].audioPath)
+    s3Tools.downloadFile(doc.slide_list[0].audio)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
-      fs.readFile(filepath, function(err, data) {
+      fs.readFile(filepath, (err, data) => {
         if (err) {
-          res.set('Content-Type', 'text/plain');
-          res.status(404).end('Not Found');
+          res.status(500).send(err);
         }
+
+        // remove saved temporary file
+        fs.unlink(filepath, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
       
         res.set('Content-type', type);
         res.end(data);

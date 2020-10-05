@@ -6,6 +6,8 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_AUTH_KEY
 });
 
+const BUCKET_NAME = "wafflenote-testbucket";
+
 const getBucketList = () => {
   return new Promise((resolve, reject) => {
     s3.listBuckets(function(err, data) {
@@ -32,8 +34,6 @@ const uploadFile = (filepath) => {
     var slice = path.split("/");
     return slice[slice.length - 1];
   }
-
-  const BUCKET_NAME = "wafflenote-testbucket";
   
   return new Promise((resolve, reject) => {
     const fileContent = fs.readFileSync(filepath);
@@ -46,11 +46,9 @@ const uploadFile = (filepath) => {
 
     s3.upload(params, function(err, data) {
       if (err) {
-        console.log("Error", err);
+        console.log(err);
         reject(err);
       }
-      console.log(`File uploaded successfully. ${data.Location}`);
-      
       resolve(data.Key);
     });
   });
@@ -63,8 +61,6 @@ const uploadFile = (filepath) => {
  * @param {String} key // test_dir/test.txt
  */
 const downloadFile = (key) => {
-  const BUCKET_NAME = "wafflenote-testbucket";
-
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: BUCKET_NAME,

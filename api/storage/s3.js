@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const s3Tools = require("./s3Tools");
+const fs = require("fs");
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ const fileUpload = multer({
 // GET /api/storage
 router.get("/", (req, res, next) => {
   console.log("GET /api/storage");
+
   s3Tools.getBucketList()
   .then((result) => {
     console.log(result);
@@ -26,9 +28,7 @@ router.get("/", (req, res, next) => {
   })
   .catch((err) => {
     console.log(err);
-    res.status(400).json({
-			error: err,
-		});
+    res.status(500).send(err);
   });
 });
 
@@ -36,23 +36,27 @@ router.get("/", (req, res, next) => {
 router.post("/upload", fileUpload.single("file"), (req, res, next) => {
   console.log("POST /api/storage/upload");
   if (!req.file) {
-		res.status(400).json({
-			message: "No such file",
-		});
+		res.status(400).send("No such file");
 		return;
   }
   
-  s3Tools.uploadFile(req.file.path)
+  const tempFilePath = req.file.path; 
+  s3Tools.uploadFile(tempFilePath)
   .then((key) => {
+    // remove saved temporary file
+    fs.unlink(tempFilePath, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
     res.send({
       path: key
-    })
+    });
   })
   .catch((err) => {
     console.log(err);
-    res.status(err).json({
-			error: err,
-		});
+    res.status(500).send(err);
   });
 });
 
