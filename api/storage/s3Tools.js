@@ -24,8 +24,7 @@ const getBucketList = () => {
 
 /**
  * 파일 업로드. 
- * Bucket: wafflenote-testbucket
- * 저장되는 이름: 파일 이름 그대로 따라감.
+ * 저장되는 이름은 파일 이름 그대로 따라감.
  *  
  * @param {String} filepath 
  */
@@ -55,10 +54,33 @@ const uploadFile = (filepath) => {
 }
 
 /**
- * 파일 다운로드. 
- * Bucket: wafflenote-testbucket
+ * 버퍼 데이터를 업로드
  * 
- * @param {String} key // test_dir/test.txt
+ * @param {Buffer} buffer 
+ * @param {String} filename 
+ */
+const uploadFileBuffer = (buffer, filename) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: filename,
+      Body: buffer
+    };
+
+    s3.upload(params, function(err, data) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      resolve(data.Key);
+    });
+  });
+}
+
+/**
+ * 파일 다운로드. 
+ * 
+ * @param {String} key 
  */
 const downloadFile = (key) => {
   return new Promise((resolve, reject) => {
@@ -83,5 +105,6 @@ const downloadFile = (key) => {
 module.exports = {
   getBucketList: getBucketList,
   uploadFile: uploadFile, 
+  uploadFileBuffer: uploadFileBuffer,
   downloadFile: downloadFile
 }
