@@ -8,7 +8,7 @@ router.use("/nlp", require("./nlp/textAnalysis"));
 router.use("/storage", require("./storage/s3"));
 
 router.get("/", (req, res, next) => {
-	res.send("<h1>Hello api index page !</h1>");
+  res.send("<h1>Hello api index page !</h1>");
 });
 
 module.exports = router;
