@@ -1,11 +1,29 @@
 const express = require("express");
+const multer = require("multer");
+const fs = require("fs");
+
 const noteModel = require("../models/note");
+const slideModel = require("../models/slide");
+const s3Tools = require("../api/storage/s3Tools");
 
 const Note = noteModel.Note;
+const Slide = slideModel.Slide;
 const router = express.Router();
 
 const mongoose = require("mongoose");
 var ObjectId = mongoose.Types.ObjectId;
+
+// multer setting
+const fileUpload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, __dirname + "/../api/tmp/");
+    },
+    filename: function (req, file, cb) {
+      cb(null, `${Date.now()}_${file.originalname}`)  // filename = "[Timestamp]_[OriginName]"
+    }
+  })
+});
 
 // GET /note
 router.get("/", (req, res, next) => {
@@ -33,15 +51,57 @@ router.get("/:noteid", (req, res, next) => {
 });
 
 // POST /note
-router.post("/", (req, res, next) => {
+router.post("/", fileUpload.single("frameImg"), (req, res, next) => {
   console.log("POST /note");
+  
+  if (!req.file) {
+    res.status(400).send("No such file");
+  }
 
-  const note = new Note(req.body);
-  note.save()
-  .then(result => {
-    res.send(result);
+  console.log(req.body);
+  console.log(req.file);
+
+  const tempFilePath = req.file.path; 
+  s3Tools.uploadFile(tempFilePath)
+  .then((key) => {
+    // remove saved temporary file
+    fs.unlink(tempFilePath, (err) => {
+      if (err)  console.log(err);
+    });
+    
+    const slideObject = {
+      slide_id: 1,
+      title: "슬라이드 1",
+      originImagePath: key,
+      smallImage: "",  // TODO image resize to 64x64 and encode base64
+      audio: "",
+      script: "",
+      tags: [],
+      memo: "",
+      startTime: "",
+      endTime: "",
+    };
+    const newSlide = new Slide(slideObject);
+    const USERID = "TEMP_USERID";  // TODO get userid from jwt
+    const noteObject = {
+      author: USERID, 
+      title: req.body.title, 
+      slide_list: [newSlide]
+    };
+    const newNote = new Note(noteObject);
+
+    newNote.save()
+    .then(result => {
+      console.log(result); 
+      res.send(result);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
     res.status(500).send(err);
   });

@@ -3,7 +3,7 @@ var slideModel = require('./slide');
 var Schema = mongoose.Schema;
 
 var noteSchema = new Schema({
-  note_id: String,
+  author: String,
   title: String,
   slide_list: [slideModel.slideSchema],
 });
