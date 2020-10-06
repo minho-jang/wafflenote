@@ -51,29 +51,28 @@ router.get("/:noteid", (req, res, next) => {
 });
 
 // POST /note
-router.post("/", fileUpload.single("frameImg"), (req, res, next) => {
+router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
   console.log("POST /note");
   
   if (!req.file) {
     res.status(400).send("No such file");
   }
 
-  console.log(req.body);
-  console.log(req.file);
-
-  const tempFilePath = req.file.path; 
-  s3Tools.uploadFile(tempFilePath)
-  .then((key) => {
-    // remove saved temporary file
+  const USERID = "TEMP_USERID";  // TODO get userid from jwt
+  
+  try {
+    const tempFilePath = req.file.path; 
+    const smallImage = await s3Tools.imageResizeAndEncodeBase64(tempFilePath, 64, 64);
+    const originImagePath = await s3Tools.uploadFile(tempFilePath);
     fs.unlink(tempFilePath, (err) => {
-      if (err)  console.log(err);
+      if (err)  throw err;
     });
     
     const slideObject = {
       slide_id: 1,
       title: "슬라이드 1",
-      originImagePath: key,
-      smallImage: "",  // TODO image resize to 64x64 and encode base64
+      originImagePath: originImagePath,
+      smallImage: smallImage, 
       audio: "",
       script: "",
       tags: [],
@@ -82,29 +81,19 @@ router.post("/", fileUpload.single("frameImg"), (req, res, next) => {
       endTime: "",
     };
     const newSlide = new Slide(slideObject);
-    const USERID = "TEMP_USERID";  // TODO get userid from jwt
     const noteObject = {
       author: USERID, 
       title: req.body.title, 
       slide_list: [newSlide]
     };
     const newNote = new Note(noteObject);
-
-    newNote.save()
-    .then(result => {
-      console.log(result); 
-      res.send(result);
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).send(err);
-    });
-
-  })
-  .catch((err) => {
+  
+    const doc = await newNote.save();
+    res.send(doc); 
+  } catch(err) {
     console.log(err);
     res.status(500).send(err);
-  });
+  }
 });
 
 // POST /note/:noteid/title

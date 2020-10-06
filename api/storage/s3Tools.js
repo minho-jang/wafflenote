@@ -26,7 +26,7 @@ const getBucketList = () => {
  * 파일 업로드. 
  * 저장되는 이름은 파일 이름 그대로 따라감.
  *  
- * @param {String} filepath 
+ * @param filepath 
  */
 const uploadFile = (filepath) => {
   const getFileName = (path) => {
@@ -56,8 +56,8 @@ const uploadFile = (filepath) => {
 /**
  * 버퍼 데이터를 업로드
  * 
- * @param {Buffer} buffer 
- * @param {String} filename 
+ * @param buffer 
+ * @param filename 
  */
 const uploadFileBuffer = (buffer, filename) => {
   return new Promise((resolve, reject) => {
@@ -80,7 +80,7 @@ const uploadFileBuffer = (buffer, filename) => {
 /**
  * 파일 다운로드. 
  * 
- * @param {String} key 
+ * @param  key 
  */
 const downloadFile = (key) => {
   return new Promise((resolve, reject) => {
@@ -102,9 +102,32 @@ const downloadFile = (key) => {
   })
 }
 
+/**
+ * 이미지 크기 조절 및 base64 인코딩
+ *
+ * @param filepath
+ * @param x
+ * @param y
+ */
+const imageResizeAndEncodeBase64 = (file, x, y) => {
+  const sharp = require("sharp");
+  
+  return new Promise((resolve, reject) => {
+    sharp(file)
+      .resize(x, y)
+      .toBuffer()
+      .then(data => resolve(data.toString('base64')))
+      .catch(err => {
+        console.log(err);
+        reject(err);
+      });
+  });
+}
+
 module.exports = {
   getBucketList: getBucketList,
   uploadFile: uploadFile, 
   uploadFileBuffer: uploadFileBuffer,
-  downloadFile: downloadFile
+  downloadFile: downloadFile,
+  imageResizeAndEncodeBase64: imageResizeAndEncodeBase64
 }

@@ -32,14 +32,8 @@ const frameUpload = multer({
   }
 });
 
-// GET /api/frame
-router.get("/", (req, res, next) => {
-  console.log("GET /api/frame");
-  res.status(200).send("You need to use POST method...");
-});
-
 // POST /api/frame
-router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
+router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
   console.log("POST /api/frame");
 
   if (!req.files[0] || !req.files[1]) {
@@ -50,18 +44,19 @@ router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
   const bufToStr0 = Uint8Array.from(Buffer.from(req.files[0].buffer)).toString();
   const bufToStr1 = Uint8Array.from(Buffer.from(req.files[1].buffer)).toString();
 
-  // 영상처리 API 요청.
-  axios({
-    method: 'post',
-    url: IMAGE_PROCESSING_SERVER_URL, 
-    data: {
-      frame0: bufToStr0,
-      frame1: bufToStr1
-    },
-    maxContentLength: 50000000,  // about 50 MB
-    maxBodyLength: 50000000  // about 50 MB
-  })
-  .then((response) => {
+  try {
+    // 영상처리 API 요청.
+    const response = await axios({
+      method: 'post',
+      url: IMAGE_PROCESSING_SERVER_URL, 
+      data: {
+        frame0: bufToStr0,
+        frame1: bufToStr1
+      },
+      maxContentLength: 50000000,  // about 50 MB
+      maxBodyLength: 50000000  // about 50 MB
+    });
+
     const nlpResult = response.data;
     if (nlpResult == 'False') {
       res.status(200).json({
@@ -70,49 +65,37 @@ router.post("/", frameUpload.array("frameImg"), (req, res, next) => {
     } else {
       console.log("Slide CHANGE!");
       // file upload to S3 
-      s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`)
-      .then(async (key) => {
-        // insert slide
-        const slideid = await getSlideListLength(req.body.noteid) + 1; 
-        const slideObject = {
-          slide_id: slideid,
-          title: `슬라이드 ${slideid}`,
-          originImagePath: key,
-          smallImage: "",  // TODO image resize to 64x64 and encode base64
-          audio: "",
-          script: "",
-          tags: [],
-          memo: "",
-          startTime: "",
-          endTime: "",
-        };
-        const newSlide = new Slide(slideObject);
+      const originImagePath = await s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
+      // insert slide
+      const slideid = await getSlideListLength(req.body.noteid) + 1; 
+      const smallImage = await s3Tools.imageResizeAndEncodeBase64(req.files[1].buffer, 64, 64);
+      const slideObject = {
+        slide_id: slideid,
+        title: `슬라이드 ${slideid}`,
+        originImagePath: originImagePath,
+        smallImage: smallImage, 
+        audio: "",
+        script: "",
+        tags: [],
+        memo: "",
+        startTime: "",
+        endTime: "",
+      };
+      const newSlide = new Slide(slideObject);
         
-        Note.findOneAndUpdate(
-          {_id: new ObjectId(req.body.noteid)}, 
-          {$push: {slide_list: newSlide}}, 
-          {new: true})
-        .then(doc => {
-          res.status(200).json({
-            result: nlpResult
-          });
-        })
-        .catch(err => {
-          console.log(err);
-          res.status(500).send(err)
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send(err);
+      const doc = await Note.findOneAndUpdate(
+        {_id: new ObjectId(req.body.noteid)}, 
+        {$push: {slide_list: newSlide}}, 
+        {new: true});
+      res.status(200).json({
+        result: nlpResult,
+        doc: doc
       });
     }
-  })
-  .catch(err => {
+  } catch(err) {
     console.log(err);
     res.status(500).send(err);
-  });
-
+  }
 });
 
 const getSlideListLength = (noteid) => {
