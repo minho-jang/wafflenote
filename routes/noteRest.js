@@ -28,7 +28,10 @@ const fileUpload = multer({
 // GET /note
 router.get("/", (req, res, next) => {
   console.log("GET /note");
-  Note.find()
+  
+  const USERID = "TEMP_USERID";  // TODO get userid from session
+
+  Note.find({author: USERID})
   .then((notes) => {
     res.send(notes);
   })
@@ -58,7 +61,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     res.status(400).send("No such file");
   }
 
-  const USERID = "TEMP_USERID";  // TODO get userid from jwt
+  const USERID = "TEMP_USERID";  // TODO get userid from session
   
   try {
     const tempFilePath = req.file.path; 
