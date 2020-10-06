@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <meta name = "google-signin-client_id" content = "1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com">
+    <meta charset="utf-8">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="sign-up.js"></script>
+    <link rel="stylesheet" href="assets/css/sign-in.css" />
+  </head>
+  <body>
+    <div class="layer">
+      <img src="./images/sign-in1.png" class="img1"></img>
+      <img src="./images/sign-in2.png" class="img2"></img>
+      <div class='google_btn'>
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-longtitle="true" style="width:300px; height:40px; position: relative;"></div>
+      </div>
+      <div class="info">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;아직 구글 계정이 없으세요?<br/><br/>
+        <button type="button" onclick="location.href='https://accounts.google.com/signup/v2/webcreateaccount?flowName=GlifWebSignIn&flowEntry=SignUp'" class='signup_btn'>구글 계정 만들기</button>
+        
+      </div>
+    </div>
+  </body>
+</html>
