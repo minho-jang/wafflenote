@@ -4,16 +4,11 @@ const { default: Axios } = require("axios");
 
 const router = express.Router();
 
-const NLP_SERVER_URL = "http://localhost:5001/";
-const TAG = "[textAnalysis.js] "
-
-// GET /api/nlp
-router.get("/", (req, res, next) => {
-  res.status(200).send("Natural Language Procssing");
-});
+const NLP_SERVER_URL = "http://localhost:5001";
 
 // POST /api/nlp/keyword-extraction
 router.post("/keyword-extraction", (req, res, next) => {
+  console.log("POST /api/nlp/keyword-extraction");
   const text = req.body.text;
 
   Axios({
@@ -24,16 +19,12 @@ router.post("/keyword-extraction", (req, res, next) => {
     },
   })
   .then((response) => {
-    console.log(TAG + 'response status: ', response.status);
-    console.log(TAG + 'response data: ', response.data);
     res.status(200).json({
       result: response.data,
-      message: "Keyword extraction complete"
     });
   })
   .catch((error) => {
     res.status(400).json({
-      message: "Keyword extraction error",
       error: error
     });
   });
@@ -41,6 +32,7 @@ router.post("/keyword-extraction", (req, res, next) => {
 
 // POST /api/nlp/summarization
 router.post("/summarization", (req, res, next) => {
+  console.log("POST /api/nlp/summarization");
   const text = req.body.text;
   const numSummaries = req.body.num;
 
@@ -53,16 +45,12 @@ router.post("/summarization", (req, res, next) => {
     },
   })
   .then((response) => {
-    console.log(TAG + 'response status: ', response.status);
-    console.log(TAG + 'response data: ', response.data);
     res.status(200).json({
       result: response.data,
-      message: "Summarization complete"
     });
   })
   .catch((error) => {
     res.status(400).json({
-      message: "Summarization error",
       error: error
     });
   });
