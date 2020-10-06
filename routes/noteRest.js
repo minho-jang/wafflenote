@@ -84,9 +84,10 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
       endTime: "",
     };
     const newSlide = new Slide(slideObject);
+    const title = (req.body.title ? req.body.title : "Untitled");
     const noteObject = {
       author: USERID, 
-      title: req.body.title, 
+      title: title, 
       slide_list: [newSlide]
     };
     const newNote = new Note(noteObject);
