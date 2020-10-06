@@ -21,41 +21,72 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
 
   if (!req.file) {
     res.status(400).send("No such file");
+    return;
   }  
   
-  try {
-    var t1 = Date.now();
-    const key = await s3Tools.uploadFileBuffer(req.file.buffer, `${Date.now()}_${req.file.originalname}`);  // upload to S3
-    var t2 = Date.now();
-    console.log(`mp3 file upload time : ${t2 - t1}ms`);
+  const noteStatus = req.body.status;
+  if (noteStatus == "running" || noteStatus == "end") {     
+    try {
+      var t1 = Date.now();
+      const key = await s3Tools.uploadFileBuffer(req.file.buffer, `${Date.now()}_${req.file.originalname}`);  // upload to S3
+      var t2 = Date.now();
+      console.log(`mp3 file upload time : ${t2 - t1}ms`);
+  
+      const script = await streamingRecognize(req.file.buffer, 'MP3', 48000, 'ko-KR');
+      t1 = Date.now();
+      console.log(`Google Speech API time : ${t1 - t2}ms`);
+      
+      const tags = await getTags(script, 10);
+      t2 = Date.now();
+      console.log(`NLP keyword extraction time : ${t2 - t1}ms`);
+  
+      const slideListLength = await getSlideListLength(req.body.noteid);
+      t1 = Date.now();
+      console.log(`get slide id time : ${t1 - t2}ms`);
 
-    const script = await streamingRecognize(req.file.buffer, 'MP3', 48000, 'ko-KR');
-    t1 = Date.now();
-    console.log(`Google Speech API time : ${t1 - t2}ms`);
-    
-    const tags = await getTags(script, 10);
-    t2 = Date.now();
-    console.log(`NLP keyword extraction time : ${t2 - t1}ms`);
-
-    const slideObjectId = new ObjectId(req.body.slideid);
-    const doc = await Note.findOneAndUpdate(
-      {"slide_list._id": slideObjectId},
-      {$set: {
-        "slide_list.$[elem].audio": key, 
-        "slide_list.$[elem].tags": tags, 
-        "slide_list.$[elem].script": script,
-        "slide_list.$[elem].startTime": req.body.startTime,
-        "slide_list.$[elem].endTime": req.body.endTime
-      }},
-      {arrayFilters: [{"elem._id": slideObjectId}], new: true}
-    );
-    t1 = Date.now();
-    console.log(`update db document time : ${t1 - t2}ms`);
-
-    res.send(doc);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
+      let slideIdx;
+      if (noteStatus == "running")  {
+        slideIdx = slideListLength - 2;
+        const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
+        const noteObjectId = new ObjectId(req.body.noteid);
+        const doc = await Note.findByIdAndUpdate(
+          noteObjectId,
+          {$set: {
+            "slide_list.$[elem].audio": key, 
+            "slide_list.$[elem].tags": tags, 
+            "slide_list.$[elem].script": script,
+            "slide_list.$[elem].startTime": req.body.startTime,
+            "slide_list.$[elem].endTime": req.body.endTime
+          }},
+          {arrayFilters: [{"elem._id": slideObjectId}], new: true}
+        );
+        res.send(doc);
+      } else {  // noteStatus == "end"
+        slideIdx = slideListLength - 1;
+        const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
+        const noteObjectId = new ObjectId(req.body.noteid);
+        const doc = await Note.findByIdAndUpdate(
+          noteObjectId,
+          {$set: {
+            status: "end",
+            "slide_list.$[elem].audio": key, 
+            "slide_list.$[elem].tags": tags, 
+            "slide_list.$[elem].script": script,
+            "slide_list.$[elem].startTime": req.body.startTime,
+            "slide_list.$[elem].endTime": req.body.endTime
+          }},
+          {arrayFilters: [{"elem._id": slideObjectId}], new: true}
+        );
+        res.send(doc); 
+      }
+      t2 = Date.now();
+      console.log(`update db document time : ${t2 - t1}ms`);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+  } else {
+    res.status(400).send("unknown status");
   }
 });
 
@@ -123,6 +154,38 @@ const getTags = (text, num) => {
       console.log(err);
       reject(err);
     });
+  });
+}
+
+const getSlideListLength = (noteid) => {
+  return new Promise((resolve, reject) => {
+    Note.aggregate([
+      {$match: {_id: new ObjectId(noteid)}},
+      {$project: {length: {$size: "$slide_list"}}}
+    ])
+    .then(result => {
+      resolve(result[0].length);
+    })
+    .catch(err => {
+      console.log(err);
+      reject(err);
+    });
+  });
+}
+
+const getSlideIdByIndex = (noteid, idx) => {
+  return new Promise((resolve, reject) => {
+    Note.aggregate([
+      {$match: {_id: new ObjectId(noteid)}},
+      {$project: {theSlide: {$arrayElemAt: ['$slide_list', idx]}}}
+    ])
+    .then(result => {
+      resolve(result[0].theSlide._id);
+    })
+    .catch(err => {
+      console.log(err);
+      reject(err);
+    }); 
   });
 }
 

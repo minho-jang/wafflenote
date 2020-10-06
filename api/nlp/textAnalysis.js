@@ -13,7 +13,7 @@ router.post("/keyword-extraction", (req, res, next) => {
 
   Axios({
     method: 'post',
-    url: NLP_SERVER_URL + "keyword-extraction", 
+    url: NLP_SERVER_URL + "/keyword-extraction", 
     data: {
       text: text 
     },
@@ -38,7 +38,7 @@ router.post("/summarization", (req, res, next) => {
 
   Axios({
     method: 'post',
-    url: NLP_SERVER_URL + "summarization", 
+    url: NLP_SERVER_URL + "/summarization", 
     data: {
       text: text,
       num: numSummaries

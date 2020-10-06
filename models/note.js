@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var noteSchema = new Schema({
   author: String,
   title: String,
+  status: String,
   slide_list: [slideModel.slideSchema],
 });
 

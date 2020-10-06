@@ -67,7 +67,7 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
       // file upload to S3 
       const originImagePath = await s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
       // insert slide
-      const slideid = await getSlideListLength(req.body.noteid) + 1; 
+      const slideid = await getLastSlideIdx(req.body.noteid) + 1; 
       const smallImage = await s3Tools.imageResizeAndEncodeBase64(req.files[1].buffer, 64, 64);
       const slideObject = {
         slide_id: slideid,
@@ -98,7 +98,7 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
   }
 });
 
-const getSlideListLength = (noteid) => {
+const getLastSlideIdx = (noteid) => {
   return new Promise((resolve, reject) => {
     Note.aggregate([
       {$match: {_id: new ObjectId(noteid)}},

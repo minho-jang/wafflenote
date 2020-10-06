@@ -88,6 +88,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     const noteObject = {
       author: USERID, 
       title: title, 
+      status: "running",
       slide_list: [newSlide]
     };
     const newNote = new Note(noteObject);
