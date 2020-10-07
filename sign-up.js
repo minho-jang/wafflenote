@@ -22,6 +22,7 @@ function valueCheck() {
   }
   if (agreeCnt === 2) {
     alert("약관에 모두 동의하셨습니다.");
+    window.location.href = "/signup-form.html";
     // sign up api
   } else {
     alert("약관에 모두 동의하셔야 회원가입이 진행됩니다.");
@@ -29,5 +30,39 @@ function valueCheck() {
 }
 
 function signUp() {
-  console.log(123);
+  // sendserver
+  const id = document.getElementById("name").value;
+  const name = document.getElementById("name").value;
+  const birth =
+    document.getElementById("yy").value +
+    document.getElementById("mm").value +
+    document.getElementById("dd").value;
+  const gender = document.getElementById("gender").value;
+  const phone = document.getElementById("mobile").value;
+  const organization = document.getElementById("organization").value;
+  if (!id || !name) {
+    alert("예상치 못한 문제가 발생했습니다. 다시 시도해 주세요.");
+    window.location.href = "/";
+  } else if (!birth) {
+    alert("생년월일을 정확히 입력해주세요.");
+  } else if (!gender) {
+    alert("성별을 정확히 입력해주세요.");
+  } else if (!phone) {
+    alert("휴대전화번호를 정확히 입력해주세요.");
+  } else {
+    alert("회원가입이 완료되었습니다.");
+    // 회원가입 API
+  }
+}
+
+function changeMm() {
+  let mm = document.getElementById("mm").value;
+  if (mm.length === 1) mm = "0" + mm;
+  document.getElementById("mm").value = mm;
+}
+
+function changeDd() {
+  let dd = document.getElementById("dd").value;
+  if (dd.length === 1) dd = "0" + dd;
+  document.getElementById("dd").value = dd;
 }

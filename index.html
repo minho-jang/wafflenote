@@ -52,7 +52,6 @@
 				<li class="space"></li>
 				<li class="signin-btn"><a href="" id="loginBtn" onclick="			
 					if(this.innerHTML === '로그아웃'){
-						console.log(1234);
 						var result = confirm('로그아웃 하시겠습니까?');
 						if(result){
     					gauth.signOut().then(function () {
@@ -150,7 +149,7 @@
         <section class="spotlight">
           <div class="image"><img src="images/pic3.png" width="100px" height="250px" /></div>
           <div class="content">
-            <h3>PDF 저장 및 시험모드</h3>
+            <h3>PDF 저장 및 원격 저장소</h3>
             <p>
               PDF로 저장할 수 있고, 내 와플노트 저장소에 저장하여 언제든지 열람이 가능합니다<br>
 							시험모드 등의 기능을 제공하며, 복습의 효율을 높일 수 있습니다<br>
@@ -176,13 +175,21 @@
             </li>
           </ul>
         </section>
+        <section class="special" style="text-align: left;">
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;본 서비스는 현재 베타 버전입니다. <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;개선사항 및 불편사항에 대해 피드백 주시면 적극 반영하겠습니다. <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;이용해주셔서 감사합니다 :) <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;개발/운영자 : 박운상, 좌동철, 장민호<br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;서비스 이용 문의 : wafflenote2020@gmail.com<br><br>
+        </section>
       </div>
     </section>
 
     <!-- Three -->
     <section id="three" class="wrapper style2 special">
       <header class="major">
-				<a href="/termsofuse.html"><h2>이용 약관</h2></a>
+        <a href="/terms-of-use.html"><h3>와플노트 이용약관 확인</h3></a>
+        <a href="/privacy-policy.html"><h3>개인정보처리방침 확인</h3></a>
       </header>
       <ul class="actions special">
         <li>
@@ -213,7 +220,8 @@
 			</ul>
 			-->
       <p class="copyright">
-        &copy; Untitled. Credits: <a href="http://html5up.net">(주)와플노트</a>
+        &copy; Untitled. Credits: 와플노트<br>
+  
       </p>
 		</footer>
 		

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <meta
+      name="google-signin-client_id"
+      content="1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com"
+    />
+    <meta charset="utf-8" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="sign-up.js"></script>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
+    <script>
+      function init() {
+        gapi.load("auth2", function () {
+          window.gauth = gapi.auth2.init({
+            client_id:
+              "1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com",
+          });
+          gauth.then(
+            function () {
+              if (gauth.isSignedIn.get()) {
+                var id = document.querySelector("#id");
+                id.innerHTML = gauth.currentUser.get().ot.Xt;
+                var id = document.querySelector("#name");
+                id.innerHTML = gauth.currentUser.get().ot.Ad;
+              } else {
+                alert("구글 로그인 세션이 만료되었습니다. 다시 시도해 주세요.");
+                window.location.href = "/";
+              }
+            },
+            function () {
+              alert("구글 로그인 세션이 만료되었습니다. 다시 시도해 주세요.");
+              window.location.href = "/";
+            }
+          );
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div class="layer_agree">
+      <!-- wrapper -->
+      <div id="wrapper">
+        <!-- content-->
+        <div id="content">
+          <!-- ID -->
+          <div>
+            <h3 class="join_title">
+              <label for="id">아이디</label>
+            </h3>
+            <span class="box int_id">
+              <span class="step_url" id="id"></span>
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- NAME -->
+          <div>
+            <h3 class="join_title"><label for="name">이름</label></h3>
+            <span class="box int_name">
+              <span class="step_url" id="name"></span>
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- BIRTH -->
+          <div>
+            <h3 class="join_title"><label for="yy">생년월일</label></h3>
+
+            <div id="bir_wrap">
+              <!-- BIRTH_YY -->
+              <div id="bir_yy">
+                <span class="box">
+                  <input
+                    type="text"
+                    id="yy"
+                    class="int"
+                    maxlength="4"
+                    placeholder="년(4자)"
+                  />
+                </span>
+              </div>
+
+              <!-- BIRTH_MM -->
+              <div id="bir_mm">
+                <span class="box">
+                  <input
+                    type="text"
+                    id="mm"
+                    class="int"
+                    maxlength="2"
+                    placeholder="월(2자)"
+                    onchange="changeMm()"
+                    ;
+                  />
+                </span>
+              </div>
+
+              <!-- BIRTH_DD -->
+              <div id="bir_dd">
+                <span class="box">
+                  <input
+                    type="text"
+                    id="dd"
+                    class="int"
+                    maxlength="2"
+                    placeholder="일(2자)"
+                    onchange="changeDd()"
+                    ;
+                  />
+                </span>
+              </div>
+            </div>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- GENDER -->
+          <div>
+            <h3 class="join_title"><label for="gender">성별</label></h3>
+            <span class="box gender_code">
+              <select id="gender" class="sel">
+                <option>성별</option>
+                <option value="M">남자</option>
+                <option value="F">여자</option>
+              </select>
+            </span>
+            <span class="error_next_box">필수 정보입니다.</span>
+          </div>
+
+          <!-- MOBILE -->
+          <div>
+            <h3 class="join_title"><label for="phoneNo">휴대전화</label></h3>
+            <span class="box int_mobile">
+              <input
+                type="tel"
+                id="mobile"
+                class="int"
+                maxlength="16"
+                placeholder="전화번호 입력"
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <h3 class="join_title">
+              <label for="email"
+                >소속(학교 또는 직장)<span class="optional"></span
+              ></label>
+            </h3>
+            <span class="box int_email">
+              <input
+                type="text"
+                id="organization"
+                class="int"
+                maxlength="100"
+                placeholder="선택입력"
+              />
+            </span>
+          </div>
+
+          <!-- JOIN BTN-->
+          <div class="btn_area">
+            <button type="button" id="btnJoin" onclick="signUp()">
+              <span>가입하기</span>
+            </button>
+          </div>
+        </div>
+        <!-- content-->
+      </div>
+      <!-- wrapper -->
+    </div>
+    <script
+      src="https://apis.google.com/js/platform.js?onload=init"
+      async
+      defer
+    ></script>
+  </body>
+</html>
