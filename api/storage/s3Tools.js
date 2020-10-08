@@ -1,9 +1,10 @@
 const AWS = require("aws-sdk");
 const fs = require("fs");
 
+const awsConfig = require("../../config/aws.json");
 const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_AUTH_ID,
-  secretAccessKey: process.env.AWS_AUTH_KEY
+  accessKeyId: awsConfig.AWS_AUTH_ID,
+  secretAccessKey: awsConfig.AWS_AUTH_KEY
 });
 
 const BUCKET_NAME = "wafflenote-testbucket";

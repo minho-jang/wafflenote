@@ -1,12 +1,7 @@
 node_modules/
-
 package-lock.json
-
-api/tmp/
-
-test.js
-convention.js
-
 .DS_Store
 
 .env
+config/
+sessions/

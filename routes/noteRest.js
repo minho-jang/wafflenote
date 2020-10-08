@@ -4,10 +4,12 @@ const fs = require("fs");
 
 const noteModel = require("../models/note");
 const slideModel = require("../models/slide");
+const userModel = require("../models/user");
 const s3Tools = require("../api/storage/s3Tools");
 
 const Note = noteModel.Note;
 const Slide = slideModel.Slide;
+const User = userModel.User;
 const router = express.Router();
 
 const mongoose = require("mongoose");
@@ -29,13 +31,19 @@ const fileUpload = multer({
 router.get("/", (req, res, next) => {
   console.log("GET /note");
   
-  const USERID = "TEMP_USERID";  // TODO get userid from session
+  const userid = req.session.wafflenote_id;
+  console.log(userid);
 
-  Note.find({author: USERID})
+  Note.find(
+    { author: userid }
+  )
   .then((notes) => {
     res.send(notes);
   })
-  .catch(err => res.status(500).send(err));
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
 });
 
 // GET /note/:noteid
@@ -61,7 +69,8 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     res.status(400).send("No such file");
   }
 
-  const USERID = "TEMP_USERID";  // TODO get userid from session
+  const userid = req.session.wafflenote_id;
+  console.log(userid);
   
   try {
     const tempFilePath = req.file.path; 
@@ -86,15 +95,22 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     const newSlide = new Slide(slideObject);
     const title = (req.body.title ? req.body.title : "Untitled");
     const noteObject = {
-      author: USERID, 
+      author: userid, 
       title: title, 
       status: "running",
       slide_list: [newSlide]
     };
-    const newNote = new Note(noteObject);
-  
-    const doc = await newNote.save();
-    res.send(doc); 
+    const newNote = new Note(noteObject);  
+    const docNewNote = await newNote.save();
+
+    // After create note, Add obejct id to user.note_list
+    const doc = await User.findByIdAndUpdate(
+      userid,
+      {$push: {note_list: docNewNote._id}},
+      {new: true}
+    );
+
+    res.send(docNewNote); 
   } catch(err) {
     console.log(err);
     res.status(500).send(err);

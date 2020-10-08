@@ -5,30 +5,40 @@ require('dotenv').config({path: __dirname + '/.env'})
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const fs = require('fs');
-const db = require('./db');
+const session = require('express-session');
+const FileStore = requrie("session-file-store")(session);
 
 const app = express();
-const port = process.env.NOTE_PORT || 3000;
-
-// public setting
-app.use('/public', express.static('public'));
+const port = process.env.NODE_PORT || 3000;
 
 // Body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// session
+const sessionConfig = require("./config/session.json");
+app.use(session({
+  secret: sessionConfig.secrget,
+  resave: false,
+  saveUninitialized: true,
+  store: new FileStore(),
+  cookie: { maxAge: 180000 }  // 3 min
+}));
+
 // Node.js의 native Promise 사용
 mongoose.Promise = global.Promise;
 
-// Connect to MongoDB
+// Connect to DocumentDB (MongoDB)
+const documentdbConfig = require("./config/documentdb");
+const db = require('./lib/db');
+const fs = require('fs');
 const opts = { 
   sslValidate: true,
-  sslCA:[fs.readFileSync(process.env.CA_PATH)],
+  sslCA:[fs.readFileSync(documentdbConfig.CA_PATH)],
   useNewUrlParser: true,
   useFindAndModify: false
 };
-db(process.env.MONGO_URI, opts);
+db(documentdbConfig.DB_URI, opts);
 
 // Connect to MongoDB (Local)
 // db("mongodb://localhost:27017/wafflenote");
@@ -37,5 +47,9 @@ db(process.env.MONGO_URI, opts);
 app.use("/api", require("./api/index"));
 app.use("/note", require("./routes/noteRest"));
 app.use("/slide", require("./routes/slideRest"));
+app.use("check-google-token", require("./routes/checkGoogleToken"));
+app.use("/signin", require("./routes/signin"));
+app.use("/signup", require("./routes/signup"));
+app.use("/logout", require("./routes/logout"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
