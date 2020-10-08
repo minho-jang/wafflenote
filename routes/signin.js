@@ -8,14 +8,14 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   console.log("POST /signin");
 
-  const googleId = req.body.google_id;
+  const googleId = req.body;
   console.log(googleId);
   const sess = req.session;
   console.log(sess);
 
   try {
     const doc = await User.findOne(
-      { google_id: googleId}
+      { google_id: googleId }
     );
     console.log(doc);
     if (doc && doc._id) {

@@ -5,7 +5,7 @@ const User = userModel.User;
 const router = express.Router();
 
 // POST /signup
-router.get("/", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   console.log("POST /signup");
   
   const googleId = req.body.google_id;

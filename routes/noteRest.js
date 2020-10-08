@@ -32,6 +32,10 @@ router.get("/", (req, res, next) => {
   console.log("GET /note");
   
   const userid = req.session.wafflenote_id;
+  if (! userid) {
+    res.status(400).send("Need to signin");
+    return;
+  }
   console.log(userid);
 
   Note.find(
@@ -70,6 +74,10 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
   }
 
   const userid = req.session.wafflenote_id;
+  if (! userid) {
+    res.status(400).send("Need to signin");
+    return;
+  }
   console.log(userid);
   
   try {
