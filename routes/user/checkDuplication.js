@@ -8,9 +8,9 @@ const router = express.Router();
 router.get("/:wafflenote_id", async (req, res, next) => {
   console.log("GET /check-duplication/:wafflenote_id");
 
-  const wf_id = req.params.wafflenote_id;
+  const uId = req.params.wafflenote_id;
   try {
-    const doc = await Note.findOne( {wafflenote_id: wf_id } );
+    const doc = await Note.findOne( {wafflenote_id: uId } );
     if (doc && doc._id) {
       res.send({
         result: false

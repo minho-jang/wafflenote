@@ -12,4 +12,6 @@ router.use("/check-duplication", require("./checkDuplication"));
 router.use("/find-id", require("./findId"));
 router.use("/find-password", require("./findPassword"));
 
+router.use("/user-info", require("./userInfo"));
+
 module.exports = router;
