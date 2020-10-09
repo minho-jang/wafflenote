@@ -11,33 +11,25 @@ export const getResult = async () => {
   });
   const res = {};
   try {
-    const result = await waffle.post('/api/nlp/summarization', {
-      header: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        text,
-      },
+    const response = await waffle.post('/api/nlp/summarization', {
+      text,
+    }, {
+      header: { 'Content-Type': 'application/json' }
     });
-    res.summary = result;
+    res.summary = response.data.result.summary;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.summary = text;
   }
-  console.log(text)
   try {
-    const keyword = await waffle.post('/api/nlp/keyword-extraction', {
-      header: {
-        'Content-Type': 'application/json', 
-      },
-      data: {
-        text,
-      },
+    const response = await waffle.post('/api/nlp/keyword-extraction', {
+      text,
+    }, {
+      header: { 'Content-Type': 'application/json' }
     });
-    console.log(keyword.result.keyword)
-    res.keyword = keyword.result.keyword;
+    res.keywords = response.data.result.keywords;
   } catch (error) {
-    
+    console.log(error)
   }
-  return res
+  return res;
 };
