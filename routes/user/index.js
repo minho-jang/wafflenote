@@ -11,6 +11,7 @@ router.use("/check-duplication", require("./checkDuplication"));
 
 router.use("/find-id", require("./findId"));
 router.use("/find-password", require("./findPassword"));
+router.use("/change-password", require("./changePassword"));
 
 router.use("/user-info", require("./userInfo"));
 

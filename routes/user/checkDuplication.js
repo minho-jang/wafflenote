@@ -1,7 +1,7 @@
 const express = require("express");
-const noteModel = require("../../models/note");
+const userModel = require("../../models/user");
 
-const Note = noteModel.Note;
+const User = userModel.User;
 const router = express.Router();
 
 // GET /check-duplication/:wafflenote_id
@@ -10,7 +10,7 @@ router.get("/:wafflenote_id", async (req, res, next) => {
 
   const uId = req.params.wafflenote_id;
   try {
-    const doc = await Note.findOne( {wafflenote_id: uId } );
+    const doc = await User.findOne( {wafflenote_id: uId } );
     if (doc && doc._id) {
       res.send({
         result: false

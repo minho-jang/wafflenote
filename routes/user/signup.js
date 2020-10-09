@@ -1,5 +1,5 @@
 const express = require("express");
-const userModel = require("../models/user");
+const userModel = require("../../models/user");
 
 const User = userModel.User;
 const router = express.Router();
@@ -24,13 +24,14 @@ router.post("/", async (req, res, next) => {
       } else {
         const userObject = {
           wafflenote_id: wafflenoteId,
+          password: req.body.password,
           name: req.body.name,
           phone_number: req.body.phone_number,
           note_list: [],
           agree: {
-            privacy_policy: req.body.privacy_policy,
-            terms_of_use: req.body.terms_of_use,
-            advertise: req.body.advertise
+            privacy_policy: req.body.agree.privacy_policy,
+            terms_of_use: req.body.agree.terms_of_use,
+            advertise: req.body.agree.advertise
           }
         };
         const newUser = new User(userObject);
@@ -62,9 +63,9 @@ router.post("/", async (req, res, next) => {
           phone_number: req.body.phone_number,
           note_list: [],
           agree: {
-            privacy_policy: req.body.privacy_policy,
-            terms_of_use: req.body.terms_of_use,
-            advertise: req.body.advertise
+            privacy_policy: req.body.agree.privacy_policy,
+            terms_of_use: req.body.agree.terms_of_use,
+            advertise: req.body.agree.advertise
           }
         };
         const newUser = new User(userObject);

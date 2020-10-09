@@ -12,7 +12,7 @@ router.post("/", async (req, res, next) => {
   
   try {
     const doc = await User.findOne({ name: uName, phone_number: uPhone });
-    if (doc && doc_id) {
+    if (doc && doc._id) {
       if (doc.google_id) {
         res.send({
           result: true,

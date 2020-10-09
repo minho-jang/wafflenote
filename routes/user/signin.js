@@ -1,5 +1,5 @@
 const express = require("express");
-const userModel = require("../models/user");
+const userModel = require("../../models/user");
 
 const User = userModel.User;
 const router = express.Router();
@@ -9,7 +9,6 @@ router.post("/", async (req, res, next) => {
   console.log("POST /signin");
 
   const type = req.body.type;
-  console.log(type);
   const sess = req.session;
 
   if (type == "wafflenote") {
@@ -19,7 +18,6 @@ router.post("/", async (req, res, next) => {
       const doc = await User.findOne(
         { wafflenote_id: wafflenoteId, password: password }
       );
-      console.log(doc);
       if (doc && doc._id) {
         sess.uuid = doc._id;
         res.send({
@@ -42,7 +40,6 @@ router.post("/", async (req, res, next) => {
       const doc = await User.findOne(
         { google_id: googleId }
       );
-      console.log(doc);
       if (doc && doc._id) {
         sess.uuid = doc._id;
         res.send({

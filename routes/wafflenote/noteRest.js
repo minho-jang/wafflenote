@@ -2,10 +2,10 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 
-const noteModel = require("../models/note");
-const slideModel = require("../models/slide");
-const userModel = require("../models/user");
-const s3Tools = require("../api/storage/s3Tools");
+const noteModel = require("../../models/note");
+const slideModel = require("../../models/slide");
+const userModel = require("../../models/user");
+const s3Tools = require("../../api/storage/s3Tools");
 
 const Note = noteModel.Note;
 const Slide = slideModel.Slide;
@@ -31,15 +31,14 @@ const fileUpload = multer({
 router.get("/", (req, res, next) => {
   console.log("GET /note");
   
-  const userid = req.session.wafflenote_id;
-  if (! userid) {
+  const uuid = req.session.uuid;
+  if (! uuid) {
     res.status(400).send("Need to signin");
     return;
   }
-  console.log(userid);
 
   Note.find(
-    { author: userid }
+    { author: uuid }
   )
   .then((notes) => {
     res.send(notes);
