@@ -49,5 +49,6 @@ app.use("/slide", require("./routes/wafflenote/slideRest"));
 app.use("check-google-token", require("./routes/user/checkGoogleToken"));
 app.use("/signin", require("./routes/user/signin"));
 app.use("/signup", require("./routes/user/signup"));
+app.use("/signout", require("./routes/user/signout"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
