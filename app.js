@@ -42,9 +42,6 @@ const opts = {
 };
 db(documentdbConfig.DB_URI, opts);
 
-// Connect to MongoDB (Local)
-// db("mongodb://localhost:27017/wafflenote");
-
 // Routes
 app.use("/api", require("./api/index"));
 app.use("/note", require("./routes/noteRest"));
