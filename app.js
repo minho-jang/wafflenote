@@ -44,11 +44,10 @@ db(documentdbConfig.DB_URI, opts);
 
 // Routes
 app.use("/api", require("./api/index"));
-app.use("/note", require("./routes/noteRest"));
-app.use("/slide", require("./routes/slideRest"));
-app.use("check-google-token", require("./routes/checkGoogleToken"));
-app.use("/signin", require("./routes/signin"));
-app.use("/signup", require("./routes/signup"));
-// app.use("/logout", require("./routes/logout"));
+app.use("/note", require("./routes/wafflenote/noteRest"));
+app.use("/slide", require("./routes/wafflenote/slideRest"));
+app.use("check-google-token", require("./routes/user/checkGoogleToken"));
+app.use("/signin", require("./routes/user/signin"));
+app.use("/signup", require("./routes/user/signup"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));

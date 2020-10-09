@@ -8,7 +8,7 @@ router.get("/", async (req, res, next) => {
   console.log("POST /check-google-token");
 
   const {OAuth2Client} = require('google-auth-library');
-  const googleConfig = require("../config/google.json");
+  const googleConfig = require("../../config/google.json");
   const client = new OAuth2Client(googleConfig.GOOGLE_CLIENT_ID);
   const token = req.body;
 

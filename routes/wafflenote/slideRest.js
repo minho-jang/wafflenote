@@ -1,7 +1,7 @@
 const express = require("express");
-const noteModel = require("../models/note");
-const slideModel = require("../models/slide");
-const s3Tools = require("../api/storage/s3Tools");
+const noteModel = require("../../models/note");
+const slideModel = require("../../models/slide");
+const s3Tools = require("../../api/storage/s3Tools");
 
 const Slide = slideModel.Slide;
 const Note = noteModel.Note;
