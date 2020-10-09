@@ -12,11 +12,12 @@ router.post("/", async (req, res, next) => {
   console.log(type);
   const sess = req.session;
 
-  if (type == "google") {
-    const googleId = req.body.google_id;
+  if (type == "wafflenote") {
+    const wafflenoteId = req.body.wafflenote_id;
+    const password = req.body.password;
     try {
       const doc = await User.findOne(
-        { google_id: googleId }
+        { wafflenote_id: wafflenoteId, password: password }
       );
       console.log(doc);
       if (doc && doc._id) {
@@ -31,12 +32,11 @@ router.post("/", async (req, res, next) => {
       res.status(500).send(err);
     }
 
-  } else if (type == "wafflenote") {
-    const wafflenoteId = req.body.wafflenote_id;
-    const password = req.body.password;
+  } else if (type == "google") {
+    const googleId = req.body.google_id;
     try {
       const doc = await User.findOne(
-        { wafflenote_id: wafflenoteId, password: password }
+        { google_id: googleId }
       );
       console.log(doc);
       if (doc && doc._id) {

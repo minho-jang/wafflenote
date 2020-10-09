@@ -8,26 +8,71 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   console.log("POST /signup");
   
-  const googleId = req.body.google_id;
-  console.log(googleId);
   const sess = req.session;
-  console.log(sess);
-
-  try {
-    const doc = await User.findOne(
-      { google_id: googleId }
-    );
-    if (doc && doc._id) {
-      res.send("false");
-    } else {
-      const newUser = new User(req.body);
-      const doc = await newUser.save();
-      sess.wafflenote_id = doc._id;
-      res.send("true");
+  const type = req.body.type;
+  
+  if (type == "wafflenote") {
+    try {
+      const wafflenoteId = req.body.wafflenote_id;
+      const doc = await User.findOne(
+        { wafflenote_id:  wafflenoteId }
+      );
+      if (doc && doc._id) {
+        res.send("false");
+      } else {
+        const userObject = {
+          wafflenote_id: wafflenoteId,
+          name: req.body.name,
+          phone_number: req.body.phone_number,
+          note_list: [],
+          agree: {
+            privacy_policy: req.body.privacy_policy,
+            terms_of_use: req.body.terms_of_use,
+            advertise: req.body.advertise
+          }
+        };
+        const newUser = new User(userObject);
+        const doc = await newUser.save();
+        sess.uuid = doc._id;
+        res.send("true");
+      }
+    } catch(err) {
+      console.log(err);
+      res.status(500).send(err);
     }
-  } catch(err) {
-    console.log(err);
-    res.status(500).send(err);
+    
+  } else if (type == "google") {
+    try {
+      const googleId = req.body.google_id;
+      const doc = await User.findOne(
+        { google_id:  googleId }
+      );
+      if (doc && doc._id) {
+        res.send("false");
+      } else {
+        const userObject = {
+          google_id: googleId,
+          name: req.body.name,
+          phone_number: req.body.phone_number,
+          note_list: [],
+          agree: {
+            privacy_policy: req.body.privacy_policy,
+            terms_of_use: req.body.terms_of_use,
+            advertise: req.body.advertise
+          }
+        };
+        const newUser = new User(userObject);
+        const doc = await newUser.save();
+        sess.uuid = doc._id;
+        res.send("true");
+      }
+    } catch(err) {
+      console.log(err);
+      res.status(500).send(err);
+    }
+    
+  } else {
+    res.status(400).send("Unknown type");
   }
 });
 
