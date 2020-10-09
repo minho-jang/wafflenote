@@ -20,7 +20,7 @@ async function compareImage(video, canvas, ctx, startTime){
   try {
     if (!isPlaying) return;
     ctx.drawImage(video, 0, 0);
-    currImage = canvas.toDataURL();
+    currImage = canvas.toDataURL('image/jpeg');
 
     const currBlob = dataURItoBlob(currImage);
     const prevBlob = dataURItoBlob(prevImage);
@@ -28,8 +28,8 @@ async function compareImage(video, canvas, ctx, startTime){
     const curTime = new Date();
     if (currBlob && prevBlob) {
       const fd = new FormData();
-      fd.append("frameImg", prevBlob, "image1.png");
-      fd.append("frameImg", currBlob, "image2.png");
+      fd.append("frameImg", prevBlob, "image1.jpeg");
+      fd.append("frameImg", currBlob, "image2.jpeg");
       const response = await waffle.post("/api/frame", fd, {
         headers: {
           "Content-Type": "multipart/form-data",
