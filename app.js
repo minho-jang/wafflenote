@@ -23,7 +23,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   store: new FileStore(),
-  cookie: { maxAge: 300000 }  // 5 min
+  cookie: { maxAge: 3600000 }  // 3,600,000 ms > 1 hour
 }));
 
 // Node.js의 native Promise 사용
