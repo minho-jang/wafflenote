@@ -22,9 +22,13 @@ router.post("/", async (req, res, next) => {
       console.log(doc);
       if (doc && doc._id) {
         sess.uuid = doc._id;
-        res.send("true");
+        res.send({
+          result: true
+        });
       } else {
-        res.send("false");
+        res.send({
+          result: false
+        });
       }
       
     } catch(err) {
@@ -41,9 +45,13 @@ router.post("/", async (req, res, next) => {
       console.log(doc);
       if (doc && doc._id) {
         sess.uuid = doc._id;
-        res.send("true");
+        res.send({
+          result: true
+        });
       } else {
-        res.send("false");
+        res.send({
+          result: false
+        });
       }
       
     } catch(err) {

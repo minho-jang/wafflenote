@@ -18,7 +18,9 @@ router.post("/", async (req, res, next) => {
         { wafflenote_id:  wafflenoteId }
       );
       if (doc && doc._id) {
-        res.send("false");
+        res.send({
+          result: false
+        });
       } else {
         const userObject = {
           wafflenote_id: wafflenoteId,
@@ -34,7 +36,9 @@ router.post("/", async (req, res, next) => {
         const newUser = new User(userObject);
         const doc = await newUser.save();
         sess.uuid = doc._id;
-        res.send("true");
+        res.send({
+          result: true
+        });
       }
     } catch(err) {
       console.log(err);
@@ -48,7 +52,9 @@ router.post("/", async (req, res, next) => {
         { google_id:  googleId }
       );
       if (doc && doc._id) {
-        res.send("false");
+        res.send({
+          result: false
+        });
       } else {
         const userObject = {
           google_id: googleId,
@@ -64,7 +70,9 @@ router.post("/", async (req, res, next) => {
         const newUser = new User(userObject);
         const doc = await newUser.save();
         sess.uuid = doc._id;
-        res.send("true");
+        res.send({
+          result: true
+        });
       }
     } catch(err) {
       console.log(err);

@@ -23,10 +23,12 @@ router.get("/", async (req, res, next) => {
     const name = payload['name'];
     
     console.log(userid, name);
-    res.send('true');
+    res.send({
+      result: true
+    });
   } catch(err) {
     console.log(err);
-    res.send('false');
+    res.status(500).send(err);
   }
 });
 
