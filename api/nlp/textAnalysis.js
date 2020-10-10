@@ -4,7 +4,7 @@ const { default: Axios } = require("axios");
 
 const router = express.Router();
 
-const NLP_SERVER_URL = "http://localhost:5001";
+const NLP_SERVER_URL = require("../../config/endpoint.json").NLP_BASE_URL;
 
 // POST /api/nlp/keyword-extraction
 router.post("/keyword-extraction", (req, res, next) => {

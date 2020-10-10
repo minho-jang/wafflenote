@@ -6,7 +6,7 @@ const s3Tools = require("../storage/s3Tools");
 const noteModel = require("../../models/note");
 const textAnalysis = require("../nlp/testAnalysisFunc");
 
-const NLP_SERVER_URL = "http://localhost:5001";
+const NLP_SERVER_URL = require("../../config/endpoint.json").NLP_BASE_URL;
 const ObjectId = require("mongoose").Types.ObjectId;
 const Note = noteModel.Note;
 const router = express.Router();

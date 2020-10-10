@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const NLP_SERVER_URL = "http://localhost:5001";
+const NLP_SERVER_URL = require("../../config/endpoint.json").NLP_BASE_URL;
 
 const getKeywords = async (text) => {
   return axios({

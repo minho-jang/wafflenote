@@ -13,7 +13,7 @@ const Slide = slideModel.Slide;
 const ObjectId = require("mongoose").Types.ObjectId;
 const router = express.Router();
 
-const IMAGE_PROCESSING_SERVER_URL = "http://localhost:5000/image";
+const IMAGE_PROCESSING_SERVER_URL = require("../../config/endpoint.json").IMAGE_PROCESSING_BASE_URL + "/image"
 
 // multer setting
 const frameUpload = multer({
