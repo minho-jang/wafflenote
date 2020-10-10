@@ -32,11 +32,27 @@ router.get("/", (req, res, next) => {
   console.log("GET /note");
   
   const sess = req.session;
-  Note.find(
-    { author: sess.uuid }
-  )
+  Note.find({ author: sess.uuid })
+  .sort({createdAt: -1})
   .then((notes) => {
     res.send(notes);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  });
+});
+
+// GET /note/recently
+router.get("/recently", (req, res, next) => {
+  console.log("GET /note/recently");
+
+  const sess = req.session;
+  Note.find({ author: sess.uuid })
+  .sort({createdAt: -1})
+  .limit(1)
+  .then((doc) => {
+    res.send(doc); 
   })
   .catch(err => {
     console.log(err);
@@ -146,4 +162,21 @@ router.post("/:noteid/delete", (req, res, next) => {
   });
 });
 
+// GET /note/:noteid/result
+router.get("/:noteid/result", async (req, res, next) => {
+  console.log("GET /note/:noteid/result");
+
+  try {
+    const doc = await Note.findById(req.params.noteid)
+    res.send({
+      keywords: doc.note_keywords,
+      summary: doc.summary
+    });
+  } catch(err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+});
+
 module.exports = router;
+

@@ -26,6 +26,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
   }  
   
   const noteStatus = req.body.status;
+  console.log(`status: ${noteStatus}`);
   if (noteStatus == "running" || noteStatus == "end") {     
     try {
       var t1 = Date.now();
@@ -83,16 +84,20 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
         );
 
         // TODO NLP 요청 및 결과 저장
-        const keyword = await textAnalysis.getKeywords(text).data.keywords;
-        console.log(keyword);
-        const summary = await textAnalysis.getSummary(text, numSummaries).data.summary;
-        console.log(summary);
+        const text = await getNoteFullText(req.body.noteid);
+        const numSummaries = slideListLength - 1;
+
+        const keywordResponse = await textAnalysis.getKeywords(text);
+        const keywords = keywordResponse.data.keywords;
+
+        const summaryResponse = await textAnalysis.getSummary(text, numSummaries);
+        const summary = summaryResponse.data.summary;
         
         doc = await Note.findByIdAndUpdate(
           noteObjectId,
           {$set: {
             summary: summary,
-            note_keywords: keyword
+            note_keywords: keywords
           }},
           {new: true}
         );
@@ -206,6 +211,23 @@ const getSlideIdByIndex = (noteid, idx) => {
       console.log(err);
       reject(err);
     }); 
+  });
+}
+
+const getNoteFullText = (noteid) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const doc = await Note.findById(noteid); 
+      const slideList = doc.slide_list;
+      let text = "";
+      for (var i = 0; i < slideList.length; i++) {
+        text = text.concat(slideList[i].script);
+      }
+      resolve(text);
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
   });
 }
 
