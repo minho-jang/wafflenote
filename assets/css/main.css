@@ -535,17 +535,6 @@ hr {
   display: inline-block;
 }
 
-#loginBtn {
-  width: 100px;
-  height: 40px;
-  position: absolute;
-  font-family: arial;
-  font-size: 18px;
-  text-align: center;
-  color: #fbb93a;
-  border-bottom: none;
-}
-
 .signin-btn:hover {
   background-color: #fbb93a;
 }

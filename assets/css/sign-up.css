@@ -24,6 +24,28 @@ body {
   box-shadow: 5px 5px 5px 5px #fbb93a;
 }
 
+.layer_agree2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 700px;
+  background: white;
+  margin: -350px 0 0 -550px;
+  box-shadow: 5px 5px 5px 5px #fbb93a;
+}
+
+.layer_agree3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 700px;
+  background: white;
+  margin: -350px 0 0 +50px;
+  box-shadow: 5px 5px 5px 5px #fbb93a;
+}
+
 .img1 {
   width: 150px;
   margin: 40px 0 0 175px;
@@ -51,7 +73,23 @@ body {
   font-size: 20px;
   position: relative;
   left: 50%;
-  margin: 0 0 0 -150px;
+  margin: 40px 0 0 -150px;
+  color: white;
+  border: 2px solid #fbb93a;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  display: inline-block;
+  background-color: #fbb93a;
+}
+
+.continue_btn {
+  width: 300px;
+  height: 40px;
+  font-size: 20px;
+  position: relative;
+  left: 50%;
+  margin: 20px 0 0 -150px;
   color: white;
   border: 2px solid #fbb93a;
   border-radius: 10px;
@@ -73,11 +111,18 @@ body {
 .agree_title {
   font-size: 25px;
   text-align: center;
+  color: #f88c13;
 }
 
 .agree_box {
   padding-top: 10px;
   text-align: right;
+  padding-right: 50px;
+}
+
+.agree_box2 {
+  padding-top: 20px;
+  text-align: left;
   padding-right: 50px;
 }
 
@@ -254,4 +299,22 @@ select {
   font-size: 20px;
   font-weight: 400;
   font-family: Dotum, "돋움", Helvetica, sans-serif;
+}
+
+.temp_btn {
+  background-color: white;
+  border: 0px;
+  cursor: pointer;
+}
+
+.verify {
+  position: relative;
+  width: 120px;
+  height: 30px;
+  text-align: center;
+  font-size: 15px;
+  color: white;
+  background-color: #fbb93a;
+  border: 0px;
+  cursor: pointer;
 }

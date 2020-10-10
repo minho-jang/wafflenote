@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "pm2": "^4.5.0"
+    "axios": "^0.20.0",
+    "cors": "^2.8.5",
+    "pm2": "^4.5.0",
+    "qs": "^6.9.4"
   }
 }

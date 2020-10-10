@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="find-account.js"></script>
+  </head>
+  <body>
+    <span class="layer_agree2">
+      <!-- wrapper -->
+      <div id="wrapper">
+        <!-- content-->
+        <div id="content">
+          <div
+            style="
+              font-size: 30px;
+              text-align: center;
+              color: #fbb93a;
+              padding-top: 50px;
+              padding-bottom: 50px;
+            "
+          >
+            아이디 찾기
+          </div>
+          <br /><br /><br />
+          <div id="new_id">
+            <!-- NAME -->
+            <div>
+              <h3 class="join_title"><label for="name">이름</label></h3>
+              <span class="box int_name">
+                <span class="step_url"></span>
+                <input
+                  type="text"
+                  id="name"
+                  class="int"
+                  maxlength="16"
+                  placeholder="한글명을 입력해주세요."
+                />
+              </span>
+              <span class="error_next_box"></span>
+            </div>
+            <br />
+
+            <!-- MOBILE -->
+            <div>
+              <h3 class="join_title"><label for="phoneNo">휴대전화</label></h3>
+              <span class="box int_mobile">
+                <input
+                  type="tel"
+                  id="mobile"
+                  class="int"
+                  maxlength="16"
+                  placeholder="-을 제외한 번호를 입력해주세요. 예) 01012345678"
+                />
+              </span>
+              <span class="error_next_box"></span>
+            </div>
+
+            <br /><br /><br /><br />
+            <!-- JOIN BTN-->
+            <div class="btn_area">
+              <button type="button" id="btnJoin" onclick="find_id()">
+                <span>아이디 찾기</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- content-->
+      </div>
+      <!-- wrapper -->
+    </span>
+    <span class="layer_agree3">
+      <!-- wrapper -->
+      <div id="wrapper">
+        <!-- content-->
+        <div id="content">
+          <div
+            style="
+              font-size: 30px;
+              text-align: center;
+              color: #fbb93a;
+              padding-top: 50px;
+              padding-bottom: 50px;
+            "
+          >
+            비밀번호 변경
+          </div>
+          <div id="new_password">
+            <br /><br />
+            <!-- ID -->
+            <div style="padding-top: 20px">
+              <h3 class="join_title">
+                <label for="id">아이디</label>
+              </h3>
+              <span class="box int_id">
+                <span class="step_url"></span>
+                <input
+                  type="text"
+                  id="wafflenote_id"
+                  class="int"
+                  maxlength="30"
+                  placeholder="이메일 형식으로 입력해주세요."
+                />
+              </span>
+              <span class="error_next_box"></span>
+            </div>
+            <div style="padding-left: 10px; padding-top: 5px" id="verify_html">
+              <button type="button" class="verify" onclick="verifyEmail()">
+                인증 메일 발송
+              </button>
+            </div>
+            <!-- PASSWORD -->
+          </div>
+          <br /><br /><br /><br /><br /><br /><br /><br />
+
+          <!-- JOIN BTN-->
+          <div class="btn_area">
+            <button type="button" id="btnJoin" onclick="changePassword()">
+              <span>비밀번호 변경</span>
+            </button>
+          </div>
+        </div>
+        <!-- content-->
+      </div>
+      <!-- wrapper -->
+    </span>
+  </body>
+</html>
