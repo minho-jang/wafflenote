@@ -4,8 +4,7 @@ const router = express.Router();
 
 // session check
 router.use((req, res, next) => {
-  console.log(req.url);
-  if (req.url == "/signin" || req.url == "/signup") {
+  if (req.url == "/signin" || req.url == "/signup" || req.url == "/find-id" || req.url == "/find-password") {
     next();
     
   } else if (! req.session.uuid) {
@@ -30,3 +29,4 @@ router.use("/change-password", require("./changePassword"));
 router.use("/user-info", require("./userInfo"));
 
 module.exports = router;
+

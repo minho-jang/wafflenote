@@ -19,7 +19,7 @@ var ObjectId = mongoose.Types.ObjectId;
 const fileUpload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, __dirname + "/../api/tmp/");
+      cb(null, __dirname + "/../../api/tmp/");
     },
     filename: function (req, file, cb) {
       cb(null, `${Date.now()}_${file.originalname}`)  // filename = "[Timestamp]_[OriginName]"
@@ -66,14 +66,9 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
   if (!req.file) {
     res.status(400).send("No such file");
   }
-
-  const userid = req.session.wafflenote_id;
-  if (! userid) {
-    res.status(400).send("Need to signin");
-    return;
-  }
-  console.log(userid);
   
+  const sess = req.session;
+
   try {
     const tempFilePath = req.file.path; 
     const smallImage = await s3Tools.imageResizeAndEncodeBase64(tempFilePath, 64, 64);
@@ -97,7 +92,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     const newSlide = new Slide(slideObject);
     const title = (req.body.title ? req.body.title : "Untitled");
     const noteObject = {
-      author: userid, 
+      author: sess.uuid, 
       title: title, 
       status: "running",
       slide_list: [newSlide]
@@ -107,7 +102,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
 
     // After create note, Add obejct id to user.note_list
     const doc = await User.findByIdAndUpdate(
-      userid,
+      sess.uuid,
       {$push: {note_list: docNewNote._id}},
       {new: true}
     );
