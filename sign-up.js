@@ -67,7 +67,7 @@ function onSignIn(googleUser) {
 
   // 토큰 유효성 검사
 
-  window.location.href = "http://localhost:80/signup-agree.html";
+  window.location.href = "/signup-agree.html";
 }
 
 function valueCheck() {

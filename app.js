@@ -6,9 +6,10 @@ var app = http.createServer(function (request, response) {
   if (request.url == "/") {
     url = "/index.html";
   }
+  console.log(url);
   response.writeHead(200);
   response.end(fs.readFileSync(__dirname + url));
 });
-app.listen(80, () => {
+app.listen(8080, () => {
   console.log("Server running");
 });

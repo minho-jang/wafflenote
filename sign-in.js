@@ -10,7 +10,7 @@ function onSignIn(googleUser) {
 
   // 토큰 유효성 검사
 
-  window.location.href = "http://localhost:80";
+  window.location.href = "/";
 }
 
 //wafflenote
