@@ -14,7 +14,8 @@ var userSchema = new Schema({
   agree: {
     privacy_policy: Boolean,
     terms_of_use: Boolean,
-    advertise: Boolean
+    advertise_sms: Boolean,
+    advertise_email: Boolean
   }
 }, { timestamps: true });
 

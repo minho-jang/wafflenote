@@ -31,7 +31,8 @@ router.post("/", async (req, res, next) => {
           agree: {
             privacy_policy: req.body.agree.privacy_policy,
             terms_of_use: req.body.agree.terms_of_use,
-            advertise: req.body.agree.advertise
+            advertise_sms: req.body.agree.advertise_sms,
+            advertise_email: req.body.agree.advertise_email
           }
         };
         const newUser = new User(userObject);
@@ -65,7 +66,8 @@ router.post("/", async (req, res, next) => {
           agree: {
             privacy_policy: req.body.agree.privacy_policy,
             terms_of_use: req.body.agree.terms_of_use,
-            advertise: req.body.agree.advertise
+            advertise_sms: req.body.agree.advertise_sms,
+            advertise_email: req.body.agree.advertise_email
           }
         };
         const newUser = new User(userObject);
