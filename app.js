@@ -44,9 +44,7 @@ db(documentdbConfig.DB_URI, opts);
 
 // Routes
 app.use("/", require("./routes/user/index"));
+app.use("/", require("./routes/wafflenote/index"));
 app.use("/api", require("./api/index"));
-app.use("/note", require("./routes/wafflenote/noteRest"));
-app.use("/slide", require("./routes/wafflenote/slideRest"));
-app.use("check-google-token", require("./routes/user/checkGoogleToken"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));

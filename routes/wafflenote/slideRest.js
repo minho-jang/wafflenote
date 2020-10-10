@@ -25,7 +25,12 @@ router.get("/all/:noteid", (req, res, next) => {
 
   Note.findById(req.params.noteid)
   .then((doc) => {
-    res.send(doc.slide_list);
+    if (doc && doc._id) {
+      res.send(doc.slide_list);
+    } else {
+      res.send("No such note");
+      return;
+    }
   })
   .catch((err) => {
     console.log(err);
