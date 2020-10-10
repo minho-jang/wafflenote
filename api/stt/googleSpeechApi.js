@@ -4,8 +4,9 @@ const axios = require("axios");
 
 const s3Tools = require("../storage/s3Tools");
 const noteModel = require("../../models/note");
-const NLP_SERVER_URL = "http://localhost:5001";
+const textAnalysis = require("../nlp/testAnalysisFunc");
 
+const NLP_SERVER_URL = "http://localhost:5001";
 const ObjectId = require("mongoose").Types.ObjectId;
 const Note = noteModel.Note;
 const router = express.Router();
@@ -44,12 +45,13 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
       t1 = Date.now();
       console.log(`get slide id time : ${t1 - t2}ms`);
 
+
       let slideIdx;
       if (noteStatus == "running")  {
         slideIdx = slideListLength - 2;
         const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
-        const doc = await Note.findByIdAndUpdate(
+        let doc = await Note.findByIdAndUpdate(
           noteObjectId,
           {$set: {
             "slide_list.$[elem].audio": key, 
@@ -61,11 +63,13 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           {arrayFilters: [{"elem._id": slideObjectId}], new: true}
         );
         res.send(doc);
+
+
       } else {  // noteStatus == "end"
         slideIdx = slideListLength - 1;
         const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
-        const doc = await Note.findByIdAndUpdate(
+        let doc = await Note.findByIdAndUpdate(
           noteObjectId,
           {$set: {
             status: "end",
@@ -77,6 +81,22 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           }},
           {arrayFilters: [{"elem._id": slideObjectId}], new: true}
         );
+
+        // TODO NLP 요청 및 결과 저장
+        const keyword = await textAnalysis.getKeywords(text).data.keywords;
+        console.log(keyword);
+        const summary = await textAnalysis.getSummary(text, numSummaries).data.summary;
+        console.log(summary);
+        
+        doc = await Note.findByIdAndUpdate(
+          noteObjectId,
+          {$set: {
+            summary: summary,
+            note_keywords: keyword
+          }},
+          {new: true}
+        );
+
         res.send(doc); 
       }
       t2 = Date.now();

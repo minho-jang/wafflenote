@@ -7,6 +7,8 @@ var noteSchema = new Schema({
   title: String,
   status: String,
   slide_list: [slideModel.slideSchema],
+  summary: String,
+  note_keywords: []
 }, { timestamps: true });
 
 module.exports = {
