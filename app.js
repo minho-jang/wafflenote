@@ -7,9 +7,13 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const session = require('express-session');
 const FileStore = require("session-file-store")(session);
+const cors = require("cors");
 
 const app = express();
 const port = process.env.NODE_PORT || 3000;
+
+// CORS
+app.use(cors());
 
 // Body-parser
 app.use(bodyParser.urlencoded({ extended: true }));

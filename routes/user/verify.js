@@ -76,7 +76,7 @@ router.post("/verify-code", async (req, res, next) => {
 
     if (doc && doc._id) {
       const elapsed = doc.expired.getTime() - Date.now();
-      if (elapsed < emailConfig.EXPIRED_TIME) {
+      if (elapsed > 0 && elapsed < emailConfig.EXPIRED_TIME) {
         res.send({
           result: true
         });
