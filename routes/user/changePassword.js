@@ -8,18 +8,13 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   console.log("POST /change-password");
   
-  const uuid = req.session.uuid;
-  if (! uuid) {
-    res.status(400).send("Need to signin");
-    return;
-  }
-
+  const sess = req.session;
   const uId = req.body.wafflenote_id;
   const newPw = req.body.new_pw;
 
   try {
     const doc = await User.findOneAndUpdate(
-      { _id: new ObjectId(uuid), wafflenote_id: uId },
+      { _id: new ObjectId(sess.uuid), wafflenote_id: uId },
       { $set: {password: newPw} },
       { new: true }
     );

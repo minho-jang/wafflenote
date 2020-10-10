@@ -7,14 +7,10 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   console.log("GET /user-info");
 
-  const uId = req.session.uuid;
-  if (! uId) {
-    res.status(400).send("Need to signin");
-    return;
-  }
+  const sess = req.session;
 
   try {
-    const doc = await User.findById(uId);
+    const doc = await User.findById(sess.uuid);
     res.send(doc);
   } catch(err) {
     console.log(err);

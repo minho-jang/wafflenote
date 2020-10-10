@@ -31,14 +31,9 @@ const fileUpload = multer({
 router.get("/", (req, res, next) => {
   console.log("GET /note");
   
-  const uuid = req.session.uuid;
-  if (! uuid) {
-    res.status(400).send("Need to signin");
-    return;
-  }
-
+  const sess = req.session;
   Note.find(
-    { author: uuid }
+    { author: sess.uuid }
   )
   .then((notes) => {
     res.send(notes);

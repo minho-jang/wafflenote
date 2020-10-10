@@ -2,6 +2,20 @@ const express = require("express");
 
 const router = express.Router();
 
+// session check
+router.use((req, res, next) => {
+  console.log(req.url);
+  if (req.url == "/signin" || req.url == "/signup") {
+    next();
+    
+  } else if (! req.session.uuid) {
+    res.status(400).send("Need to signin");
+
+  } else {
+    next();
+  }
+});
+
 router.use("/signin", require("./signin"));
 router.use("/signout", require("./signout"));
 router.use("/signup", require("./signup"));
