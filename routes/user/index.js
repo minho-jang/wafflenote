@@ -3,8 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 // session check
+const whiteList = ["/signup", "/signin", "/find-id", "/find-password", "/verify-email", "/verify-code"];
 router.use((req, res, next) => {
-  if (req.url == "/signin" || req.url == "/signup" || req.url == "/find-id" || req.url == "/find-password") {
+  if (whiteList.includes(req.url)) {
     next();
     
   } else if (! req.session.uuid) {
@@ -14,6 +15,8 @@ router.use((req, res, next) => {
     next();
   }
 });
+
+router.use("/", require("./verify"));
 
 router.use("/signin", require("./signin"));
 router.use("/signout", require("./signout"));
