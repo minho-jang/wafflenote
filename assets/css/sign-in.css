@@ -108,11 +108,11 @@ body {
   height: 30px;
 }
 .signin_btn {
-  width: 200px;
+  width: 290px;
   height: 40px;
   font-size: 20px;
   position: relative;
-  margin: 10px 0 0 30px;
+  margin: 10px 0 0 0px;
   color: white;
   border: 2px solid #fbb93a;
   border-radius: 10px;
