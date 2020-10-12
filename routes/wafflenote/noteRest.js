@@ -87,7 +87,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
 
   try {
     const tempFilePath = req.file.path; 
-    const smallImage = await s3Tools.imageResizeAndEncodeBase64(tempFilePath, 64, 64);
+    const smallImage = await s3Tools.imageResizeAndEncodeBase64(tempFilePath);
     const originImagePath = await s3Tools.uploadFile(tempFilePath);
     fs.unlink(tempFilePath, (err) => {
       if (err)  throw err;

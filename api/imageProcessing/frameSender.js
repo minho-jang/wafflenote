@@ -68,7 +68,7 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
       const originImagePath = await s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
       // insert slide
       const slideid = await getLastSlideIdx(req.body.noteid) + 1; 
-      const smallImage = await s3Tools.imageResizeAndEncodeBase64(req.files[1].buffer, 128, 128);
+      const smallImage = await s3Tools.imageResizeAndEncodeBase64(req.files[1].buffer);
       const slideObject = {
         slide_id: slideid,
         title: `슬라이드 ${slideid}`,

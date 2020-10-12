@@ -107,11 +107,12 @@ const downloadFile = (key) => {
  * 이미지 크기 조절 및 base64 인코딩
  *
  * @param filepath
- * @param x
- * @param y
  */
-const imageResizeAndEncodeBase64 = (file, x, y) => {
+const imageResizeAndEncodeBase64 = (file) => {
   const sharp = require("sharp");
+
+  const x = 128;
+  const y = 128;
   
   return new Promise((resolve, reject) => {
     sharp(file)
