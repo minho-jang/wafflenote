@@ -21,7 +21,8 @@ router.post("/", async (req, res, next) => {
       if (doc && doc._id) {
         sess.uuid = doc._id;
         res.send({
-          result: true
+          result: true,
+          whoami: doc.name
         });
       } else {
         res.send({
@@ -43,7 +44,8 @@ router.post("/", async (req, res, next) => {
       if (doc && doc._id) {
         sess.uuid = doc._id;
         res.send({
-          result: true
+          result: true,
+          whoami: doc.name
         });
       } else {
         res.send({
