@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getSlides } from '../../actions/slides';
+import { Icon } from 'semantic-ui-react';
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -23,19 +24,19 @@ const SlideCard = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-`
+`;
 const SlideImage = styled.img`
   width: 89.5px;
   height: 89.5px;
   margin: 20.5px;
-`
+`;
 const SlideContent = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20.5px 0;
   margin-right: 30.5px;
   color: #b3b3b3;
-`
+`;
 const SlideTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
@@ -44,17 +45,17 @@ const SlideTitle = styled.div`
   line-height: 1.45;
   letter-spacing: normal;
   color: #9b9b9b;
-`
+`;
 const SlideScript = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  word-wrap:break-word; 
+  word-wrap: break-word;
   line-height: 1.2em;
-  height: 2.4em; 
-`
+  height: 2.4em;
+`;
 
 const ResultButton = styled.div`
   width: 336px;
@@ -71,55 +72,76 @@ const ResultButton = styled.div`
   font-size: 20px;
   padding-top: 10px;
   a {
+    width: 336px;
     color: #fbb93a;
+    display: block;
   }
+  cursor: pointer;
+`;
+
+const RefreshIcon = styled(Icon)`
+  padding-right: 20px;
+  padding-bottom: 20px;
+  float: right;
   cursor: pointer;
 `
 
-const SlideList = (props) => {
-  useEffect(() => {
-    props.getSlides();
-  }, []);
-  const renderedList = (arr) => arr.map((item, index) => {
-    return (
-      <Link to={`${index+1}`}>
-        <SlideCard>
-          <SlideImage src={item.slide} />
-          <SlideContent>
-            <SlideTitle>{item.title}</SlideTitle>
-            <div>
-              <span>{item.endTimeInfo !== null ?
-                item.startTimeInfo + " ~ " + item.endTimeInfo + " ": 
-                item.startTimeInfo + " ~ "}</span>
-              <span>#keyword</span>
-            </div>
-            <SlideScript>
-              {item.script}
-            </SlideScript>
-          </SlideContent>
-        </SlideCard>
-      </Link>
-    );
-  })
 
+const LoadingIcon = styled(Icon)`
+  padding-right: 20px;
+  padding-bottom: 20px;
+  float: right;
+`
+
+const SlideList = (props) => {
+  const [clickedRefresh, toggleRefresh] = useState(false);
+  useEffect(() => {
+    props.getSlides(props.noteId);
+  }, []);
+  const renderedList = (arr) =>
+    arr.map((item, index) => {
+      return (
+        <Link to={`/notes/${props.noteId}/slides/${index + 1}`}>
+          <SlideCard>
+            <SlideImage src={'data:image/jpeg;base64,' + item.smallImage} />
+            <SlideContent>
+              <SlideTitle>{item.title}</SlideTitle>
+              <div>
+                <span>{item.endTime !== null ? item.startTime + ' ~ ' + item.endTime + ' ' : item.startTime + ' ~ '}</span>
+                <span>{item.tags.slice(0, 4).join(',')}</span>
+              </div>
+              <SlideScript>{item.script}</SlideScript>
+            </SlideContent>
+          </SlideCard>
+        </Link>
+      );
+    });
+
+    useEffect(() => {
+      toggleRefresh(false);
+    }, [props]);
+  const onClickRefresh = () => {
+    toggleRefresh(true);
+    props.getSlides(props.noteId);
+  }
   return (
     <Wrapper>
-      <div>
-        {props.slides ? renderedList(props.slides) : ""}
-      </div>
+      {clickedRefresh ?
+        <LoadingIcon name="spinner" /> :
+        <RefreshIcon name="refresh" onClick={onClickRefresh} />}
+      <div>{props.slides ? renderedList(props.slides) : ''}</div>
       <ResultButton>
-        <Link to="result">
-          결과
-        </Link>
+        <Link to={`/notes/${props.noteId}/result`}>결과</Link>
       </ResultButton>
     </Wrapper>
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     slides: Object.values(state.slides),
-  }
-}
+    note: state.notes[ownProps.noteId],
+  };
+};
 
 export default connect(mapStateToProps, { getSlides })(SlideList);

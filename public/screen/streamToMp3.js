@@ -1,4 +1,6 @@
-import waffle from '../apis/waffle.js';
+import {
+  requestSTT,
+} from '../apis/waffle.js';
 
 let recBuffers = [[]];
 let recLength = 0;
@@ -20,27 +22,29 @@ function clearRecording() {
   listening = true;
 }
 
-const worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
+let worker;
 
-function getScripts() {
+function getScripts(status, startTime, endTime) {
   return new Promise((resolve, reject) => {
     try {
+      worker = new Worker(chrome.extension.getURL('screen/mp3Worker.js'));
+
       worker.addEventListener('message', function post(e) {
         console.log(e)
         const blob = e.data;
         const file = new File([blob], 'temp.mp3');
-        const frm = new FormData();
-        console.log(blob)
-        frm.append('audio', file);
-        waffle.post('/api/stt', frm, config).then((res) => {
-          worker.removeEventListener('message', post)
-          resolve({...res.data, audioBlob: blob});
-        });
+        requestSTT(file, status, startTime, endTime)
+          .then((res) => {
+            resolve({...res.data, audioBlob: blob});
+          })
+          .catch((error) => {
+            console.log(error);
+          })
       });
       console.log("Start encode")
       worker.postMessage({ recBuffers, recLength, sampleRate: context.sampleRate });
-      console.log("Requested to Worker")
       clearRecording();
+      console.log("Requested to Worker")
     } catch (error) {
       console.log(error)
       reject(error);
@@ -66,11 +70,10 @@ function init(stream) {
   node.connect(context.destination);
 }
 
-function onended() {
+async function onended() {
   clearRecording()
   source.disconnect(node);
   node.disconnect(context.destination);
-  worker.terminate();
 }
 
 export { init, clearRecording, getScripts, onended };
