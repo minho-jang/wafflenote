@@ -35,7 +35,15 @@ router.get("/", (req, res, next) => {
   Note.find({ author: sess.uuid })
   .sort({createdAt: -1})
   .then((notes) => {
-    res.send(notes);
+    let notesIdAndTitle = [];
+    for (var i = 0; i < notes.length; i++) {
+      let idAndTitle = {
+        _id: notes[i]._id,
+        title: notes[i].title
+      };
+      notesIdAndTitle.push(idAndTitle);
+    }
+    res.send(notesIdAndTitle);
   })
   .catch(err => {
     console.log(err);
