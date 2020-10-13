@@ -18,7 +18,7 @@ const Note = (props) => {
     <React.Fragment>
       <Navbar />
       <Wrapper>
-        <SlideList />
+        <SlideList noteId={props.match.params.noteId} />
         <MainBoard id={props.match.params.id} />
       </Wrapper>
     </React.Fragment>

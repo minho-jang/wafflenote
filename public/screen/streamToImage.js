@@ -1,22 +1,43 @@
-import waffle from "../apis/waffle.js";
+import {
+  requestCompareImages,
+  startWaffle,
+} from "../apis/waffle.js";
+
+import {
+  RUNNING,
+  END,
+} from '../apis/types.js';
+
 import {
   getOneSlideFromStorage,
   setSlideToStorage,
   setAudioToStorage,
   setStartTime,
 } from "../apis/storage.js";
-import { getScripts } from "./streamToMp3.js";
+
+import { getScripts, init } from "./streamToMp3.js";
 
 let currImage;
 let prevImage;
 let id;
 let isPlaying;
 
+let startTime;
+let curTime;
+let initTime;
+
 function stopCaptureImage() {
+  getScripts(END, dateDiffToString(initTime, startTime), dateDiffToString(initTime, new Date()))
+    .then((res) => {
+
+    })
+    .catch((err) => {
+
+    })
   isPlaying = false;
 }
 
-async function compareImage(video, canvas, ctx, startTime){
+async function compareImage(video, canvas, ctx){
   try {
     if (!isPlaying) return;
     ctx.drawImage(video, 0, 0);
@@ -25,37 +46,30 @@ async function compareImage(video, canvas, ctx, startTime){
     const currBlob = dataURItoBlob(currImage);
     const prevBlob = dataURItoBlob(prevImage);
 
-    const curTime = new Date();
-    if (currBlob && prevBlob) {
-      const fd = new FormData();
-      fd.append("frameImg", prevBlob, "image1.jpeg");
-      fd.append("frameImg", currBlob, "image2.jpeg");
-      const response = await waffle.post("/api/frame", fd, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const diffTime = dateDiffToString(startTime, curTime).toString();
-      if (response.data.result === "True") {
+    if (prevBlob) {
+      const response = await requestCompareImages(prevBlob, currBlob)
+      console.log(response);
+      if (response === "True") {
         console.log("changed!!")
-        const script = await getScripts();
-
-        console.log(script.data);
-        if (script.transcription === "") return;
-        await storePrevSlide(id-1, diffTime, script);
-        await storeCurrSlide(id++, diffTime, currImage);
+        curTime = new Date();
+        await getScripts(RUNNING, dateDiffToString(initTime ,startTime), dateDiffToString(initTime, curTime));
         prevImage = currImage;
+        startTime = curTime;
       }
     } else {
-      await storeCurrSlide(id++, "00:00", currImage);
+      await startWaffle(currBlob);
       prevImage = currImage;
     }
     setTimeout(() => {
-      compareImage(video, canvas, ctx, startTime)
+      compareImage(video, canvas, ctx)
     }, 1000)
   } catch (error) {
+    setTimeout(() => {
+      compareImage(video, canvas, ctx)
+    }, 1000)
     console.log(error);
   }
+
 }
 
 const captureImage = (stream) => {
@@ -64,6 +78,7 @@ const captureImage = (stream) => {
     "loadedmetadata",
     function () {
       const canvas = document.createElement("canvas");
+      console.log(window.screen.height)
       canvas.width = window.screen.width;
       canvas.height = window.screen.height;
       const ctx = canvas.getContext("2d");
@@ -72,9 +87,10 @@ const captureImage = (stream) => {
       prevImage = null;
       id = 1;
       isPlaying = true;
-      let startTime = new Date();
+      startTime = new Date();
+      initTime = new Date();
       setStartTime(startTime.toUTCString());
-      compareImage(video, canvas, ctx, startTime);
+      compareImage(video, canvas, ctx);
     },
     false
   );

@@ -33,7 +33,7 @@ self.addEventListener('message', function(e) {
       self.postMessage(result);
     })
     .catch((e) => {
-      self.postMessage(e);
+      self.postMessage(e.toString());
     })
 });
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import waffle from '../../static/WaffleLogo.png';
 import menuIcon from '../../static/Menu.png';
+import UserDropdown from './UserDropdown';
 
 const Wrapper = styled.div`
   height: 64px;
@@ -30,7 +31,7 @@ const Navbar = () => (
       <WaffleLogo src={waffle} />
 
       <ItemRight>
-        <MenuIcon src={menuIcon} />
+        <UserDropdown />
       </ItemRight>
     </Container>
   </Wrapper>

@@ -96,7 +96,7 @@ const ContentBoard = (props) => {
   return (
     <div>
       {isClicked ? (
-        <TextArea value={text} onChange={onChange} onBlur={onBlur} autoFocus />
+        <TextArea spellcheck="false" value={text} onChange={onChange} onBlur={onBlur} autoFocus />
       ) : (
         <>
           <NormalText onClick={onClick} placeholder={defaultText}>

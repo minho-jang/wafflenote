@@ -1,3 +1,10 @@
 export const GET_SLIDES = 'GET_SLIDES';
 export const GET_SLIDE = 'GET_SLIDE';
 export const EDIT_SLIDE = 'EDIT_SLIDE';
+export const GET_NOTES = 'GET_NOTES';
+export const GET_NOTE = 'GET_NOTE';
+export const EDIT_NOTE = 'EDIT_NOTE';
+export const SIGN_IN = 'SIGN_IN';
+export const SIGN_OUT = 'SIGN_OUT';
+export const FAIL = 'FAIL';
+export const WAFFLE_HOME = 'http://www.wafflenote.com';

@@ -1,35 +1,48 @@
 import { getSlidesFromStorage } from './storage';
-import waffle from './waffle';
+import { waffle } from './waffle';
+import { Redirect } from 'react-router-dom';
 
-export const getResult = async () => {
-  const response = await getSlidesFromStorage('note');
-  let text = '';
-  response.forEach((item) => {
-    if (item.script) {
-      text = text + item.script;
-    }
-  });
-  const res = {};
+
+export const getNoteId = async () => {
+  const response = await waffle.get(`/note/recently`);
+  return response.data[0];
+};
+
+export const login = async (email, password) => {
   try {
-    const response = await waffle.post('/api/nlp/summarization', {
-      text,
-    }, {
-      header: { 'Content-Type': 'application/json' }
+    const response = await waffle.post('/signin', {
+      type: 'wafflenote',
+      wafflenote_id: email,
+      password: password,
     });
-    res.summary = response.data.result.summary;
+
+    return response.data.result;
   } catch (error) {
-    console.log(error);
-    res.summary = text;
+    return false;
   }
+};
+export const logout = async () => {
   try {
-    const response = await waffle.post('/api/nlp/keyword-extraction', {
-      text,
-    }, {
-      header: { 'Content-Type': 'application/json' }
-    });
-    res.keywords = response.data.result.keywords;
+    const response = await waffle.get('/signout');
+
+    return true;
   } catch (error) {
-    console.log(error)
+    return false;
   }
-  return res;
+}
+export const getImage = async (slideId) => {
+  const response = await waffle.get(`/slide/${slideId}/origin-image`, { responseType: 'blob' });
+  const imageURL = URL.createObjectURL(response.data);
+  return imageURL;
+};
+export const getAudio = async (slideId) => {
+  const response = await waffle.get(`/slide/${slideId}/audio`, { responseType: 'blob' });
+  const audioURL = URL.createObjectURL(response.data);
+  return audioURL;
+};
+
+export const getResult = async (noteId) => {
+  const response = await waffle.get(`/note/${noteId}/result`);
+
+  return response.data;
 };

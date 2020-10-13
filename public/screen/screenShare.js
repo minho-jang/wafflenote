@@ -59,11 +59,12 @@ const requestScreenSharing = (port, msg) => {
             port.recorderPlaying = false;
             setState(false);
 
+            // stop Capturing Image
+            stopCaptureImage();
+
             // stop Audio
             onended();
 
-            // stop Capturing Image
-            stopCaptureImage();
           };
         },
         (err) => {

@@ -18,8 +18,8 @@ const Result = (props) => {
     <React.Fragment>
       <Navbar />
       <Wrapper>
-        <SlideList />
-        <ResultBoard/>
+        <SlideList noteId={props.match.params.noteId} />
+        <ResultBoard noteId={props.match.params.noteId} />
       </Wrapper>
     </React.Fragment>
   );

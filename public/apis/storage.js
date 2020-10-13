@@ -1,3 +1,14 @@
+export const setCurrentNoteId = (noteId) => {
+  return new Promise((resolve, reject) => {
+    const data = {};
+    data.currentNoteId = noteId;
+    chrome.storage.local.set(data, (obj) => {
+      console.log(obj);
+      resolve(true)
+    })
+  });
+}
+
 export const getSlidesFromStorage = async (noteName) => {
   try {
     const slides = [];

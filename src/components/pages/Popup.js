@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { getState, getStartTime } from "../../apis/storage";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import CaptureButton from "./CaptureButton";
-import StopButton from "./StopButton";
-import { getLastCapturedImage } from "../../apis/storage";
-import waffleLogo from "../../static/waffleLogo.png";
+import { signOut } from '../../actions/auth';
+import { getState, getStartTime } from '../../apis/storage';
+
+import CaptureButton from './CaptureButton';
+import StopButton from './StopButton';
+import { getLastCapturedImage } from '../../apis/storage';
+import waffleLogo from '../../static/waffleLogo.png';
+import { getNoteId, logout } from '../../apis/utils';
+import Spinner from '../presenter/Spinner';
+import PopupContainer from '../presenter/PopupContainer';
+import PopupHeader from '../presenter/PopupHeader';
+import PopupCircleLogo from '../presenter/PopupCircleLogo';
 
 const Button = styled(Link)`
   margin-top: 12px;
@@ -57,33 +65,8 @@ const InfoFalse = styled.div`
   color: #ffffff;
 `;
 
-const Title = styled.img`
-  width: 103px;
-  height: 16px;
-  margin-top: 12px;
-  margin-left: 11px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 270px;
-  height: 430px;
-  box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.16);
-  background-color: #ffbc3e;
-`;
-
 const ImageTrue = styled.img`
   margin-top: 4px;
-  margin-left: 35px;
-  width: 200px;
-  height: 140px;
-  box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.16);
-  background-color: #ffffff;
-`;
-
-const ImageFalse = styled.img`
-  margin-top: 69px;
   margin-left: 35px;
   width: 200px;
   height: 140px;
@@ -96,89 +79,105 @@ const Time = styled.div`
   margin-left: 110px;
   width: 30px;
   height: 18px;
-  font-family: NotoSansKR;
   font-size: 12px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.5;
   letter-spacing: normal;
   text-align: center;
   color: #ffffff;
 `;
 
-const Popup = () => {
+const Logout = styled.span`
+  text-align: right;
+  color: #ffffff;
+  cursor: pointer;
+  margin-left: 100px;
+`;
+
+const Popup = ({ signOut }) => {
   const [curSlide, setCurSlide] = useState({});
   const [curState, setCurState] = useState(false);
-  const [curTime, setCurTime] = useState("");
-
+  const [curTime, setCurTime] = useState('');
+  const [noteId, setNoteId] = useState('');
+  console.log(curSlide);
   useEffect(() => {
-    setImage();
+    countTime();
+    getNoteId().then((res) => {
+      setCurSlide(res.slide_list[res.slide_list.length - 1]);
+      setNoteId(res._id);
+    });
     setInterval(async () => {
-      setImage();
+      countTime();
     }, 1000);
   }, []);
 
-  const setImage = async () => {
-    const response = await getLastCapturedImage("note");
+  const countTime = async () => {
     const startTime = await getStartTime();
-
-    setCurSlide(response);
     setCurTime(dateDiffToString(new Date(), new Date(startTime)));
   };
-
-  const dateDiffToString = (a, b) => {
-    let diff = Math.abs(a - b);
-
-    let ms = diff % 1000;
-    diff = (diff - ms) / 1000;
-    let ss = diff % 60;
-    diff = (diff - ss) / 60;
-    let mm = diff % 60;
-    diff = (diff - mm) / 60;
-    let hh = diff % 24;
-
-    if (ss < 10) ss = "0" + ss;
-    if (mm < 10) mm = "0" + mm;
-    if (hh < 10) hh = "0" + hh;
-
-    return hh + ":" + mm + ":" + ss;
-  };
+  if (!noteId) {
+    return (
+      <PopupContainer>
+        <Spinner />
+      </PopupContainer>
+    );
+  }
 
   getState().then((state) => {
     setCurState(state);
   });
 
-  if (curState === true) {
-    // 와플노트 실행중
-    return (
-      <Container>
-        <Title src={waffleLogo} />
-        {curSlide.id}
-        <InfoTrue>현재 슬라이드</InfoTrue>
-        <ImageTrue src={curSlide.slide} />
-        <Time> {curTime} </Time>
-        <StopButton />
-        <Button to="/notes/1" target="_blank">
-          요약중인 노트보기
-        </Button>
-      </Container>
-    );
-  } else {
-    // 와플노트 종료
-    return (
-      <Container>
-        <Title src={waffleLogo} />
-        {curSlide.id}
-        <ImageFalse src={curSlide.slide} />
-        <InfoFalse>현재 탭에서 강의를 듣고 계신가요?</InfoFalse>
-        <CaptureButton />
-        <Button to="/notes/1" target="_blank">
-          와플노트 바로가기
-        </Button>
-      </Container>
-    );
-  }
+  const onClickLogout = async () => {
+    await logout();
+    window.location.reload();
+  };
+
+  return (
+    <PopupContainer>
+      <div>
+        <PopupHeader />
+        <Logout onClick={onClickLogout}>로그아웃</Logout>
+      </div>
+      {curSlide.id}
+      {curState ? (
+        <>
+          <InfoTrue>현재 슬라이드</InfoTrue>
+          <ImageTrue src={'data:image/jpeg;base64,' + curSlide.smallImage} />
+          <Time> {curTime} </Time>
+          <StopButton />
+          <Button to={`/notes/${noteId}/slides/1`} target="_blank">
+            요약중인 노트보기
+          </Button>{' '}
+        </>
+      ) : (
+        <>
+          <PopupCircleLogo />
+          <InfoFalse>현재 탭에서 강의를 듣고 계신가요?</InfoFalse>
+          <CaptureButton />
+          <Button to={`/notes/${noteId}/slides/1`} target="_blank">
+            와플노트 바로가기
+          </Button>
+        </>
+      )}
+    </PopupContainer>
+  );
 };
 
-export default Popup;
+function dateDiffToString(a, b) {
+  let diff = Math.abs(a - b);
+
+  let ms = diff % 1000;
+  diff = (diff - ms) / 1000;
+  let ss = diff % 60;
+  diff = (diff - ss) / 60;
+  let mm = diff % 60;
+  diff = (diff - mm) / 60;
+  let hh = diff % 24;
+
+  if (ss < 10) ss = '0' + ss;
+  if (mm < 10) mm = '0' + mm;
+  if (hh < 10) hh = '0' + hh;
+
+  return hh + ':' + mm + ':' + ss;
+}
+
+export default connect(null, { signOut })(Popup);
