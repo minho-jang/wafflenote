@@ -5,10 +5,10 @@ import {
   SIGN_OUT,
 } from './types';
 
-export const signIn = () => {
+export const signIn = (userId) => {
   return {
       type: SIGN_IN,
-      payload: null,
+      payload: userId,
     }
 };
 export const signOut = () => {

@@ -8,8 +8,10 @@ waffle.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error)
-    window.location.href = "popup.html#/login"
+    if(error.response.status == 401) {
+      window.open("popup.html#/login", "_self")
+      return error
+    }
   },
 );
 export {waffle};

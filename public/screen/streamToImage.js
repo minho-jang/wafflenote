@@ -78,9 +78,8 @@ const captureImage = (stream) => {
     "loadedmetadata",
     function () {
       const canvas = document.createElement("canvas");
-      console.log(window.screen.height)
-      canvas.width = window.screen.width;
-      canvas.height = window.screen.height;
+      canvas.width = this.videoWidth;
+      canvas.height = this.videoHeight;
       const ctx = canvas.getContext("2d");
 
       currImage = null;

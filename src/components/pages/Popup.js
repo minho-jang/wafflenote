@@ -93,12 +93,11 @@ const Logout = styled.span`
   margin-left: 100px;
 `;
 
-const Popup = ({ signOut }) => {
+const Popup = ({ signOut, auth }) => {
   const [curSlide, setCurSlide] = useState({});
   const [curState, setCurState] = useState(false);
   const [curTime, setCurTime] = useState('');
   const [noteId, setNoteId] = useState('');
-  console.log(curSlide);
   useEffect(() => {
     countTime();
     getNoteId().then((res) => {
@@ -128,6 +127,7 @@ const Popup = ({ signOut }) => {
 
   const onClickLogout = async () => {
     await logout();
+    signOut();
     window.location.reload();
   };
 
@@ -180,4 +180,9 @@ function dateDiffToString(a, b) {
   return hh + ':' + mm + ':' + ss;
 }
 
-export default connect(null, { signOut })(Popup);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  }
+}
+export default connect(mapStateToProps, { signOut })(Popup);

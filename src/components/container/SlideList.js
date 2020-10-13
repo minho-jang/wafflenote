@@ -6,8 +6,8 @@ import { getSlides } from '../../actions/slides';
 import { Icon } from 'semantic-ui-react';
 
 const Wrapper = styled.div`
-  height: 100vh;
-  width: 346px;
+  height: 90vh;
+  width: 356px;
   position: relative;
   z-index: 1;
   top: 0;
@@ -80,16 +80,16 @@ const ResultButton = styled.div`
 `;
 
 const RefreshIcon = styled(Icon)`
-  padding-right: 20px;
-  padding-bottom: 20px;
+  padding-right: 30px;
+  padding-bottom: 25px;
   float: right;
   cursor: pointer;
 `
 
 
 const LoadingIcon = styled(Icon)`
-  padding-right: 20px;
-  padding-bottom: 20px;
+  padding-right: 30px;
+  padding-bottom: 25px;
   float: right;
 `
 
@@ -128,7 +128,7 @@ const SlideList = (props) => {
     <Wrapper>
       {clickedRefresh ?
         <LoadingIcon name="spinner" /> :
-        <RefreshIcon name="refresh" onClick={onClickRefresh} />}
+        <RefreshIcon name="refresh" onClick={onClickRefresh} size="large" color="yellow" />}
       <div>{props.slides ? renderedList(props.slides) : ''}</div>
       <ResultButton>
         <Link to={`/notes/${props.noteId}/result`}>결과</Link>

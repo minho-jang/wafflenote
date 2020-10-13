@@ -22,7 +22,6 @@ const requestScreenSharing = (port, msg) => {
   }
   port.recorderPlaying = true;
   const tab = port.sender.tab;
-
   chrome.desktopCapture.chooseDesktopMedia(
     ["tab", "audio"],
     tab,
@@ -46,6 +45,8 @@ const requestScreenSharing = (port, msg) => {
                 chromeMediaSourceId: streamId,
                 maxFrameRate: 1,
                 minFrameRate: 1,
+                maxWidth: 1200,
+                maxHeight: 800,
               },
             },
           },

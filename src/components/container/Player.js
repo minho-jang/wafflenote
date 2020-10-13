@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import playIcon from '../../static/play.svg';
 import pauseIcon from '../../static/pause.svg';
+import Spinner from '../presenter/Spinner';
+import { getAudio } from '../../apis/utils';
+import { Icon } from 'semantic-ui-react';
+
+
+const LoadingIcon = styled(Icon)`
+  padding-left: 14px;
+  margin-top: 5px;
+  vertical-align: middle;
+`
+
 const Container = styled.div`
   margin-bottom: 13px;
   width: 40px;
@@ -17,16 +28,21 @@ const Button = styled.img`
   cursor: pointer;
 `
 
-const Player = ({ url }) => {
-  const [audio, setAudio] = useState(new Audio(url));
+const Player = ({ id }) => {
+  const [audio, setAudio] = useState(new Audio());
   const [playing, setPlaying] = useState(false);
+  const [loadingAudio, toggleLoading] = useState(false);
 
   const toggle = () => setPlaying(!playing);
   useEffect(() => {
-    audio.src = url;
-    setAudio(audio);
-  }, [url]);
-
+    toggleLoading(true)
+    getAudio(id).then((res) => {
+      audio.src=URL.createObjectURL(res)
+      toggleLoading(false);
+    })
+    setPlaying(false);
+  }, [id]);
+  
   useEffect(() => {
     playing ? audio.play() : audio.pause();
   }, [playing]);
@@ -37,6 +53,11 @@ const Player = ({ url }) => {
       audio.removeEventListener('ended', () => setPlaying(false));
     };
   }, []);
+
+  if (loadingAudio) return (
+    <Container>
+      <LoadingIcon name="spinner" />
+    </Container>)
 
   return (
     <Container>

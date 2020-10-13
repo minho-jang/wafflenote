@@ -16,7 +16,7 @@ export const login = async (email, password) => {
       password: password,
     });
 
-    return response.data.result;
+    return response.data;
   } catch (error) {
     return false;
   }
@@ -37,8 +37,8 @@ export const getImage = async (slideId) => {
 };
 export const getAudio = async (slideId) => {
   const response = await waffle.get(`/slide/${slideId}/audio`, { responseType: 'blob' });
-  const audioURL = URL.createObjectURL(response.data);
-  return audioURL;
+  const audio = response.data;
+  return audio;
 };
 
 export const getResult = async (noteId) => {
