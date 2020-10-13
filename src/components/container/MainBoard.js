@@ -24,15 +24,12 @@ const MainBoard = (props) => {
     return <div>Loading</div>;
   }
 
-  const [audio, setAudio] = useState(null);
   const [image, setImage] = useState("");
 
   useEffect(() => {
     (async function(){
       const image = await getImage(props.slide._id);
       setImage(image);
-      const audio = await getAudio(props.slide._id);
-      setAudio(audio)
     })();
   }, [props]);
 
@@ -63,7 +60,7 @@ const MainBoard = (props) => {
     <Body>
       <TitleBoard slide={curSlide} onTitleSubmit={onTitleSubmit} />
       <Image src={image ? image : wireframe } />
-      {audio ? <Player url={audio} /> : 'loading mp3'}
+      <Player id={curSlide._id} />
       <TitleText>스크립트</TitleText>
       <ContentBoard input={curSlide.script} title="스크립트" onBlur={scriptOnBlur} />
       <TitleText>노트</TitleText>

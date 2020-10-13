@@ -57,7 +57,7 @@ const LoginForm = ({ auth, signIn, location }) => {
       login(email, password)
         .then((res) => {
           if (res) {
-            signIn();
+            signIn(res.whoami);
           } else {
             alert('로그인 정보가 올바르지 않습니다.');
           }
