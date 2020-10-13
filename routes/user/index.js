@@ -9,7 +9,7 @@ router.use((req, res, next) => {
     next();
     
   } else if (! req.session.uuid) {
-    res.status(400).send("Need to signin");
+    res.status(401).send("Need to signin");
 
   } else {
     next();
