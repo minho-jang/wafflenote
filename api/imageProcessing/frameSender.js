@@ -38,6 +38,7 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
 
   if (!req.files[0] || !req.files[1]) {
     res.status(400).send("No such file");
+    return;
   }
 	
   // Convert Buffer to String(Integer array)
