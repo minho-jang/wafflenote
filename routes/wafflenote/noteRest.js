@@ -32,6 +32,7 @@ router.get("/", (req, res, next) => {
   console.log("GET /note");
   
   const sess = req.session;
+
   Note.find({ author: sess.uuid })
   .sort({createdAt: -1})
   .then((notes) => {
@@ -39,7 +40,13 @@ router.get("/", (req, res, next) => {
     for (var i = 0; i < notes.length; i++) {
       let idAndTitle = {
         _id: notes[i]._id,
-        title: notes[i].title
+        title: notes[i].title,
+        author: notes[i].author,
+        status: notes[i].status,
+        summary: notes[i].summary,
+        note_keywords: notes[i].note_keywords,
+        createdAt: notes[i].createdAt,
+        updatedAt: notes[i].updatedAt
       };
       notesIdAndTitle.push(idAndTitle);
     }
