@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 // session check
-const whiteList = ["/signup", "/signin", "/find-id", "/find-password", "/verify-email", "/verify-code"];
+const whiteList = ["/signup", "/signin", "/find-id", "/find-password", "/change-password", "/verify-email", "/verify-code"];
 router.use((req, res, next) => {
   if (whiteList.includes(req.url)) {
     next();
