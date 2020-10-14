@@ -57,9 +57,9 @@ def get_stopwords():
     return set(stopwords)
 
 
-def summarize(text, num_summaries):
-    text = text.split('. ')
-    if len(text) < num_summaries:
+def summarize(text, num_summaries, summary_ratio=0.2):
+    text_split = text.split('. ')
+    if len(text_split) < num_summaries:
         return 'SummarizeError: Number of sentences must be bigger than num_summaries'
 
     wordrank_extractor = KRWordRank(min_count=3,  # 단어의 최소 출현 빈도수 (그래프 생성 시)
@@ -68,19 +68,29 @@ def summarize(text, num_summaries):
     beta = 0.85  # PageRank의 decaying factor beta
     max_iter = 10
     try:
-        keywords, rank, graph = wordrank_extractor.extract(text, beta, max_iter, num_keywords=100)
+        keywords, rank, graph = wordrank_extractor.extract(text_split, beta, max_iter, num_keywords=100)
 
         stopwords = set.union(get_stopwords(), set(stopwords_ko))
         vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)
         # tokenizer = MaxScoreTokenizer(vocab_score)
         tokenizer_mecab = Mecab()
 
-        sents = keysentence(vocab_score,
-                            text,
-                            tokenizer_mecab.nouns,  # tokenizer.tokenize
-                            diversity=0.7,
-                            topk=num_summaries)
-    except ValueError as e:
-        raise RuntimeError("SummarizationError: " + str(e))
+        # 일정 길이 이상이 될 때까지 요약 반복
+        text_summary = ""
+        iter_num = 1
+        while len(text_summary) < len(text) * summary_ratio:
+            if len(text_split) < num_summaries * iter_num:
+                break
 
-    return '. '.join(sents)
+            sents = keysentence(vocab_score,
+                                text_split,
+                                tokenizer_mecab.nouns,  # tokenizer.tokenize
+                                diversity=0.7,
+                                topk=num_summaries * iter_num)
+            text_summary = '. '.join(sents)
+            iter_num += 1
+
+    except ValueError as e:
+        return "SummarizationError: " + str(e)
+
+    return text_summary
