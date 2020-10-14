@@ -44,6 +44,12 @@ const LoginButton = styled.button`
   color: #959595;
   font-size: 12px;
   cursor: pointer;
+  box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.16);
+  transition: all ease 0.5s 0s;
+  :hover {
+    background-color: #ffbc3e;
+    color: white
+  }
 `
 
 const LoginForm = ({ auth, signIn, location }) => {

@@ -15,8 +15,8 @@ const HomeLinks = styled.div`
   width: 200px;
   margin: 19px auto;
   text-align: center;
-  
 `
+
 const HomeLink = styled.a`
   font-size: 10px;
   margin: 0 7px;

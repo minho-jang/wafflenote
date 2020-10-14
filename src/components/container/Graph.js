@@ -7,7 +7,6 @@ const Wrapper = styled.canvas`
 
 function Graph({ data }) {
   const chartRef = useRef();
-  // console.log(data)
   const dataset = data.slice(0, 10);
   useEffect(() => {
     if (data.length != 0) {

@@ -6,7 +6,6 @@ import { SIGN_OUT } from '../actions/types';
 export const errorHandler = (error, dispatch) => {
   if (!error.response) return
   if (error.response.status == 401) {
-    console.log("MUST BE fALSE")
     dispatch({
       type: SIGN_OUT,
     })
