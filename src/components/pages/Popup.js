@@ -12,6 +12,7 @@ import { getNoteId, logout } from '../../apis/utils';
 import PopupContainer from '../presenter/PopupContainer';
 import PopupHeader from '../presenter/PopupHeader';
 import PopupCircleLogo from '../presenter/PopupCircleLogo';
+import PopupFooter from '../presenter/PopupFooter';
 
 const Button = styled(Link)`
   margin-top: 12px;
@@ -30,6 +31,12 @@ const Button = styled(Link)`
   font-style: normal;
   line-height: 30px;
   color: #ffbc3e;
+
+  transition: all ease 0.5s 0s;
+  :hover {
+    background-color: #ffbc3e;
+    color: white
+  }
 `;
 
 const InfoTrue = styled.div`
@@ -143,6 +150,7 @@ const port = chrome.runtime.connect({
         <PopupCircleLogo />
         <InfoFalse>현재 탭에서 강의를 듣고 계신가요?</InfoFalse>
         <CaptureButton />
+        <PopupFooter />
       </PopupContainer>
     );
   }
@@ -174,6 +182,7 @@ const port = chrome.runtime.connect({
           </Button>
         </>
       )}
+      <PopupFooter />
     </PopupContainer>
   );
 };

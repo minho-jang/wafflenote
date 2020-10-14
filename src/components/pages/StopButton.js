@@ -18,6 +18,11 @@ const Button = styled.button`
   font-style: normal;
   color: #ffbc3e;
   cursor: pointer;
+  transition: all ease 0.5s 0s;
+  :hover {
+    background-color: #ffbc3e;
+    color: white
+  }
 `;
 
 const port = chrome.runtime.connect({

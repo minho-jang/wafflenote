@@ -33,9 +33,7 @@ const Navbar = ({ auth, checkAuth }) => {
   useEffect(() => {
     checkAuth()
   }, [])
-  console.log( auth )
   if (auth.isSignedIn == null) {
-    console.log("SUC")
     return <Spinner />
   }
   if (!auth.isSignedIn) {
