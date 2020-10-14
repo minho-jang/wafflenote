@@ -1,7 +1,17 @@
 import { getSlidesFromStorage } from './storage';
 import { waffle } from './waffle';
 import { Redirect } from 'react-router-dom';
+import { SIGN_OUT } from '../actions/types';
 
+export const errorHandler = (error, dispatch) => {
+  if (!error.response) return
+  if (error.response.status == 401) {
+    console.log("MUST BE fALSE")
+    dispatch({
+      type: SIGN_OUT,
+    })
+  }
+}
 
 export const getNoteId = async () => {
   const response = await waffle.get(`/note/recently`);

@@ -43,6 +43,7 @@ const LoginButton = styled.button`
   text-align: center;
   color: #959595;
   font-size: 12px;
+  cursor: pointer;
 `
 
 const LoginForm = ({ auth, signIn, location }) => {
@@ -70,7 +71,7 @@ const LoginForm = ({ auth, signIn, location }) => {
     }
   };
   if (auth.isSignedIn) {
-    history.goBack();
+    return <Redirect to="/" />
   }
   if (isRequested) {
     return <Spinner />

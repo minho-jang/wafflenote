@@ -16,9 +16,9 @@ const Result = (props) => {
 
   return (
     <React.Fragment>
-      <Navbar />
+      <Navbar  />
       <Wrapper>
-        <SlideList noteId={props.match.params.noteId} />
+        <SlideList noteId={props.match.params.noteId} id={props.match.params.id} />
         <ResultBoard noteId={props.match.params.noteId} />
       </Wrapper>
     </React.Fragment>

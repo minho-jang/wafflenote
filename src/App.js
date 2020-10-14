@@ -1,12 +1,14 @@
 import React from 'react';
 import { Switch, HashRouter, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import Note from './components/pages/Note';
 import Popup from './components/pages/Popup';
 import Result from './components/pages/Result';
 import Login from './components/pages/Login';
 
-const App = () => (
+const App = () => {
+  return(
   <div>
     <HashRouter history={createBrowserHistory()}>
       <Switch>
@@ -17,6 +19,7 @@ const App = () => (
       </Switch>
     </HashRouter>
   </div>
-);
+)};
+
 
 export default App;

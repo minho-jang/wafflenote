@@ -5,13 +5,10 @@ import { connect } from 'react-redux';
 
 import { signOut } from '../../actions/auth';
 import { getState, getStartTime } from '../../apis/storage';
-
+import { getRecentNote } from '../../actions/notes';
 import CaptureButton from './CaptureButton';
 import StopButton from './StopButton';
-import { getLastCapturedImage } from '../../apis/storage';
-import waffleLogo from '../../static/waffleLogo.png';
 import { getNoteId, logout } from '../../apis/utils';
-import Spinner from '../presenter/Spinner';
 import PopupContainer from '../presenter/PopupContainer';
 import PopupHeader from '../presenter/PopupHeader';
 import PopupCircleLogo from '../presenter/PopupCircleLogo';
@@ -93,7 +90,11 @@ const Logout = styled.span`
   margin-left: 100px;
 `;
 
-const Popup = ({ signOut, auth }) => {
+const port = chrome.runtime.connect({
+  name: "WaffleNote",
+});
+
+const Popup = ({ signOut, auth, getRecentNote }) => {
   const [curSlide, setCurSlide] = useState({});
   const [curState, setCurState] = useState(false);
   const [curTime, setCurTime] = useState('');
@@ -113,13 +114,11 @@ const Popup = ({ signOut, auth }) => {
     const startTime = await getStartTime();
     setCurTime(dateDiffToString(new Date(), new Date(startTime)));
   };
-  if (!noteId) {
-    return (
-      <PopupContainer>
-        <Spinner />
-      </PopupContainer>
-    );
-  }
+
+
+const port = chrome.runtime.connect({
+  name: "WaffleNote",
+});
 
   getState().then((state) => {
     setCurState(state);
@@ -129,7 +128,24 @@ const Popup = ({ signOut, auth }) => {
     await logout();
     signOut();
     window.location.reload();
+    port.postMessage({ type: "waffleNoteStop", text: "stop" }, "*");
+
   };
+
+  if (!noteId) {
+    return (
+      <PopupContainer>
+        <div>
+          <PopupHeader />
+          <Logout onClick={onClickLogout}>로그아웃</Logout>
+        </div>
+
+        <PopupCircleLogo />
+        <InfoFalse>현재 탭에서 강의를 듣고 계신가요?</InfoFalse>
+        <CaptureButton />
+      </PopupContainer>
+    );
+  }
 
   return (
     <PopupContainer>
@@ -183,6 +199,6 @@ function dateDiffToString(a, b) {
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
-  }
-}
+  };
+};
 export default connect(mapStateToProps, { signOut })(Popup);

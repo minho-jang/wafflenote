@@ -1,9 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import waffle from '../../static/WaffleLogo.png';
 import menuIcon from '../../static/Menu.png';
 import UserDropdown from './UserDropdown';
+import Spinner from '../presenter/Spinner';
+import { checkAuth } from '../../actions/auth';
 
 const Wrapper = styled.div`
   height: 64px;
@@ -25,7 +28,20 @@ const MenuIcon = styled.img`
 const WaffleLogo = styled.img`
 `
 
-const Navbar = () => (
+const Navbar = ({ auth, checkAuth }) => {
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+  console.log( auth )
+  if (auth.isSignedIn == null) {
+    console.log("SUC")
+    return <Spinner />
+  }
+  if (!auth.isSignedIn) {
+    return <Redirect to="/login" />
+  }
+  return (
   <Wrapper>
     <Container>
       <WaffleLogo src={waffle} />
@@ -35,6 +51,13 @@ const Navbar = () => (
       </ItemRight>
     </Container>
   </Wrapper>
-);
+)};
 
-export default Navbar;
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  };
+};
+
+export default connect(mapStateToProps, { checkAuth })(Navbar);

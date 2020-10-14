@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css }  from 'styled-components';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getSlides } from '../../actions/slides';
@@ -24,6 +24,16 @@ const SlideCard = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
+  ${(props) =>
+    props.isSelected &&
+    css`
+      background-color: #fdeed0;
+    `}
+  transition: all ease 0.5s 0s;
+  :hover {
+    
+    background-color: #fdeed0;
+  }
 `;
 const SlideImage = styled.img`
   width: 89.5px;
@@ -100,9 +110,10 @@ const SlideList = (props) => {
   }, []);
   const renderedList = (arr) =>
     arr.map((item, index) => {
+      const isSelected = item.slide_id === props.id-0 ? true : false;
       return (
         <Link to={`/notes/${props.noteId}/slides/${index + 1}`}>
-          <SlideCard>
+          <SlideCard isSelected= {isSelected}>
             <SlideImage src={'data:image/jpeg;base64,' + item.smallImage} />
             <SlideContent>
               <SlideTitle>{item.title}</SlideTitle>
