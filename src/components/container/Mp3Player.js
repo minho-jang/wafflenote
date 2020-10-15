@@ -36,11 +36,12 @@ const Mp3Player = ({id}) => {
   }, [id]);
   
   if(loadingAudio) {
-    return <Container><LoadingIcon loading name="spinner" size="large" showJumpControls={false} /></Container>
+    return <Container><LoadingIcon loading name="spinner" size="large"  /></Container>
   }
   return (
   <AudioPlayer
     src={audio}
+    showJumpControls={false}
   />
 )};
 
