@@ -175,6 +175,7 @@ const port = chrome.runtime.connect({
       ) : (
         <>
           <PopupCircleLogo />
+          <InfoFalse>{`${auth.userId}님 안녕하세요.`}</InfoFalse>
           <InfoFalse>현재 탭에서 강의를 듣고 계신가요?</InfoFalse>
           <CaptureButton />
           <Button to={`/notes/${noteId}/slides/1`} target="_blank">

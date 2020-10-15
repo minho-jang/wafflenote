@@ -20,6 +20,7 @@ const PopupHeader = ({ auth, checkAuth }) => {
   useEffect(() => {
     checkAuth()
   }, [])
+
   if (auth.isSignedIn == false) {
     return <Redirect to="/login" />
   }

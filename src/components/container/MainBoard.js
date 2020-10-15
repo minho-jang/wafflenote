@@ -9,6 +9,7 @@ import TitleBoard from '../presenter/TitleBoard';
 import { getImage, getAudio } from '../../apis/utils';
 import wireframe from '../../static/wireframe.png'
 import Tags from '../presenter/Tags';
+import Mp3Player from './Mp3Player';
 
 const Body = styled.div`
   margin: 0 auto;
@@ -60,7 +61,8 @@ const MainBoard = (props) => {
     <Body>
       <TitleBoard slide={curSlide} onTitleSubmit={onTitleSubmit} />
       <Image src={image ? image : wireframe } />
-      <Player id={curSlide._id} />
+      <Mp3Player id={curSlide._id}/>
+      {/* <Player id={curSlide._id} /> */}
       <TitleText>스크립트</TitleText>
       <ContentBoard input={curSlide.script} title="스크립트" onBlur={scriptOnBlur} />
       <TitleText>노트</TitleText>
