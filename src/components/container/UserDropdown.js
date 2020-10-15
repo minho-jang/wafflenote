@@ -7,7 +7,7 @@ import { getNotes } from '../../actions/notes';
 import Spinner from '../presenter/Spinner';
 import { useHistory } from 'react-router-dom';
 
-const UserDropdown = ({ notes, getNotes }) => {
+const UserDropdown = ({ notes, getNotes, auth }) => {
   useEffect(() => {
     getNotes();
   }, []);
@@ -27,7 +27,7 @@ const UserDropdown = ({ notes, getNotes }) => {
   return (
     <Dropdown icon={<img src={menuIcon}></img>}>
       <Dropdown.Menu direction="left" style={{ width: "200px"}}>
-        <Dropdown.Item text={"와플노트"} />
+        <Dropdown.Item text={`${auth.userId}`} />
         <Dropdown.Divider />
         { notes ? (renderNoteList(notes)) :
           <Spinner />
@@ -41,6 +41,7 @@ const UserDropdown = ({ notes, getNotes }) => {
 const mapStateToProps = (state) => {
   return {
     notes: Object.values(state.notes),
+    auth: state.auth,
   };
 };
 
