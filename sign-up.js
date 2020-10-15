@@ -94,7 +94,6 @@ function signUp() {
   const password2 = document.getElementById("password2").value;
   const name = document.getElementById("name").value;
   const phone = document.getElementById("mobile").value;
-  const organization = document.getElementById("organization").value;
   const advertise_email = document.getElementsByName("adv_agree")[0].checked;
   const advertise_sms = document.getElementsByName("adv_agree")[1].checked;
 
@@ -148,6 +147,7 @@ function verifyEmail() {
   if (!wafflenote_id) {
     alert("아이디(이메일)를 정확히 입력해 주세요.");
   } else {
+    alert("인증번호가 전송되었습니다.");
     verifyEmailApi(wafflenote_id).then((res) => {
       console.log(res);
       if (res) {

@@ -4,11 +4,11 @@ const waffle = axios.create({
   baseURL: PROD_SERVER,
 });
 
-const verifyEmailApi = async (email) => {
+const findPasswordApi = async (email) => {
   var data = {
     email,
   };
-  const response = await waffle.post("/verify-email", data);
+  const response = await waffle.post("/find-password", data);
   console.log(response);
   return response.data.result;
 };
@@ -91,7 +91,8 @@ function verifyEmail() {
   if (!wafflenote_id) {
     alert("아이디(이메일)를 정확히 입력해 주세요.");
   } else {
-    verifyEmailApi(wafflenote_id).then((res) => {
+    alert("인증번호가 전송되었습니다.");
+    findPasswordApi(wafflenote_id).then((res) => {
       console.log(res);
       if (res) {
         var verify_display = document.querySelector("#verify_html");
@@ -121,14 +122,16 @@ function verifyCode() {
         isVerify = true;
         const new_password = document.querySelector("#new_password");
         new_password.innerHTML =
-          "" +
+          "<div><h3><label for='id'>아이디</label></h3><span class='box int_id'><span id='wafflenote_id'>" +
+          wafflenote_id +
+          "</span></span></div>" +
           "<div><h3 class='join_title'><label for='name'>새 비밀번호</label></h3>" +
           "<span class='box int_name'><span class='step_url'></span>" +
-          "<input type='password' id='password1' class='int' maxlength='20' placeholder='숫자, 영문, 특자문자를 혼합하여 9자 이상 입력해주세요.'/>" +
-          "</span><span class='error_next_box'></span></div><div><h3 class='join_title'><label for='name'>새 비밀번호 확인</label>" +
+          "<input type='password' id='password1' class='int' maxlength='20' placeholder='숫자, 영문, 특수문자를 혼합하여 9자 이상 입력해주세요.'/>" +
+          "</span></div><div><h3 class='join_title'><label for='name'>새 비밀번호 확인</label>" +
           "</h3><span class='box int_name'><span class='step_url'></span>" +
-          "<input type='password'id='password2'class='int'maxlength='20'placeholder='숫자, 영문, 특자문자를 혼합하여 9자 이상 입력해주세요.'/>" +
-          "</span><span class='error_next_box'></span></div>";
+          "<input type='password'id='password2'class='int'maxlength='20'placeholder='숫자, 영문, 특수문자를 혼합하여 9자 이상 입력해주세요.'/>" +
+          "</span></div>";
         clearInterval(tid);
       } else {
         alert("인증번호가 일치하지 않습니다.");
@@ -139,7 +142,7 @@ function verifyCode() {
 
 function changePassword() {
   // sendserver
-  const wafflenote_id = document.getElementById("wafflenote_id").value;
+  const wafflenote_id = document.getElementById("wafflenote_id").innerHTML;
   const password1 = document.getElementById("password1").value;
   const password2 = document.getElementById("password2").value;
 
@@ -152,6 +155,8 @@ function changePassword() {
   } else if (!checkPassword(password1, password2)) {
     alert("비밀번호가 일치하지 않거나, 9자 미만입니다.");
   }
+  console.log(wafflenote_id);
+  console.log(password1);
   changePasswordApi(wafflenote_id, password1).then((res) => {
     alert("비밀번호 변경이 완료되었습니다.");
     window.location.href = "/";
