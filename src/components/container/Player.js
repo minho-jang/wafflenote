@@ -41,6 +41,10 @@ const Player = ({ id }) => {
       toggleLoading(false);
     })
     setPlaying(false);
+    return () => {
+      audio.pause();
+      audio.removeEventListener('ended', () => setPlaying(false));
+    }
   }, [id]);
   
   useEffect(() => {
