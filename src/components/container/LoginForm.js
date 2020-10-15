@@ -63,7 +63,8 @@ const LoginForm = ({ auth, signIn, location }) => {
       toggleRequest(true);
       login(email, password)
         .then((res) => {
-          if (res) {
+          console.log(res)
+          if (res.result) {
             signIn(res.whoami);
           } else {
             alert('로그인 정보가 올바르지 않습니다.');
