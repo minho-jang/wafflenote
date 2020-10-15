@@ -25,14 +25,14 @@ const MainBoard = (props) => {
   }
 
   const [image, setImage] = useState("");
-
   useEffect(() => {
     (async function(){
       const image = await getImage(props.slide._id);
       setImage(image);
     })();
-  }, [props]);
-
+    props.getSlide(props.slide._id);
+  }, [props.slide._id]);
+  
   const curSlide = props.slide;
   const onTitleSubmit = (editedTitle) => {
     const editedCurSlide = {
