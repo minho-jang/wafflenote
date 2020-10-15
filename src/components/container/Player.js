@@ -8,9 +8,9 @@ import { Icon } from 'semantic-ui-react';
 
 
 const LoadingIcon = styled(Icon)`
-  padding-left: 14px;
-  margin-top: 5px;
-  vertical-align: middle;
+  position: relative;
+  left: 13px;
+  top: 5px;
 `
 
 const Container = styled.div`
@@ -56,7 +56,7 @@ const Player = ({ id }) => {
 
   if (loadingAudio) return (
     <Container>
-      <LoadingIcon name="spinner" />
+      <LoadingIcon loading name="spinner" />
     </Container>)
 
   return (

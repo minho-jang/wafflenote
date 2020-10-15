@@ -47,8 +47,9 @@ const RefreshIcon = styled(Icon)`
 
 
 const LoadingIcon = styled(Icon)`
-  padding-right: 30px;
-  padding-bottom: 25px;
+  position: relative;
+  top: 5px;
+  right: 10px;
   float: right;
 `
 
@@ -77,7 +78,7 @@ const SlideList = (props) => {
   return (
     <Wrapper>
       {clickedRefresh ?
-        <LoadingIcon name="spinner" /> :
+        <LoadingIcon loading name="spinner" size="large" /> :
         <RefreshIcon name="refresh" onClick={onClickRefresh} size="large" color="yellow" />}
       <div>{props.slides ? renderedList(props.slides) : ''}</div>
       <ResultButton>
