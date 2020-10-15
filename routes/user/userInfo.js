@@ -11,6 +11,7 @@ router.get("/", async (req, res, next) => {
 
   try {
     const doc = await User.findById(sess.uuid);
+    doc.password = undefined;
     res.send(doc);
   } catch(err) {
     console.log(err);
