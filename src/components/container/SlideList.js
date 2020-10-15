@@ -7,9 +7,9 @@ import { Icon } from 'semantic-ui-react';
 import SlideItem from './SlideItem';
 
 const Wrapper = styled.div`
-  height: 90vh;
+  height: 100vh;
   width: 356px;
-  position: relative;
+  position: sticky;
   z-index: 1;
   top: 0;
   left: 0;
