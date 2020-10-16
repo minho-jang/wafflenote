@@ -43,7 +43,7 @@ function Graph({ data }) {
         },
       });
     }
-  });
+  }, []);
 
   return (
     <>

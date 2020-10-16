@@ -8,7 +8,8 @@ const Tag = styled.button`
   text-align: center;
   font-size: 20px;
   background-color: #fdeed0;
-  width: 106px;
+  width: auto;
+  min-width: 106px;
   height: 59px;
   border: 0;
   outline: 0;
