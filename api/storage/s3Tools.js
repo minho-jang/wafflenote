@@ -2,13 +2,13 @@ const AWS = require("aws-sdk");
 const fs = require("fs");
 
 const awsConfig = require("../../config/aws.json");
-const documentDBConfig = require("../../config/documentdb.json");
+const docdbConfig = require("../../config/documentdb.json");
 const s3 = new AWS.S3({
   accessKeyId: awsConfig.AWS_AUTH_ID,
   secretAccessKey: awsConfig.AWS_AUTH_KEY
 });
 
-const BUCKET_NAME = documentDBConfig.BUECKET_NAME;
+const BUCKET_NAME = docdbConfig.BUCKET_NAME;
 
 const getBucketList = () => {
   return new Promise((resolve, reject) => {

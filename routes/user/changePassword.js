@@ -1,4 +1,5 @@
 const express = require("express");
+const crypto = require("crypto");
 
 const AuthEmail = require("../../models/authEmail").AuthEmail;
 const User = require("../../models/user").User;
@@ -26,10 +27,13 @@ router.post("/", async (req, res, next) => {
     
     const authEmailDoc = authEmailDocs[0];
     const elapsed = authEmailDoc.expired.getTime() - Date.now();
+
     if (elapsed > 0 && elapsed < emailConfig.EXPIRED_TIME) {
+      const salt = crypto.randomBytes(64).toString('base64');
+      const encryptedPw = crypto.pbkdf2Sync(newPw, salt, 93034, 64, 'sha512');
       const doc = await User.findOneAndUpdate(
         { wafflenote_id: uId },
-        { $set: {password: newPw} },
+        { $set: {password: encryptedPw, salt: salt} },
         { new: true }
       );
       res.send({
