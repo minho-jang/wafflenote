@@ -16,7 +16,8 @@ var userSchema = new Schema({
     terms_of_use: Boolean,
     advertise_sms: Boolean,
     advertise_email: Boolean
-  }
+  },
+  salt: String
 }, { timestamps: true });
 
 module.exports = {

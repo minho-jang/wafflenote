@@ -1,5 +1,6 @@
 const express = require("express");
 const userModel = require("../../models/user");
+const crypto = require("crypto");
 
 const User = userModel.User;
 const router = express.Router();
@@ -12,18 +13,25 @@ router.post("/", async (req, res, next) => {
   const sess = req.session;
 
   if (type == "wafflenote") {
-    const wafflenoteId = req.body.wafflenote_id;
-    const password = req.body.password;
     try {
       const doc = await User.findOne(
-        { wafflenote_id: wafflenoteId, password: password }
+        { wafflenote_id: req.body.wafflenote_id }
       );
+      
       if (doc && doc._id) {
-        sess.uuid = doc._id;
-        res.send({
-          result: true,
-          whoami: doc.name
-        });
+        const encryptedPw = crypto.pbkdf2Sync(req.body.password, doc.salt, 93034, 64, 'sha512');
+        if (doc.password == encryptedPw) {
+          sess.uuid = doc._id;
+          res.send({
+            result: true,
+            whoami: doc.name
+          });
+        } else {
+          res.send({
+            result: false
+          });
+        }
+
       } else {
         res.send({
           result: false
@@ -36,10 +44,9 @@ router.post("/", async (req, res, next) => {
     }
 
   } else if (type == "google") {
-    const googleId = req.body.google_id;
     try {
       const doc = await User.findOne(
-        { google_id: googleId }
+        { google_id: req.body.google_id }
       );
       if (doc && doc._id) {
         sess.uuid = doc._id;
@@ -65,3 +72,5 @@ router.post("/", async (req, res, next) => {
 
 
 module.exports = router;
+
+

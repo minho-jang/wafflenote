@@ -1,5 +1,6 @@
 const express = require("express");
 const userModel = require("../../models/user");
+const crypto = require("crypto");
 
 const User = userModel.User;
 const router = express.Router();
@@ -8,11 +9,13 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   console.log("POST /signup");
   
-  const sess = req.session;
   const type = req.body.type;
-  
+
   if (type == "wafflenote") {
     try {
+      const salt = crypto.randomBytes(64).toString('base64');
+      const encryptedPw = crypto.pbkdf2Sync(req.body.password, salt, 93034, 64, 'sha512');
+
       const wafflenoteId = req.body.wafflenote_id;
       const doc = await User.findOne(
         { wafflenote_id:  wafflenoteId }
@@ -24,7 +27,7 @@ router.post("/", async (req, res, next) => {
       } else {
         const userObject = {
           wafflenote_id: wafflenoteId,
-          password: req.body.password,
+          password: encryptedPw,
           name: req.body.name,
           phone_number: req.body.phone_number,
           note_list: [],
@@ -33,11 +36,11 @@ router.post("/", async (req, res, next) => {
             terms_of_use: req.body.agree.terms_of_use,
             advertise_sms: req.body.agree.advertise_sms,
             advertise_email: req.body.agree.advertise_email
-          }
+          },
+          salt: salt
         };
         const newUser = new User(userObject);
         const doc = await newUser.save();
-        sess.uuid = doc._id;
         res.send({
           result: true
         });
@@ -72,7 +75,6 @@ router.post("/", async (req, res, next) => {
         };
         const newUser = new User(userObject);
         const doc = await newUser.save();
-        sess.uuid = doc._id;
         res.send({
           result: true
         });
