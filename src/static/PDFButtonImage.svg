@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="166" height="40" viewBox="0 0 166 40">
+    <g id="그룹_43" data-name="그룹 43" transform="translate(-1444 -108)">
+        <g id="사각형_35" fill="none" stroke="#c9c9c9" data-name="사각형 35" transform="translate(1444 108)">
+            <rect width="166" height="40" stroke="none" rx="20"/>
+            <rect width="165" height="39" x=".5" y=".5" rx="19.5"/>
+        </g>
+        <g id="그룹_19" fill="none" stroke="#9b9b9b" stroke-linecap="round" stroke-width="3px" data-name="그룹 19" transform="translate(872 -11.816)">
+            <path id="선_8" d="M0 0L0 13.799" data-name="선 8" transform="translate(599.682 132.5)"/>
+            <path id="패스_1" stroke-linejoin="round" d="M598.527 1213l7 7.637 7-7.637" data-name="패스 1" transform="translate(-6 -1074.137)"/>
+        </g>
+        <text id="PDF로_저장" fill="#9b9b9b" data-name="PDF로 저장" font-family="NotoSansKR-Medium, Noto Sans KR" font-size="20px" font-weight="500" transform="translate(1538 135)">
+            <tspan x="-48.97" y="0">PDF</tspan><tspan y="0">로 저장</tspan>
+        </text>
+    </g>
+</svg>
