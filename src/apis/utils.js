@@ -44,6 +44,10 @@ export const getImage = async (slideId) => {
   const imageURL = URL.createObjectURL(response.data);
   return imageURL;
 };
+export const getImageBlob = async (slideId) => {
+  const response = await waffle.get(`/slide/${slideId}/origin-image`, { responseType: 'blob' });
+  return response.data;
+};
 export const getAudio = async (slideId) => {
   const response = await waffle.get(`/slide/${slideId}/audio`, { responseType: 'blob' });
   const audio = response.data;

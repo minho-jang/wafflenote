@@ -66,7 +66,7 @@ async function compareImage(video, canvas, ctx){
   } catch (error) {
     setTimeout(() => {
       compareImage(video, canvas, ctx)
-    }, 1000)
+    }, 4000)
     console.log(error);
   }
 

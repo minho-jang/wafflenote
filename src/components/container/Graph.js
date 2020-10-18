@@ -1,6 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Chart from 'chart.js';
 import styled from 'styled-components';
+var backgroundColor = 'white';
+Chart.plugins.register({
+    beforeDraw: function(c) {
+        var ctx = c.chart.ctx;
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+    }
+});
+
 const Wrapper = styled.canvas`
   margin: 20px 0;
 `;
@@ -14,6 +23,7 @@ function Graph({ data }) {
       const labels = dataset.map((item) => item[0]);
       const data = dataset.map((item) => item[1]);
       const bgColor = dataset.map(dynamicColors);
+
       new Chart(myChartRef, {
         type: 'horizontalBar',
         data: {
@@ -47,7 +57,7 @@ function Graph({ data }) {
 
   return (
     <>
-      <Wrapper ref={chartRef}>{}</Wrapper>
+      <Wrapper ref={chartRef} id="graph" >{}</Wrapper>
     </>
   );
 }
