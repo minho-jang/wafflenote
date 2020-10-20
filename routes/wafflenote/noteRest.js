@@ -122,7 +122,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
       endTime: "",
     };
     const newSlide = new Slide(slideObject);
-    const title = (req.body.title ? req.body.title : "Untitled");
+    const title = (req.body.title ? req.body.title : "강의 제목을 입력해주세요");
     const noteObject = {
       author: sess.uuid, 
       title: title, 
