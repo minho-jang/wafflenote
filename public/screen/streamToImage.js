@@ -154,12 +154,20 @@ function dateDiffToString(a, b) {
 
   let ms = diff % 1000;
   diff = (diff - ms) / 1000;
+
   let ss = diff % 60;
+  if (ss < 10) ss = '0' + ss;
   diff = (diff - ss) / 60;
+  
   let mm = diff % 60;
+  if (mm < 10) mm = '0' + mm;
   diff = (diff - mm) / 60;
+
   let hh = diff % 24;
-  if (hh === 0) return mm + ":" + ss;
+  if (hh === 0) 
+    return mm + ":" + ss;
+    
+  if (hh < 10) hh = '0' + hh;
   return hh + ":" + mm + ":" + ss;
 }
 
