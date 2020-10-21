@@ -10,7 +10,7 @@ const FileStore = require("session-file-store")(session);
 const cors = require("cors");
 
 const app = express();
-const port = process.env.NODE_PORT || 3000;
+const port = require("./config/nodeserver.json").PORT || 3000;
 
 // CORS
 app.use(cors());
