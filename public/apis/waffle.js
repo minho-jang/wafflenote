@@ -9,7 +9,7 @@ import {
   FRAME_IMAGE,
 } from './types.js'
 
-const PROD_SERVER = 'http://13.124.80.162:3000' //TODO: Add production server
+const PROD_SERVER = 'http://15.165.43.178:3000'; 
 
 const formConfig = {
   headers: {
