@@ -28,13 +28,7 @@ def keyword_extraction():
 def summarization():
     data = request.get_json()
     text = data['text']
-    try:
-        num_summaries = data['num']
-    except KeyError:
-        default_num_summaries = (len(text.split('. '))) // 4
-        if default_num_summaries <= 0:
-            default_num_summaries = 2
-        num_summaries = default_num_summaries
+    num_summaries = data['num']
 
     try:
         summary = summarize(text, num_summaries)
@@ -50,4 +44,4 @@ def summarization():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=5000)
