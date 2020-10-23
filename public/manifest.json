@@ -11,13 +11,7 @@
     "storage",
     "tabs",
     "desktopCapture",
-    "activeTab",
-    "declarativeContent",
-    "tabCapture",
-    "downloads",
-    "file://*/*",
-    "<all_urls>",
-    "unlimitedStorage"
+    "<all_urls>"
   ],
   "icons": {
     "16": "WaffleLogo.png",
