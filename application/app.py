@@ -32,15 +32,17 @@ def summarization():
 
     try:
         summary = summarize(text, num_summaries)
-    except RuntimeError as e:
+        if summary[:20] == "SummarizationError: ":
+            raise Exception(summary)
+
+        return jsonify({
+            'summary': summary
+        })
+    except Exception as e:
         return jsonify({
             'error': str(e),
             'summary': text
         })
-
-    return jsonify({
-        'summary': summary
-    })
 
 
 if __name__ == "__main__":
