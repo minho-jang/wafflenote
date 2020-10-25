@@ -142,7 +142,6 @@ const streamingRecognize = (buffer, encoding, sampleRateHertz, languageCode) => 
     const recognizeStream = client
       .streamingRecognize(request)
       .on('error', (err) => {
-        console.log(err);
         reject(err);
       })
       .on('data', (data) => {

@@ -99,7 +99,7 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
     res.status(400).send("No such file");
     return;
   }
-  
+
   const sess = req.session;
 
   try {
