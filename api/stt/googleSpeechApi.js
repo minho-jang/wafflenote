@@ -5,6 +5,7 @@ const axios = require("axios");
 const s3Tools = require("../storage/s3Tools");
 const noteModel = require("../../models/note");
 const textAnalysis = require("../nlp/testAnalysisFunc");
+const gcs = require("../../api/storage/gcs");
 
 const NLP_SERVER_URL = require("../../config/endpoint.json").NLP_BASE_URL;
 const ObjectId = require("mongoose").Types.ObjectId;
@@ -30,7 +31,8 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
   if (noteStatus == "running" || noteStatus == "end") {     
     try {
       var t1 = Date.now();
-      const key = await s3Tools.uploadFileBuffer(req.file.buffer, `${Date.now()}_${req.file.originalname}`);  // upload to S3
+      // const key = await s3Tools.uploadFileBuffer(req.file.buffer, `${Date.now()}_${req.file.originalname}`);  // upload to S3
+      const key = await gcs.uploadBuffer(req.file.buffer, `${Date.now()}_${req.file.originalname}`);  // upload to gcs
       var t2 = Date.now();
       console.log(`mp3 file upload time : ${t2 - t1}ms`);
   
@@ -153,6 +155,39 @@ const streamingRecognize = (buffer, encoding, sampleRateHertz, languageCode) => 
     // File data(in memory) to Stream
     streamifier.createReadStream(buffer).pipe(recognizeStream);
   });  
+}
+
+// Google Speech API 호출 (GCS)
+const streamingRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCode) => {
+  const speech = require('@google-cloud/speech').v1p1beta1;
+  const gcsConfig = require("../../config/gcs.json");
+
+  // Creates a client
+  const client = new speech.SpeechClient();
+
+  const gcsUri = `gs://${gcsConfig.BUCKET_NAME}/${filename}`;
+  const audio = {
+    uri: gcsUri,
+  };
+
+  const request = {
+    config: {
+      encoding: encoding,
+      sampleRateHertz: sampleRateHertz,
+      languageCode: languageCode,
+      enableAutomaticPunctuation: true
+    },
+    audio: audio,
+    interimResults: false, // If you want interim results, set this to true
+  };
+
+  // Detects speech in the audio file
+  const [response] = await client.recognize(request);
+  const transcription = response.results
+    .map(result => result.alternatives[0].transcript)
+    .join('\n');
+
+  return transcription;
 }
 
 // NLP API 호출

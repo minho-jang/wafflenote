@@ -2,6 +2,7 @@ const express = require("express");
 const noteModel = require("../../models/note");
 const slideModel = require("../../models/slide");
 const s3Tools = require("../../api/storage/s3Tools");
+const gcs = require("../../api/storage/gcs");
 
 const Slide = slideModel.Slide;
 const Note = noteModel.Note;
@@ -83,7 +84,8 @@ router.get("/:slideid/origin-image", (req, res, next) => {
   .select(
     { slide_list: {$elemMatch: {_id: slideObjectId}} })
   .then(doc => {
-    s3Tools.downloadFile(doc.slide_list[0].originImagePath)
+    // s3Tools.downloadFile(doc.slide_list[0].originImagePath)
+    gcs.download(doc.slide_list[0].originImagePath)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, (err, data) => {
@@ -93,9 +95,7 @@ router.get("/:slideid/origin-image", (req, res, next) => {
 
         // remove saved temporary file
         fs.unlink(filepath, (err) => {
-          if (err) {
-            console.log(err);
-          }
+          if (err)  throw err;
         });
 
         res.set('Content-type', type);
@@ -123,7 +123,8 @@ router.get("/:slideid/audio", (req, res, next) => {
   .select(
     { slide_list: {$elemMatch: {_id: slideObjectId}} })
   .then(doc => {
-    s3Tools.downloadFile(doc.slide_list[0].audio)
+    // s3Tools.downloadFile(doc.slide_list[0].audio)
+    gcs.download(doc.slide_list[0].audio)
     .then((filepath) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, (err, data) => {

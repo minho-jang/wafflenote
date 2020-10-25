@@ -7,6 +7,7 @@ const axios = require("axios");
 const noteModel = require("../../models/note");
 const slideModel = require("../../models/slide");
 const s3Tools = require("../storage/s3Tools");
+const gcs = require("../storage/gcs");
 
 const Note = noteModel.Note;
 const Slide = slideModel.Slide;
@@ -23,7 +24,7 @@ const frameUpload = multer({
   },
   fileFilter(req, file, cb) {
     if (!file) {
-      return cb(new Error("Must be image"))
+      return cb(new Error("Must be image file"))
     }
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
       return cb(new Error("Must be png, jpg or jpeg"))
@@ -66,7 +67,9 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
     } else {
       console.log("Slide CHANGE!");
       // file upload to S3 
-      const originImagePath = await s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
+      // const originImagePath = await s3Tools.uploadFileBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
+      // file upload to gcs
+      const originImagePath = await gcs.uploadBuffer(req.files[1].buffer, `${Date.now()}_${req.files[1].originalname}`);
       // insert slide
       const slideid = await getLastSlideIdx(req.body.noteid) + 1; 
       const smallImage = await s3Tools.imageResizeAndEncodeBase64(req.files[1].buffer);

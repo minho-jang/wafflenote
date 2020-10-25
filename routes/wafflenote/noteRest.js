@@ -6,6 +6,7 @@ const noteModel = require("../../models/note");
 const slideModel = require("../../models/slide");
 const userModel = require("../../models/user");
 const s3Tools = require("../../api/storage/s3Tools");
+const gcs = require("../../api/storage/gcs");
 
 const Note = noteModel.Note;
 const Slide = slideModel.Slide;
@@ -104,8 +105,9 @@ router.post("/", fileUpload.single("frameImg"), async (req, res, next) => {
   try {
     const tempFilePath = req.file.path; 
     const smallImage = await s3Tools.imageResizeAndEncodeBase64(tempFilePath);
-    const originImagePath = await s3Tools.uploadFile(tempFilePath);
-    fs.unlink(tempFilePath, (err) => {
+    // const originImagePath = await s3Tools.uploadFile(tempFilePath);
+    const originImagePath = await gcs.upload(req.file);
+    fs.unlink(req.file.path, (err) => {
       if (err)  throw err;
     });
     
