@@ -14,7 +14,6 @@ const getBucketList = () => {
   return new Promise((resolve, reject) => {
     s3.listBuckets(function(err, data) {
       if (err) {
-        console.log("Error", err);
         reject(err);
       } else {
         console.log("Bucket list: ", data.Buckets);
@@ -47,7 +46,6 @@ const uploadFile = (filepath) => {
 
     s3.upload(params, function(err, data) {
       if (err) {
-        console.log(err);
         reject(err);
       }
       resolve(data.Key);
@@ -71,7 +69,6 @@ const uploadFileBuffer = (buffer, filename) => {
 
     s3.upload(params, function(err, data) {
       if (err) {
-        console.log(err);
         reject(err);
       }
       resolve(data.Key);
@@ -86,6 +83,11 @@ const uploadFileBuffer = (buffer, filename) => {
  */
 const downloadFile = (key) => {
   return new Promise((resolve, reject) => {
+    if (key === "") {
+      reject("Error: The name of the downloaded file is empty.");
+      return;
+    }
+
     const params = {
       Bucket: BUCKET_NAME,
       Key: key
@@ -93,7 +95,6 @@ const downloadFile = (key) => {
 
     s3.getObject(params, function(err, data) {
       if (err) {
-        console.log("Error: ", err);
         reject(err);
       }
 
@@ -121,7 +122,6 @@ const imageResizeAndEncodeBase64 = (file) => {
       .toBuffer()
       .then(data => resolve(data.toString('base64')))
       .catch(err => {
-        console.log(err);
         reject(err);
       });
   });

@@ -90,7 +90,7 @@ router.get("/:slideid/origin-image", (req, res, next) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, (err, data) => {
         if (err) {
-          res.status(500).send(err);
+          throw err;
         }
 
         // remove saved temporary file
@@ -102,9 +102,8 @@ router.get("/:slideid/origin-image", (req, res, next) => {
         res.end(data);
       });
 
-    }).catch(err => {
-      console.log(err);
-      res.status(500).send(err);
+    }).catch((err) => {
+      throw err;
     });
 
   }).catch(err => {
@@ -116,7 +115,7 @@ router.get("/:slideid/origin-image", (req, res, next) => {
 // GET /slide/:slideid/audio
 router.get("/:slideid/audio", (req, res, next) => {
   console.log("GET /slide/:slideid/audio");
-  
+
   const slideObjectId = new ObjectId(req.params.slideid);
   Note.findOne(
     { "slide_list._id": slideObjectId })
@@ -129,13 +128,13 @@ router.get("/:slideid/audio", (req, res, next) => {
       const type = mime[path.extname(filepath).slice(1)] || 'text/plain';
       fs.readFile(filepath, (err, data) => {
         if (err) {
-          res.status(500).send(err);
+          throw err;
         }
 
         // remove saved temporary file
         fs.unlink(filepath, (err) => {
           if (err) {
-            console.log(err);
+            throw err;
           }
         });
       
@@ -143,8 +142,7 @@ router.get("/:slideid/audio", (req, res, next) => {
         res.end(data);
       });
     }).catch(err => {
-      console.log(err);
-      res.status(500).send(err);
+      throw err;
     });
 
   }).catch(err => {

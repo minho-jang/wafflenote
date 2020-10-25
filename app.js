@@ -21,8 +21,9 @@ app.use(bodyParser.text());
 const sessionConfig = require("./config/session.json");
 app.use(session({
   secret: sessionConfig.secret,
-  resave: false,
-  saveUninitialized: true,
+  resave: true,
+  saveUninitialized: false,
+  rolling: true,
   store: new FileStore(),
   cookie: { maxAge: 3600000 }  // 3,600,000 ms > 1 hour
 }));

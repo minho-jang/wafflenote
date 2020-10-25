@@ -85,9 +85,8 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           {arrayFilters: [{"elem._id": slideObjectId}], new: true}
         );
 
-        // TODO NLP 요청 및 결과 저장
         const text = await getNoteFullText(req.body.noteid);
-        const numSummaries = slideListLength - 1;
+        const numSummaries = slideListLength;
 
         const keywordResponse = await textAnalysis.getKeywords(text);
         const keywords = keywordResponse.data.keywords;

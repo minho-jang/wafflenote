@@ -8,7 +8,6 @@ router.use((req, res, next) => {
     res.status(401).send("Need to signin");
     
   } else {
-    req.session.touch();
     next();
   }
 });
