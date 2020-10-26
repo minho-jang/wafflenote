@@ -76,7 +76,7 @@ def process_image():
         img1 = cv2.imdecode(np_frame1, cv2.IMREAD_UNCHANGED)
     except Exception:
         print(traceback.print_exc())
-        abort(400, 'Image load error')
+        abort(500, 'Image load error')
 
     try:
         # Image Processing with img0 and img1
@@ -96,13 +96,13 @@ def process_image():
         # cv2.imwrite('./images/img1.png', img1)
 
         result = "False"
-        if n_m / image0.size > 25 and same_feature < 1718 :
+        if n_m / image0.size > 20 and same_feature < 1918 :
             result = "True"
         return result
         # return str(n_m/image0.size)
     except Exception:
         print(traceback.print_exc())
-        abort(400, 'Image process error')
+        abort(500, 'Image process error')
 
 
 if __name__ == "__main__":
