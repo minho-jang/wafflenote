@@ -44,9 +44,7 @@ const requestScreenSharing = (port, msg) => {
                 chromeMediaSource: "desktop",
                 chromeMediaSourceId: streamId,
                 maxFrameRate: 1,
-                minFrameRate: 1,
-                maxWidth: 6400,
-                maxHeight: 4800,
+                minFrameRate: 1
               },
             },
           },
