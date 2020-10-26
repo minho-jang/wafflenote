@@ -30,8 +30,6 @@ const upload = (file) => {
       
       // Uploads a local file to the bucket
       await bucket.upload(file.path, options);
-  
-      console.log(`${file.path} uploaded to ${bucketName}.`);
       resolve(file.filename);
     }
   
@@ -55,7 +53,6 @@ const uploadBuffer = (buffer, filename) => {
     });
 
     blobStream.on('finish', () => {
-      console.log("blob.name ", blob.name);
       resolve(blob.name);
     });
 
@@ -71,7 +68,7 @@ const download = (key) => {
       return;
     }
 
-    const destDir = path.join(__dirname, "..", tmp);
+    const destDir = path.join(__dirname, "..", "tmp");
     const filename = `${Date.now()}_${key}`;
     const destFilename = path.join(destDir, filename);
     const srcFilename = key;
@@ -84,11 +81,6 @@ const download = (key) => {
   
       // Downloads the file
       await bucket.file(srcFilename).download(options);
-  
-      console.log(
-        `gs://${bucketName}/${srcFilename} downloaded to ${destFilename}.`
-      );
-
       resolve(destFilename);
     }
   

@@ -36,7 +36,8 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
       var t2 = Date.now();
       console.log(`mp3 file upload time : ${t2 - t1}ms`);
   
-      const script = await streamingRecognize(req.file.buffer, 'MP3', 48000, 'ko-KR');
+      // const script = await streamingRecognize(req.file.buffer, 'MP3', 48000, 'ko-KR');
+      const script = await streamingRecognizeGCS(key, 'MP3', 48000, 'ko-KR');
       t1 = Date.now();
       console.log(`Google Speech API time : ${t1 - t2}ms`);
       
@@ -158,12 +159,12 @@ const streamingRecognize = (buffer, encoding, sampleRateHertz, languageCode) => 
 // Google Speech API 호출 (GCS)
 const streamingRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCode) => {
   const speech = require('@google-cloud/speech').v1p1beta1;
-  const gcsConfig = require("../../config/gcs.json");
+  const bucketName = require("../../config/gcs.json").BUCKET_NAME;
 
   // Creates a client
   const client = new speech.SpeechClient();
 
-  const gcsUri = `gs://${gcsConfig.BUCKET_NAME}/${filename}`;
+  const gcsUri = `gs://${bucketName}/${filename}`;
   const audio = {
     uri: gcsUri,
   };
@@ -179,11 +180,15 @@ const streamingRecognizeGCS = async (filename, encoding, sampleRateHertz, langua
     interimResults: false, // If you want interim results, set this to true
   };
 
-  // Detects speech in the audio file
-  const [response] = await client.recognize(request);
+  // Detects speech in the audio file. This creates a recognition job that you
+  // can wait for now, or get its result later.
+  const [operation] = await client.longRunningRecognize(request);
+  // Get a Promise representation of the final result of the job
+  const [response] = await operation.promise();
   const transcription = response.results
     .map(result => result.alternatives[0].transcript)
     .join('\n');
+  console.log(`Transcription: ${transcription}`);
 
   return transcription;
 }
