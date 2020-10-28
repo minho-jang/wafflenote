@@ -72,8 +72,8 @@ def summarize(text, num_summaries, summary_ratio=0.2):
 
         stopwords = set.union(get_stopwords(), set(stopwords_ko))
         vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)
-        # tokenizer = MaxScoreTokenizer(vocab_score)
-        tokenizer_mecab = Mecab()
+        tokenizer = MaxScoreTokenizer(vocab_score)
+        # tokenizer_mecab = Mecab()
 
         # 일정 길이 이상이 될 때까지 요약 반복
         text_summary = ""
@@ -84,7 +84,7 @@ def summarize(text, num_summaries, summary_ratio=0.2):
 
             sents = keysentence(vocab_score,
                                 text_split,
-                                tokenizer_mecab.nouns,  # tokenizer.tokenize
+                                tokenizer.tokenize,  #tokenizer_mecab.nouns
                                 diversity=0.7,
                                 topk=num_summaries * iter_num)
             text_summary = '. '.join(sents)
