@@ -5,8 +5,51 @@
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/main.css" />
-		<script>
-			// function checkLoginStatus() {
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+      const PROD_SERVER = "http://13.124.80.162:3000";
+
+      const waffle = axios.create({
+        baseURL: PROD_SERVER,
+      });
+      const userInfoApi = async () => {
+        const response = await waffle.get("/user-info");
+        console.log(response);
+        return response.data.result;
+      };
+
+      const signOutApi = async () => {
+        const response = await waffle.get("/signout");
+        console.log(response);
+        return response.data.result;
+      };
+      
+    	function checkLoginStatus() {
+        console.log(123);
+				var loginBtn = document.querySelector('#loginBtn');
+        var signupBtn = document.querySelector('#signupBtn');
+        userInfoApi()
+        .then((res)=>{
+          console.log('logined');
+					loginBtn.innerHTML = '로그아웃';
+					loginBtn.href = "/"
+					signupBtn.innerHTML = '마이페이지';
+					signupBtn.href = "/mypage.html";
+        }).catch((err)=>{
+          console.log('logouted');
+					loginBtn.innerHTML = '로그인';
+					loginBtn.href = '/sign-in.html';
+					signupBtn.innerHTML = '회원가입';
+					signupBtn.href = "/sign-up.html";
+        })
+        
+      }
+      
+      checkLoginStatus();
+
+
+			// function checkGoogleLoginStatus() {
 			// 	var loginBtn = document.querySelector('#loginBtn');
 			// 	var signupBtn = document.querySelector('#signupBtn')
 			// 	if(gauth.isSignedIn.get()){
@@ -23,7 +66,7 @@
 			// 		signupBtn.href = "/sign-up.html";
 			// 	}
 			// }
-			// function init(){
+			// function google_init(){
 			// 	console.log('init');
 			// 	gapi.load('auth2', function() {
 			// 		console.log('auth2');
@@ -37,7 +80,10 @@
 			// 			console.log('googleAuth fail');
 			// 		})
 			// 	})
-			// }
+      // }
+      
+
+
 		</script>
   </head>
   <body class="is-preload">
@@ -51,21 +97,25 @@
 				<li class="nav-item"><a href="/companyinfo.html">회사소개</a></li>
 				<li class="space"></li>
 				<li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="			
-					// if(this.innerHTML === '로그아웃'){
-					// 	var result = confirm('로그아웃 하시겠습니까?');
-					// 	if(result){
-    			// 		gauth.signOut().then(function () {
-					// 			console.log('User signed out.');
-					// 			checkLoginStatus();
-    			// 		});
-					// 	}
-					// }
-					// else {
-					// 	gauth.signIn().then(function () {
-					// 			console.log('User signed In.');
-					// 			checkLoginStatus();
-    			// 	});
-					// }
+					if(this.innerHTML === '로그아웃'){
+						var result = confirm('로그아웃 하시겠습니까?');
+						if(result){
+    					// gauth.signOut().then(function () {
+							// 	console.log('User signed out.');
+							// 	checkLoginStatus();
+              // });
+              // signOutApi.then((res)=>{
+              //   checkLoginStatus();
+              // })
+						}
+					}
+					else {
+            checkLoginStatus();
+						// gauth.signIn().then(function () {
+						// 		console.log('User signed In.');
+						// 		checkLoginStatus();
+    				// });
+					}
 					">로그인</a></li>
 				<li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
       </ul>
@@ -233,6 +283,6 @@
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
 		<script src="assets/js/main.js"></script>
-		<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+		<!--script src="https://apis.google.com/js/platform.js?onload=init" async defer></script-->
   </body>
 </html>
