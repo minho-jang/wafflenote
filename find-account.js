@@ -33,9 +33,10 @@ const findIdApi = async (name, phone_number) => {
   return response;
 };
 
-const changePasswordApi = async (wafflenote_id, new_pw) => {
+const changePasswordApi = async (wafflenote_id, code, new_pw) => {
   var data = {
     wafflenote_id,
+    code,
     new_pw,
   };
   const response = await waffle.post("/change-password", data);
@@ -111,7 +112,7 @@ function verifyEmail() {
 
 function verifyCode() {
   const wafflenote_id = document.getElementById("wafflenote_id").value;
-  const verify_code = document.getElementById("verify_code").value;
+  verify_code = document.getElementById("verify_code").value;
   if (!verify_code) {
     alert("인증번호를 정확히 입력해주세요.");
   } else {
@@ -154,13 +155,15 @@ function changePassword() {
     alert("비밀번호를 입력해주세요.");
   } else if (!checkPassword(password1, password2)) {
     alert("비밀번호가 일치하지 않거나, 9자 미만입니다.");
+  } else {
+    console.log(wafflenote_id);
+    console.log(verify_code);
+    console.log(password1);
+    changePasswordApi(wafflenote_id, verify_code, password1).then((res) => {
+      alert("비밀번호 변경이 완료되었습니다.");
+      window.location.href = "/";
+    });
   }
-  console.log(wafflenote_id);
-  console.log(password1);
-  changePasswordApi(wafflenote_id, password1).then((res) => {
-    alert("비밀번호 변경이 완료되었습니다.");
-    window.location.href = "/";
-  });
 }
 
 function checkPassword(password1, password2) {

@@ -13,26 +13,6 @@ function onSignIn(googleUser) {
   window.location.href = "/";
 }
 
-//wafflenote
-function logIn() {
-  const id = document.getElementById("id").value;
-  const password = document.getElementById("password").value;
-  if (!id) {
-    alert("아이디를 입력해주세요.");
-  } else if (!password) {
-    alert("비밀번호를 입력해주세요.");
-  } else {
-    signIn("wafflenote", id, password).then((res) => {
-      if (res) {
-        alert("로그인 되었습니다.");
-        window.location.href = "/";
-      } else {
-        alert("해당 계정이 없거나, 패스워드가 일치하지 않습니다.");
-      }
-    });
-  }
-}
-
 const PROD_SERVER = "http://13.124.80.162:3000";
 
 const waffle = axios.create({
@@ -47,5 +27,30 @@ const signIn = async (type, wafflenote_id, password) => {
   };
   const response = await waffle.post("/signin", data);
   console.log(response);
-  return response.data.result;
+  console.log(document.cookie);
+  // const user_info = await waffle.get("/user-info");
+  // console.log(user_info);
+  return response;
 };
+
+//wafflenote
+function logIn() {
+  const id = document.getElementById("id").value;
+  const password = document.getElementById("password").value;
+  if (!id) {
+    alert("아이디를 입력해주세요.");
+  } else if (!password) {
+    alert("비밀번호를 입력해주세요.");
+  } else {
+    signIn("wafflenote", id, password).then((res) => {
+      if (res.data.result) {
+        alert("로그인 되었습니다.");
+
+        // localStorage.setItem("cookie", );
+        // window.location.href = "/";
+      } else {
+        alert("해당 계정이 없거나, 패스워드가 일치하지 않습니다.");
+      }
+    });
+  }
+}
