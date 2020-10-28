@@ -37,7 +37,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
       console.log(`mp3 file upload time : ${t2 - t1}ms`);
   
       // const script = await streamingRecognize(req.file.buffer, 'MP3', 48000, 'ko-KR');
-      const script = await streamingRecognizeGCS(key, 'MP3', 48000, 'ko-KR');
+      const script = await asyncRecognizeGCS(key, 'MP3', 48000, 'ko-KR');
       t1 = Date.now();
       console.log(`Google Speech API time : ${t1 - t2}ms`);
       
@@ -157,7 +157,7 @@ const streamingRecognize = (buffer, encoding, sampleRateHertz, languageCode) => 
 }
 
 // Google Speech API 호출 (GCS)
-const streamingRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCode) => {
+const asyncRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCode) => {
   const speech = require('@google-cloud/speech').v1p1beta1;
   const bucketName = require("../../config/gcs.json").BUCKET_NAME;
 
@@ -188,7 +188,6 @@ const streamingRecognizeGCS = async (filename, encoding, sampleRateHertz, langua
   const transcription = response.results
     .map(result => result.alternatives[0].transcript)
     .join('\n');
-  console.log(`Transcription: ${transcription}`);
 
   return transcription;
 }
