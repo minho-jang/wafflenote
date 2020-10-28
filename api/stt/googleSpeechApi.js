@@ -66,10 +66,13 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           }},
           {arrayFilters: [{"elem._id": slideObjectId}], new: true}
         );
+
+        t2 = Date.now();
+        console.log(`update db document time : ${t2 - t1}ms`);
+
         res.send(doc);
 
-
-      } else {  // noteStatus == "end"
+      } if else (noteStatus == "end") { 
         slideIdx = slideListLength - 1;
         const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
@@ -94,7 +97,9 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
 
         const summaryResponse = await textAnalysis.getSummary(text, numSummaries);
         const summary = summaryResponse.data.summary;
-        
+        t2 = Date.now();
+        console.log(`analysis of entire notes time : ${t2 - t1}ms`);
+	
         doc = await Note.findByIdAndUpdate(
           noteObjectId,
           {$set: {
@@ -103,11 +108,14 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           }},
           {new: true}
         );
+	
+        t1 = Date.now();
+        console.log(`update db document time : ${t1 - t2}ms`);
 
         res.send(doc); 
+      } else {
+        throw new Error(`Unknown note status: ${noteStatus}`);
       }
-      t2 = Date.now();
-      console.log(`update db document time : ${t2 - t1}ms`);
     } catch (err) {
       console.log(err);
       res.status(500).send(err);
