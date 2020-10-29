@@ -193,7 +193,7 @@ const asyncRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCo
   const [response] = await operation.promise();
   const transcription = response.results
     .map(result => result.alternatives[0].transcript)
-    .join('\n');
+    .join(' ');
 
   return transcription;
 }
