@@ -175,6 +175,10 @@ router.post("/:slideid/replace", async (req, res, next) => {
   console.log("POST /slide/:slideid/replace");
 
   try {
+    if (req.body.script == "작성된 스크립트가 없습니다") {
+      req.body.script = "";
+    }
+
     const tags = await textAnalysis.getTags(req.body.script, 10);
     req.body.tags = tags;
 
