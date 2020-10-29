@@ -50,13 +50,10 @@ def make_default_stopwords():
 
 
 def get_stopwords():
-    if not os.path.exists('my_konlpy/stopword_list.txt'):
-        default_stopwords = make_default_stopwords()
-    else:
-        with open('my_konlpy/stopword_list.txt', 'r') as f:
-            default_stopwords = f.read().split('\n')
+    with open('text_analysis_beta/stopword_list.txt', 'r') as f:
+        default_stopwords = f.read().split('\n')
 
-    with open('my_konlpy/custom_stopword_list.txt', 'r') as f:
+    with open('text_analysis_beta/custom_stopword_list.txt', 'r') as f:
         custom_stopwords = f.read().split('\n')
 
     stopwords = custom_stopwords + default_stopwords
