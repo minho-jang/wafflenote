@@ -38,7 +38,8 @@ function getScripts(status, startTime, endTime) {
             resolve({...res.data, audioBlob: blob});
           })
           .catch((error) => {
-            console.log(error);
+            // TODO BUG: STT API 요청에서 timeout(5 min)이 지나면 순서 엉킴
+            reject(error);
           })
       });
       console.log("Start encode")

@@ -15,6 +15,7 @@ const formConfig = {
   headers: {
     "Content-Type": "multipart/form-data",
   },
+  timeout: 300000   // 300,000 ms = 5 min
 }
 
 let noteId;
@@ -43,14 +44,18 @@ export const requestCompareImages = async (prevImage, currImage) => {
 }
 
 export const requestSTT = async (mp3, status, startTime, endTime) => {
-  const fd = new FormData();
-  fd.append(NOTE_ID, noteId);
-  fd.append(AUDIO, mp3);
-  fd.append(STATUS, status);
-  fd.append(START_TIME, startTime);
-  fd.append(END_TIME, endTime);
-  const response = await waffle.post('/api/stt', fd, formConfig)
-  return response.data
+  try {
+    const fd = new FormData();
+    fd.append(NOTE_ID, noteId);
+    fd.append(AUDIO, mp3);
+    fd.append(STATUS, status);
+    fd.append(START_TIME, startTime);
+    fd.append(END_TIME, endTime);
+    const response = await waffle.post('/api/stt', fd, formConfig)
+    return response.data
+  } catch (err) {
+    throw err;
+  }
 }
 
 export const endWaffle = async (mp3) => {
