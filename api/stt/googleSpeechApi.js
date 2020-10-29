@@ -72,7 +72,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
 
         res.send(doc);
 
-      } if else (noteStatus == "end") { 
+      } else if (noteStatus == "end") { 
         slideIdx = slideListLength - 1;
         const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
