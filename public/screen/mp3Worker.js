@@ -31,9 +31,11 @@ self.addEventListener('message', function(e) {
   encodeMp3(recBuffers, recLength)
     .then((result) => {
       self.postMessage(result);
+      self.close();
     })
     .catch((e) => {
       self.postMessage(e.toString());
+      self.close();
     })
 });
 
