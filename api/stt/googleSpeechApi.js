@@ -1,15 +1,13 @@
 const express = require("express");
 const multer = require("multer");
-const axios = require("axios");
 
 const s3Tools = require("../storage/s3Tools");
-const noteModel = require("../../models/note");
-const textAnalysis = require("../nlp/testAnalysisFunc");
+const textAnalysis = require("../nlp/textAnalysisFunc");
 const gcs = require("../../api/storage/gcs");
-
-const NLP_SERVER_URL = require("../../config/endpoint.json").NLP_BASE_URL;
 const ObjectId = require("mongoose").Types.ObjectId;
-const Note = noteModel.Note;
+const Note = require("../../models/note").Note;
+const wafflenoteUtil = require("../../routes/wafflenote/util");
+
 const router = express.Router();
 
 // multer setting
@@ -41,11 +39,11 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
       t1 = Date.now();
       console.log(`Google Speech API time : ${t1 - t2}ms`);
       
-      const tags = await getTags(script, 10);
+      const tags = await textAnalysis.getTags(script, 10);
       t2 = Date.now();
       console.log(`NLP keyword extraction time : ${t2 - t1}ms`);
   
-      const slideListLength = await getSlideListLength(req.body.noteid);
+      const slideListLength = await wafflenoteUtil.getSlideListLength(req.body.noteid);
       t1 = Date.now();
       console.log(`get slide id time : ${t1 - t2}ms`);
 
@@ -53,7 +51,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
       let slideIdx;
       if (noteStatus == "running")  {
         slideIdx = slideListLength - 2;
-        const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
+        const slideObjectId = await wafflenoteUtil.getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
         let doc = await Note.findByIdAndUpdate(
           noteObjectId,
@@ -74,7 +72,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
 
       } else if (noteStatus == "end") { 
         slideIdx = slideListLength - 1;
-        const slideObjectId = await getSlideIdByIndex(req.body.noteid, slideIdx); 
+        const slideObjectId = await wafflenoteUtil.getSlideIdByIndex(req.body.noteid, slideIdx); 
         const noteObjectId = new ObjectId(req.body.noteid);
         let doc = await Note.findByIdAndUpdate(
           noteObjectId,
@@ -89,7 +87,7 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           {arrayFilters: [{"elem._id": slideObjectId}], new: true}
         );
 
-        const text = await getNoteFullText(req.body.noteid);
+        const text = await wafflenoteUtil.getNoteFullText(req.body.noteid);
         const numSummaries = slideListLength;
 
         const keywordResponse = await textAnalysis.getKeywords(text);
@@ -199,82 +197,5 @@ const asyncRecognizeGCS = async (filename, encoding, sampleRateHertz, languageCo
 
   return transcription;
 }
-
-// NLP API 호출
-const getTags = (text, num) => {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: 'post',
-      url: NLP_SERVER_URL + "/keyword-extraction", 
-      data: {
-        text 
-      },
-    })
-    .then((response) => {
-      let tags = [];
-      const result = response.data.keywords;
-      const count = (result.length > num ? num : result.length);
-      for (var i = 0; i < count; i++) {
-        tags.push(result[i][0]);
-      }
-      
-      resolve(tags.slice(0, count));
-    })
-    .catch(err => {
-      console.log(err);
-      reject(err);
-    });
-  });
-}
-
-const getSlideListLength = (noteid) => {
-  return new Promise((resolve, reject) => {
-    Note.aggregate([
-      {$match: {_id: new ObjectId(noteid)}},
-      {$project: {length: {$size: "$slide_list"}}}
-    ])
-    .then(result => {
-      resolve(result[0].length);
-    })
-    .catch(err => {
-      console.log(err);
-      reject(err);
-    });
-  });
-}
-
-const getSlideIdByIndex = (noteid, idx) => {
-  return new Promise((resolve, reject) => {
-    Note.aggregate([
-      {$match: {_id: new ObjectId(noteid)}},
-      {$project: {theSlide: {$arrayElemAt: ['$slide_list', idx]}}}
-    ])
-    .then(result => {
-      resolve(result[0].theSlide._id);
-    })
-    .catch(err => {
-      console.log(err);
-      reject(err);
-    }); 
-  });
-}
-
-const getNoteFullText = (noteid) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const doc = await Note.findById(noteid); 
-      const slideList = doc.slide_list;
-      let text = "";
-      for (var i = 0; i < slideList.length; i++) {
-        text = text.concat(slideList[i].script);
-      }
-      resolve(text);
-    } catch (err) {
-      console.log(err);
-      reject(err);
-    }
-  });
-}
-
 
 module.exports = router;

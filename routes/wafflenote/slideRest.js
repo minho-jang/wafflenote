@@ -3,6 +3,7 @@ const noteModel = require("../../models/note");
 const slideModel = require("../../models/slide");
 const s3Tools = require("../../api/storage/s3Tools");
 const gcs = require("../../api/storage/gcs");
+const textAnalysis = require("../nlp/textAnalysisFunc");
 
 const Slide = slideModel.Slide;
 const Note = noteModel.Note;
@@ -170,22 +171,24 @@ router.post("/:slideid/delete", (req, res, next) => {
 });
 
 // POST /slide/:slideid/replace
-router.post("/:slideid/replace", (req, res, next) => {
+router.post("/:slideid/replace", async (req, res, next) => {
   console.log("POST /slide/:slideid/replace");
 
-  const slideObjectId = new ObjectId(req.params.slideid);
-  Note.findOneAndUpdate(
-    {"slide_list._id": slideObjectId},
-    {$set: {"slide_list.$[elem]": req.body}},
-    {arrayFilters: [{"elem._id": slideObjectId}],
-    new: true})
-  .then((doc) => {
+  try {
+    const tags = await textAnalysis.getTags(req.body.script, 10);
+    req.body.tags = tags;
+
+    const slideObjectId = new ObjectId(req.params.slideid);
+    const doc = await Note.findOneAndUpdate(
+      {"slide_list._id": slideObjectId},
+      {$set: {"slide_list.$[elem]": req.body}},
+      {arrayFilters: [{"elem._id": slideObjectId}],
+      new: true});
     res.send(doc);
-  })
-  .catch(err => {
+  } catch (err) {
     console.log(err);
     res.status(500).send(err);
-  });
+  }
 });
 
 

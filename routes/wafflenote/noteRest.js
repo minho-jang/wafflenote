@@ -2,15 +2,13 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 
-const noteModel = require("../../models/note");
-const slideModel = require("../../models/slide");
-const userModel = require("../../models/user");
 const s3Tools = require("../../api/storage/s3Tools");
 const gcs = require("../../api/storage/gcs");
+const Note = require("../../models/note").Note;
+const Slide = require("../../models/slide").Slide;
+const User = require("../../models/user").User;
+const wafflenoteUtil = require("./util");
 
-const Note = noteModel.Note;
-const Slide = slideModel.Slide;
-const User = userModel.User;
 const router = express.Router();
 
 const mongoose = require("mongoose");
@@ -185,7 +183,27 @@ router.get("/:noteid/result", async (req, res, next) => {
   console.log("GET /note/:noteid/result");
 
   try {
-    const doc = await Note.findById(req.params.noteid)
+    const noteObjectId = req.params.noteid;
+    const slideListLength = await wafflenoteUtil.getSlideListLength();
+
+    const text = await wafflenoteUtil.getNoteFullText(noteObjectId);
+    const numSummaries = slideListLength;
+
+    const keywordResponse = await textAnalysis.getKeywords(text);
+    const keywords = keywordResponse.data.keywords;
+
+    const summaryResponse = await textAnalysis.getSummary(text, numSummaries);
+    const summary = summaryResponse.data.summary;
+
+    const doc = await Note.findByIdAndUpdate(
+      noteObjectId,
+      {$set: {
+        summary: summary,
+        note_keywords: keywords
+      }},
+      {new: true}
+    );
+
     res.send({
       keywords: doc.note_keywords,
       summary: doc.summary
