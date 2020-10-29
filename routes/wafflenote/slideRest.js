@@ -3,7 +3,7 @@ const noteModel = require("../../models/note");
 const slideModel = require("../../models/slide");
 const s3Tools = require("../../api/storage/s3Tools");
 const gcs = require("../../api/storage/gcs");
-const textAnalysis = require("../nlp/textAnalysisFunc");
+const textAnalysis = require("../../api/nlp/textAnalysisFunc");
 
 const Slide = slideModel.Slide;
 const Note = noteModel.Note;

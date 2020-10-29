@@ -8,6 +8,7 @@ const Note = require("../../models/note").Note;
 const Slide = require("../../models/slide").Slide;
 const User = require("../../models/user").User;
 const wafflenoteUtil = require("./util");
+const textAnalysis = require("../../api/nlp/textAnalysisFunc");
 
 const router = express.Router();
 
@@ -184,7 +185,7 @@ router.get("/:noteid/result", async (req, res, next) => {
 
   try {
     const noteObjectId = req.params.noteid;
-    const slideListLength = await wafflenoteUtil.getSlideListLength();
+    const slideListLength = await wafflenoteUtil.getSlideListLength(noteObjectId);
 
     const text = await wafflenoteUtil.getNoteFullText(noteObjectId);
     const numSummaries = slideListLength;
