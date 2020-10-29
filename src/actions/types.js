@@ -3,6 +3,7 @@ export const GET_SLIDE = 'GET_SLIDE';
 export const EDIT_SLIDE = 'EDIT_SLIDE';
 export const GET_NOTES = 'GET_NOTES';
 export const GET_NOTE = 'GET_NOTE';
+export const GET_NOTE_RESULT = 'GET_NOTE_RESULT'
 export const EDIT_NOTE = 'EDIT_NOTE';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';

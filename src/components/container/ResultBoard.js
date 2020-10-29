@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import TitleText from '../presenter/TitleText';
 import { getSlides, editSlide } from '../../actions/slides';
-import { getNote, editNote } from '../../actions/notes';
+import { editNote, getNoteResult } from '../../actions/notes';
 import ContentBoard from '../presenter/ContentBoard';
 import { getResult } from '../../apis/utils';
 import Graph from './Graph';
@@ -21,7 +21,7 @@ const ResultBoard = (props) => {
 
   const [isRequested, toggleRequest] = useState(false);
   useEffect(() => {
-    props.getNote(props.noteId);
+    props.getNoteResult(props.noteId);
   }, []);
   const onNoteTitleSubmit = (editedTitle) => {
     props.editNote(props.noteId, editedTitle);
@@ -61,4 +61,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, { getSlides, editNote, getNote })(ResultBoard);
+export default connect(mapStateToProps, { getSlides, editNote, getNoteResult })(ResultBoard);

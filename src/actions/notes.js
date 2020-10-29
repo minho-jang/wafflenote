@@ -1,5 +1,5 @@
 import { waffle } from '../apis/waffle';
-import { GET_NOTE, GET_NOTES, EDIT_NOTE } from './types';
+import { GET_NOTE, GET_NOTES, EDIT_NOTE, GET_NOTE_RESULT } from './types';
 import { getSlidesFromStorage, getOneSlideFromStorage, setSlideToStorage } from '../apis/storage';
 import { errorHandler } from '../apis/utils';
 
@@ -16,6 +16,15 @@ export const getNote = (noteId) => async (dispatch) => {
   try {
     const response = await waffle.get(`/note/${noteId}`);
     dispatch({ type: GET_NOTE, payload: response.data });
+  } catch (error) {
+    errorHandler(error, dispatch);
+  }
+};
+
+export const getNoteResult = (noteId) => async (dispatch) => {
+  try {
+    const response = await waffle.get(`/note/${noteId}/result`);
+    dispatch({ type: GET_NOTE_RESULT, payload: response.data });
   } catch (error) {
     errorHandler(error, dispatch);
   }
