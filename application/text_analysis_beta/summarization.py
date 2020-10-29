@@ -60,7 +60,7 @@ def get_stopwords():
 def summarize(text, num_summaries, summary_ratio=0.2):
     text_split = text.split('. ')
     if len(text_split) < num_summaries:
-        return 'SummarizeError: Number of sentences must be bigger than num_summaries'
+        return 'SummarizationError: Number of sentences must be bigger than num_summaries'
 
     wordrank_extractor = KRWordRank(min_count=3,  # 단어의 최소 출현 빈도수 (그래프 생성 시)
                                     max_length=20,  # 단어의 최대 길이
