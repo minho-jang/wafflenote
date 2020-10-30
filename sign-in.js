@@ -13,7 +13,7 @@ function onSignIn(googleUser) {
   window.location.href = "/";
 }
 
-const PROD_SERVER = "http://15.165.43.178:3000";
+const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
@@ -27,7 +27,7 @@ const signIn = async (type, wafflenote_id, password) => {
   };
   const response = await waffle.post("/signin", data);
   console.log(response);
-  console.log(document.cookie);
+  // console.log(document.cookie);
   // const user_info = await waffle.get("/user-info");
   // console.log(user_info);
   return response;
@@ -43,7 +43,8 @@ function logIn() {
     alert("비밀번호를 입력해주세요.");
   } else {
     signIn("wafflenote", id, password).then((res) => {
-      if (res.data.result) {
+      console.log(res.data);
+      if (res.data) {
         alert("로그인 되었습니다.");
 
         // localStorage.setItem("cookie", );
