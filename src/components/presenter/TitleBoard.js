@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TitleText from './TitleText';
+import { TopTitleText } from './TitleText';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 
@@ -48,22 +48,22 @@ const TitleBoard = ({ slide, onTitleSubmit }) => {
 
   if (isClicked) {
     return (
-      <TitleText onMouseOver={mouseOver} onMouseOut={mouseOut}>
+      <TopTitleText onMouseOver={mouseOver} onMouseOut={mouseOut}>
         <form style={{ display: 'inline' }} onSubmit={onSubmit}>
           <input placeholder="title" value={editedTitle} onChange={onInputChange} />
           <SaveButton> 저장 </SaveButton>
         </form>
         {startTime && <TimeInfo>{endTime !== null ? ' ' + startTime + ' ~ ' + endTime : ' ' + startTime + ' ~'}</TimeInfo>}
-      </TitleText>
+      </TopTitleText>
     );
   }
   return (
     // diff between onMouseOver and onMouseEnter
-    <TitleText onMouseLeave={mouseOut} onMouseEnter={mouseOver}>
+    <TopTitleText onMouseLeave={mouseOut} onMouseEnter={mouseOver}>
       {title ? title + '  ' : 'Slide'}
       {isHover && <EditButton name="edit outline" size='small' onClick={onClick}></EditButton>}
       {startTime && <TimeInfo>{endTime !== null ? ' ' + startTime + ' ~ ' + endTime : ' ' + startTime + ' ~'}</TimeInfo>}
-    </TitleText>
+    </TopTitleText>
   );
 };
 

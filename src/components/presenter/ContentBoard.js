@@ -55,21 +55,38 @@ const ContentBoard = (props) => {
       const result = text.substr(0, 250);
       return (
         <>
-          {result.split('\n').map((i) => (
-            <>
-              <br />
-              {i}
-            </>
-          ))}
+          {result.split('\n').map((item, i) => {
+            if (text.split('\n').length === i + 1) {
+              return (
+                <>
+                  {item}
+                </>
+              );
+            } else {
+              return (
+                <>
+                  {item}
+                  <br />
+                </>
+              );
+            }
+          })}
           <MoreButton>더 보기</MoreButton>
         </>
       );
     } else if (text.split('\n').length >= 3) {
       const result = text.split('\n').map((item, index) => {
-        if (index < 3) {
+        if (index < 2) {
           return (
             <>
-              <br /> {item}
+              {item}
+              <br /> 
+            </>
+          );
+        } else if (index == 2) {
+          return (
+            <>
+              {item}
             </>
           );
         } else return '';
@@ -83,12 +100,22 @@ const ContentBoard = (props) => {
     } else {
       return (
         <>
-          {text.split('\n').map((i) => (
-            <>
-              <br />
-              {i}
-            </>
-          ))}
+          {text.split('\n').map((item, i) => {
+            if (text.split('\n').length === i + 1) {
+              return (
+                <>
+                  {item}
+                </>
+              );
+            } else {
+              return (
+                <>
+                  {item}
+                  <br />
+                </>
+              );
+            }
+          })}
         </>
       );
     }
