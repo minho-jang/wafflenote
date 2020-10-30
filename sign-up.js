@@ -1,6 +1,7 @@
 isVerify = false;
 
 const PROD_SERVER = "http://13.124.43.79:3000";
+// const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
@@ -11,8 +12,8 @@ const verifyEmailApi = async (email) => {
     email,
   };
   const response = await waffle.post("/verify-email", data);
-  console.log(response);
-  return response.data.result;
+  // console.log(response);
+  return response.data;
 };
 
 const verifyCodeApi = async (email, code) => {
@@ -21,8 +22,8 @@ const verifyCodeApi = async (email, code) => {
     code,
   };
   const response = await waffle.post("/verify-code", data);
-  console.log(response);
-  return response.data.result;
+  // console.log(response);
+  return response.data;
 };
 
 const waffleNoteSignUpApi = async (
@@ -32,7 +33,6 @@ const waffleNoteSignUpApi = async (
   phone_number,
   advertise_sms,
   advertise_email
-  // organization,
 ) => {
   var data = {
     type: "wafflenote",
@@ -52,18 +52,19 @@ const waffleNoteSignUpApi = async (
     },
   };
   const response = await waffle.post("/signup", data);
-  console.log(response);
-  return response.data.result;
+  // console.log(response);
+  return response.data;
 };
 
+// for google login
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
-  console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  console.log("Name: " + profile.getName());
-  console.log("Image URL: " + profile.getImageUrl());
-  console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+  // console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  // console.log("Name: " + profile.getName());
+  // console.log("Image URL: " + profile.getImageUrl());
+  // console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
   var id_token = googleUser.getAuthResponse().id_token;
-  console.log(id_token);
+  // console.log(id_token);
 
   // 토큰 유효성 검사
 
@@ -149,7 +150,7 @@ function verifyEmail() {
   } else {
     alert("인증번호가 전송되었습니다.");
     verifyEmailApi(wafflenote_id).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res) {
         var verify_display = document.querySelector("#verify_html");
         verify_display.innerHTML =

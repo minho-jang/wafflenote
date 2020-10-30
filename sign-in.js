@@ -14,6 +14,7 @@ function onSignIn(googleUser) {
 }
 
 const PROD_SERVER = "http://13.124.43.79:3000";
+// const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
@@ -26,10 +27,7 @@ const signIn = async (type, wafflenote_id, password) => {
     password,
   };
   const response = await waffle.post("/signin", data);
-  console.log(response);
-  // console.log(document.cookie);
-  // const user_info = await waffle.get("/user-info");
-  // console.log(user_info);
+  // console.log(response);
   return response;
 };
 
@@ -43,12 +41,40 @@ function logIn() {
     alert("비밀번호를 입력해주세요.");
   } else {
     signIn("wafflenote", id, password).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data) {
         alert("로그인 되었습니다.");
 
+        // 지금으로부터 하루 후
+        let date = new Date(Date.now() + 3600e3);
+        date = date.toUTCString();
+        document.cookie =
+          encodeURIComponent("wafflenote_user") +
+          "=" +
+          encodeURIComponent(res.data) +
+          ";" +
+          encodeURIComponent("path") +
+          "=" +
+          encodeURIComponent("/") +
+          ";" +
+          encodeURIComponent("expires") +
+          "=" +
+          date;
+        document.cookie =
+          encodeURIComponent("wafflenote_id") +
+          "=" +
+          encodeURIComponent(id) +
+          ";" +
+          encodeURIComponent("path") +
+          "=" +
+          encodeURIComponent("/") +
+          ";" +
+          encodeURIComponent("expires") +
+          "=" +
+          date;
+        // alert(document.cookie);
         // localStorage.setItem("cookie", );
-        // window.location.href = "/";
+        window.location.href = "/";
       } else {
         alert("해당 계정이 없거나, 패스워드가 일치하지 않습니다.");
       }

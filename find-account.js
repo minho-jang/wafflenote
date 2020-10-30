@@ -1,4 +1,5 @@
-const PROD_SERVER = "http://15.165.43.178:3000";
+const PROD_SERVER = "http://13.124.43.79:3000";
+// const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
@@ -9,8 +10,8 @@ const findPasswordApi = async (email) => {
     email,
   };
   const response = await waffle.post("/find-password", data);
-  console.log(response);
-  return response.data.result;
+  // console.log(response);
+  return response.data;
 };
 
 const verifyCodeApi = async (email, code) => {
@@ -19,8 +20,8 @@ const verifyCodeApi = async (email, code) => {
     code,
   };
   const response = await waffle.post("/verify-code", data);
-  console.log(response);
-  return response.data.result;
+  // console.log(response);
+  return response.data;
 };
 
 const findIdApi = async (name, phone_number) => {
@@ -29,8 +30,9 @@ const findIdApi = async (name, phone_number) => {
     phone_number,
   };
   const response = await waffle.post("/find-id", data);
-  console.log(response);
-  return response;
+  // console.log(typeof response.data);
+  // console.log(response.data);
+  return response.data;
 };
 
 const changePasswordApi = async (wafflenote_id, code, new_pw) => {
@@ -40,28 +42,29 @@ const changePasswordApi = async (wafflenote_id, code, new_pw) => {
     new_pw,
   };
   const response = await waffle.post("/change-password", data);
-  console.log(response);
-  return response;
+  // console.log(response);
+  return response.data;
 };
 
 function find_id() {
   const name = document.getElementById("name").value;
   const phone = document.getElementById("mobile").value;
-
   if (!name) {
     alert("이름을 입력해 주세요.");
   } else if (!phone) {
     alert("휴대전화번호를 정확히 입력해주세요.");
   } else {
     findIdApi(name, phone).then((res) => {
-      if (res.data.result) {
+      // console.log(res);
+      if (res) {
+        // console.log(res);
         const newid = document.querySelector("#new_id");
-        if (res.data.wafflenote_id) {
+        if (res) {
           newid.innerHTML =
             "<br/><br/><br/><br/><br/><br/><br/><div style='font-size:30px; padding-left:90px'>" +
-            res.data.wafflenote_id +
+            res +
             "</div>";
-        } else if (res.data.google_id) {
+        } else if (res.google_id) {
           newid.innerHTML =
             "<br/><br/><br/><br/><br/><br/><br/><div style='font-size:30px; padding-left:90px'>" +
             res.data.google_id +
@@ -94,7 +97,7 @@ function verifyEmail() {
   } else {
     alert("인증번호가 전송되었습니다.");
     findPasswordApi(wafflenote_id).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res) {
         var verify_display = document.querySelector("#verify_html");
         verify_display.innerHTML =
@@ -156,9 +159,9 @@ function changePassword() {
   } else if (!checkPassword(password1, password2)) {
     alert("비밀번호가 일치하지 않거나, 9자 미만입니다.");
   } else {
-    console.log(wafflenote_id);
-    console.log(verify_code);
-    console.log(password1);
+    // console.log(wafflenote_id);
+    // console.log(verify_code);
+    // console.log(password1);
     changePasswordApi(wafflenote_id, verify_code, password1).then((res) => {
       alert("비밀번호 변경이 완료되었습니다.");
       window.location.href = "/";

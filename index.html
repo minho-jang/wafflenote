@@ -6,85 +6,6 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="stylesheet" href="assets/css/main.css" />
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-    <script>
-      const PROD_SERVER = "http://13.124.80.162:3000";
-
-      const waffle = axios.create({
-        baseURL: PROD_SERVER,
-      });
-      const userInfoApi = async () => {
-        const response = await waffle.get("/user-info");
-        console.log(response);
-        return response.data.result;
-      };
-
-      const signOutApi = async () => {
-        const response = await waffle.get("/signout");
-        console.log(response);
-        return response.data.result;
-      };
-      
-    	function checkLoginStatus() {
-        console.log(123);
-				var loginBtn = document.querySelector('#loginBtn');
-        var signupBtn = document.querySelector('#signupBtn');
-        userInfoApi()
-        .then((res)=>{
-          console.log('logined');
-					loginBtn.innerHTML = '로그아웃';
-					loginBtn.href = "/"
-					signupBtn.innerHTML = '마이페이지';
-					signupBtn.href = "/mypage.html";
-        }).catch((err)=>{
-          console.log('logouted');
-					loginBtn.innerHTML = '로그인';
-					loginBtn.href = '/sign-in.html';
-					signupBtn.innerHTML = '회원가입';
-					signupBtn.href = "/sign-up.html";
-        })
-        
-      }
-      
-      checkLoginStatus();
-
-
-			// function checkGoogleLoginStatus() {
-			// 	var loginBtn = document.querySelector('#loginBtn');
-			// 	var signupBtn = document.querySelector('#signupBtn')
-			// 	if(gauth.isSignedIn.get()){
-			// 		console.log('logined');
-			// 		loginBtn.innerHTML = '로그아웃';
-			// 		loginBtn.href = "/"
-			// 		signupBtn.innerHTML = '마이페이지';
-			// 		signupBtn.href = "/mypage.html";
-			// 	} else{
-			// 		console.log('logouted');
-			// 		loginBtn.innerHTML = '로그인';
-			// 		loginBtn.href = '/sign-in.html';
-			// 		signupBtn.innerHTML = '회원가입';
-			// 		signupBtn.href = "/sign-up.html";
-			// 	}
-			// }
-			// function google_init(){
-			// 	console.log('init');
-			// 	gapi.load('auth2', function() {
-			// 		console.log('auth2');
-			// 		window.gauth = gapi.auth2.init({
-			// 			client_id: "1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com"
-			// 		})
-			// 		gauth.then(function(){
-			// 			console.log('googleAuth success');
-			// 			checkLoginStatus();
-			// 		}, function(){
-			// 			console.log('googleAuth fail');
-			// 		})
-			// 	})
-      // }
-      
-
-
-		</script>
   </head>
   <body class="is-preload">
     <!-- NavBar-->
@@ -96,26 +17,15 @@
 				<li class="nav-item"><a href="/service.html">고객센터</a></li>
 				<li class="nav-item"><a href="/companyinfo.html">회사소개</a></li>
 				<li class="space"></li>
-				<li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="			
+        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="
+          console.log(this.innerHTML);			
 					if(this.innerHTML === '로그아웃'){
 						var result = confirm('로그아웃 하시겠습니까?');
 						if(result){
-    					// gauth.signOut().then(function () {
-							// 	console.log('User signed out.');
-							// 	checkLoginStatus();
-              // });
-              // signOutApi.then((res)=>{
-              //   checkLoginStatus();
-              // })
-						}
+              deleteCookie();
+            }
 					}
-					else {
-            checkLoginStatus();
-						// gauth.signIn().then(function () {
-						// 		console.log('User signed In.');
-						// 		checkLoginStatus();
-    				// });
-					}
+					// checkLoginStatus();
 					">로그인</a></li>
 				<li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
       </ul>
@@ -129,7 +39,7 @@
 				<br/><br/><br/>
         <ul class="actions">
           <li>
-            <a href="#" class="button primary icon solid fa-download"
+            <a href="http://chrome.google.com/webstore/detail/waffle-note/nkbanjeggkgicdbflnbamciallippolk" target="_blank" class="button primary icon solid fa-download"
               >Download</a
             >
           </li>
@@ -282,7 +192,8 @@
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="./index.js"></script>
 		<!--script src="https://apis.google.com/js/platform.js?onload=init" async defer></script-->
   </body>
 </html>
