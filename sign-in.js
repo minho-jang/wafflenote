@@ -13,7 +13,7 @@ function onSignIn(googleUser) {
   window.location.href = "/";
 }
 
-const PROD_SERVER = "http://13.124.43.79/:3000";
+const PROD_SERVER = "http://13.124.43.79:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
