@@ -11,7 +11,7 @@ const waffle = axios.create({
 
 var app = http.createServer(function (request, response) {
   if (request.url == "/") {
-    response.writeHead(200);
+    response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
     response.end(fs.readFileSync(__dirname + "/index.html"));
   } else {
     if (request.url === "/signin") {
@@ -24,7 +24,7 @@ var app = http.createServer(function (request, response) {
             if (res.data.whoami) {
               result = res.data.whoami.toString();
             }
-            response.writeHead(200);
+            response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
             response.end(result);
           }
         );
@@ -36,7 +36,7 @@ var app = http.createServer(function (request, response) {
         // console.log(typeof newData.email);
         verifyEmailApi(newData.email).then((res) => {
           // console.log(res.data);
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.result.toString());
         });
       });
@@ -46,7 +46,7 @@ var app = http.createServer(function (request, response) {
         // console.log(newData);
         verifyCodeApi(newData.email, newData.code).then((res) => {
           // console.log(res);
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.result.toString());
         });
       });
@@ -63,7 +63,7 @@ var app = http.createServer(function (request, response) {
           newData.advertise_email
         ).then((res) => {
           // console.log(res);
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.result.toString());
         });
       });
@@ -72,7 +72,7 @@ var app = http.createServer(function (request, response) {
         const newData = JSON.parse(data.toString());
         // console.log(newData);
         findPasswordApi(newData.email).then((res) => {
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.result.toString());
         });
       });
@@ -82,7 +82,7 @@ var app = http.createServer(function (request, response) {
         // console.log(newData);
         findIdApi(newData.name, newData.phone_number).then((res) => {
           //  console.log(typeof res);
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.wafflenote_id.toString());
         });
       });
@@ -95,12 +95,12 @@ var app = http.createServer(function (request, response) {
           newData.code,
           newData.new_pw
         ).then((res) => {
-          response.writeHead(200);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(res.data.result.toString());
         });
       });
     } else {
-      response.writeHead(200);
+      response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
       response.end(fs.readFileSync(__dirname + request.url));
     }
   }
