@@ -1,4 +1,4 @@
-const PROD_SERVER = "http://13.124.43.79:3000";
+const PROD_SERVER = "https://wafflenote.com";
 // const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({

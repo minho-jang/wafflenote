@@ -20,9 +20,12 @@ var app = http.createServer(function (request, response) {
         // console.log(newData);
         signIn(newData.type, newData.wafflenote_id, newData.password).then(
           (res) => {
-            // console.log(res);
+            var result = undefined;
+            if (res.data.whoami) {
+              result = res.data.whoami.toString();
+            }
             response.writeHead(200);
-            response.end(res.data.whoami.toString());
+            response.end(result);
           }
         );
       });

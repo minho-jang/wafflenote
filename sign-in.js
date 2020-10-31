@@ -9,11 +9,10 @@ function onSignIn(googleUser) {
   console.log(id_token);
 
   // 토큰 유효성 검사
-
   window.location.href = "/";
 }
 
-const PROD_SERVER = "http://13.124.43.79:3000";
+const PROD_SERVER = "https://wafflenote.com";
 // const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
