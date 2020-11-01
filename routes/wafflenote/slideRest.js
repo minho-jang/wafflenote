@@ -178,6 +178,10 @@ router.post("/:slideid/replace", async (req, res, next) => {
     if (req.body.script == "작성된 스크립트가 없습니다") {
       req.body.script = "";
     }
+  
+    if (req.body.memo == "작성된 노트가 없습니다") {
+      req.body.memo = "";
+    }
 
     const tags = await textAnalysis.getTags(req.body.script, 10);
     req.body.tags = tags;
