@@ -58,7 +58,7 @@ def key_sentences():
             raise Exception(sents[0])
 
         return jsonify({
-            'keySentences': sents
+            'key_sentences': sents
         })
     except KeyError as e:
         return abort(400, description="Need parameters 'text' and 'num'")
@@ -69,7 +69,7 @@ def key_sentences():
         sents = sents[:num]
         return jsonify({
             'error': str(e),
-            'keySentences': sents
+            'key_sentences': sents
         })
 
 if __name__ == "__main__":
