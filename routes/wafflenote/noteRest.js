@@ -44,6 +44,7 @@ router.get("/", (req, res, next) => {
         author: notes[i].author,
         status: notes[i].status,
         summary: notes[i].summary,
+	key_sentences: notes[i].key_sentences,
         note_keywords: notes[i].note_keywords,
         createdAt: notes[i].createdAt,
         updatedAt: notes[i].updatedAt
@@ -193,6 +194,10 @@ router.get("/:noteid/result", async (req, res, next) => {
     const keywordResponse = await textAnalysis.getKeywords(text);
     const keywords = keywordResponse.data.keywords;
 
+    const num = 5;
+    const keySentencesResponse = await textAnalysis.getKeySentences(text, num);
+    const keySentences = keySentencesResponse.data.key_sentences;
+    
     const summaryResponse = await textAnalysis.getSummary(text, numSummaries);
     const summary = summaryResponse.data.summary;
 
@@ -200,14 +205,16 @@ router.get("/:noteid/result", async (req, res, next) => {
       noteObjectId,
       {$set: {
         summary: summary,
-        note_keywords: keywords
+        note_keywords: keywords,
+	key_sentences: keySentences
       }},
       {new: true}
     );
 
     res.send({
       keywords: doc.note_keywords,
-      summary: doc.summary
+      summary: doc.summary,
+      key_sentences: doc.key_sentences
     });
   } catch(err) {
     console.log(err);

@@ -20,7 +20,6 @@ const getKeywords = (text) => {
   });
 }
 
-// NLP API 호출
 const getTags = (text, num) => {
   return new Promise((resolve, reject) => {
     axios({
@@ -41,7 +40,23 @@ const getTags = (text, num) => {
       resolve(tags.slice(0, count));
     })
     .catch(err => {
-      console.log(err);
+      reject(err);
+    });
+  });
+}
+
+const getKeySentences = (text, num) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'post',
+      url: NLP_SERVER_URL + "/key-sentences",
+      data: {
+        text,
+	num
+      },
+    }).then((response) => {
+      resolve(response); 
+    }).catch(err => {
       reject(err);
     });
   });
@@ -72,6 +87,7 @@ const getSummary = (text, numSummaries) => {
 
 module.exports = {
   getSummary,
+  getKeySentences,
   getKeywords,
   getTags
 }

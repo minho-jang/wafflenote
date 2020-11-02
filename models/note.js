@@ -8,6 +8,7 @@ var noteSchema = new Schema({
   status: String,
   slide_list: [slideModel.slideSchema],
   summary: String,
+  key_sentences: [],
   note_keywords: []
 }, { timestamps: true });
 

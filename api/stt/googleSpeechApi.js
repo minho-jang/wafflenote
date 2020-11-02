@@ -95,6 +95,10 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
 
         const summaryResponse = await textAnalysis.getSummary(text, numSummaries);
         const summary = summaryResponse.data.summary;
+
+	const num = 5;
+	const keySentencesResponse = await textAnalysis.getKeySentences(text, num);
+	const keySentences = keySentencesResponse.data.key_sentences;
         t2 = Date.now();
         console.log(`analysis of entire notes time : ${t2 - t1}ms`);
 	
@@ -102,7 +106,8 @@ router.post("/", speechUpload.single("audio"), async (req, res, next) => {
           noteObjectId,
           {$set: {
             summary: summary,
-            note_keywords: keywords
+            note_keywords: keywords,
+            key_sentences: keySentences
           }},
           {new: true}
         );
