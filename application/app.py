@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from text_analysis_beta.keyword_extraction import cleaning_text, text_analysis
 from text_analysis_beta.summarization import summarize
+from text_analysis_beta.key_sentences import get_key_sentences
 
 app = Flask(__name__)
 
@@ -44,6 +45,32 @@ def summarization():
             'summary': text
         })
 
+
+@app.route('/key-sentences', methods=['POST'])
+def key_sentences():
+    try:
+        data = request.get_json()
+        text = data['text']
+        num = data['num']
+
+        sents = get_key_sentences(text, num)
+        if sents[0][:20] == "KeySentencesError: ":
+            raise Exception(sents[0])
+
+        return jsonify({
+            'keySentences': sents
+        })
+    except KeyError as e:
+        return abort(400, description="Need parameters 'text' and 'num'")
+    except Exception as e:
+        import re
+        sents = re.split("[.?!]", text)
+        sents = [s.strip() for s in sents]
+        sents = sents[:num]
+        return jsonify({
+            'error': str(e),
+            'keySentences': sents
+        })
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
