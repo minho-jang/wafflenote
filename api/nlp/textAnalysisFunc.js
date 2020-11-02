@@ -52,9 +52,12 @@ const getKeySentences = (text, num) => {
       url: NLP_SERVER_URL + "/key-sentences",
       data: {
         text,
-	num
+        num
       },
     }).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      }
       resolve(response); 
     }).catch(err => {
       reject(err);
@@ -74,7 +77,7 @@ const getSummary = (text, numSummaries) => {
     })
     .then((response) => {
       if (response.data.error) {
-	console.log(response.data.error);
+        console.log(response.data.error);
       } 
       resolve(response);
       
