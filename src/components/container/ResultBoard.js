@@ -30,7 +30,7 @@ const ResultBoard = (props) => {
   }
   const onClick = () => {
     toggleRequest(true);
-    PDFMaker(props.slides, props.note.summary, props.note.title).then((res) => {
+    PDFMaker(props.slides, props.note.key_sentences, props.note.title).then((res) => {
       toggleRequest(false);
     });
   };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const TextArea = styled.span`
-  margin: 24px 0;
+  margin: 0 0 24px 0;
   width: 805px;
   font-size: 16px;
   font-weight: 500;

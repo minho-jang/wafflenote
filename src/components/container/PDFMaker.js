@@ -16,7 +16,7 @@ oReq.onload = function (oEvent) {
 
 oReq.send(null);
 
-const PDFMaker = async (slides, summary, title) => {
+const PDFMaker = async (slides, keySentences, title) => {
   try {
     
   const doc = new pdf.Document({
@@ -50,10 +50,17 @@ const PDFMaker = async (slides, summary, title) => {
   const noteTitleCell = doc.cell({ fontSize: 20, paddingBottom: 20});
   noteTitleCell.text(title);
   
-  doc.text("요약노트");
-  doc.text(summary, {fontSize: 11}).br();
+  doc.text("와플노트의 PICK! - 핵심 문장");
+  console.log(keySentences);
+  keySentences.forEach((item, index) => {
+    if (index == keySentences.length - 1) {
+      doc.text("- " + item, {fontSize: 12}).br();  
+    } else {
+      doc.text("- " + item, {fontSize: 12});
+    }
+  })
 
-  doc.text("분석");
+  doc.text("와플노트의 PICK! - 핵심 키워드");
   doc.image(new pdf.Image(graph));
   // << First page. 핵심문장 및 분석
 
