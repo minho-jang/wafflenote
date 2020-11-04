@@ -99,16 +99,16 @@ var app = http.createServer(function (request, response) {
           response.end(res.data.result.toString());
         });
       });
-    } else if (request.url === "/service" && request.method === "GET") {
+    } else if (request.url === "/review" && request.method === "GET") {
       getReviewApi()
       .then((res) => {
         response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
         response.end(JSON.stringify(res.data));
       })
-    } else if (request.url === "/service" && request.method === "POST") {
+    } else if (request.url === "/review" && request.method === "POST") {
       request.on("data", (data) => {
         const newData = JSON.parse(data.toString());
-        postReviewApi(newData.content)
+        postReviewApi(newData.content, newData.userId)
         .then((res) => {
           response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(JSON.stringify(res.data));
@@ -216,8 +216,8 @@ const getReviewApi = async () => {
   return response;
 }
 
-const postReviewApi = async (content) => {
-  var data = { content }
+const postReviewApi = async (content, userId) => {
+  var data = { content, author: userId }
   const response = await waffle.post("/review", data);
   return response;
 }

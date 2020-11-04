@@ -1,5 +1,5 @@
-// const PROD_SERVER = "https://wafflenote.com";
-const PROD_SERVER = "http://localhost:3000";
+const PROD_SERVER = "https://wafflenote.com";
+// const PROD_SERVER = "http://localhost:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
@@ -7,7 +7,7 @@ const waffle = axios.create({
 
 const callGetReview = () => {
   return new Promise((resolve, reject) => {
-    waffle.get("/service")
+    waffle.get("/review")
     .then((res) => {
       resolve(res);
     })
@@ -18,30 +18,34 @@ const callGetReview = () => {
 };
 
 const callPostReview = (content) => {
-  console.log(document.cookie);
-  return new Promise((resolve, reject) => {
-    var data = { content };
-    waffle.post("/service", data)
-    .then(() => {
-      resolve();
-    })
-    .catch((err) => {
-      reject(err);
+  const userId = getCookie("wafflenote_id");
+  if (! userId) {
+    return false;
+  } else {
+    return new Promise((resolve, reject) => {
+      var data = { content, userId };
+      waffle.post("/review", data)
+      .then(() => {
+        resolve(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(false);
+      });
     });
-  });
+  }
 }
 
 async function showReviews() {
   const res = await callGetReview();
   if (res.data.length == 0) {
-    document.getElementById("review-list").innerHTML = "리뷰가 없습니다.";
+    document.getElementById("review-list").innerHTML = "글이 없습니다.";
   } else {
     const reviewList = res.data;
     
     let reviews = "";
     for (var i = 0; i < reviewList.length; i++) {
       const value = reviewList[i];
-      reviews = reviews.concat("\n");
       reviews = reviews.concat(i);
       reviews = reviews.concat("\t");
       reviews = reviews.concat(value.author);
@@ -49,7 +53,7 @@ async function showReviews() {
       reviews = reviews.concat(ISODateToString(value.createdAt));
       reviews = reviews.concat("\n");
       reviews = reviews.concat(value.content);
-      reviews = reviews.concat("\n");
+      reviews = reviews.concat("\n\n");
     }
 
     document.getElementById("review-list").innerHTML = reviews;
@@ -58,8 +62,24 @@ async function showReviews() {
 
 async function postReview() {
   const content = document.getElementById("review").value;
-  await callPostReview(content);
-  window.location.href = "/service.html";
+  const postOK = await callPostReview(content);
+  if (postOK) {
+    window.location.href = "/service.html";
+  } else {
+    alert("Need to signin");
+  }
+}
+
+function getCookie(name) {
+  let matches = document.cookie.match(
+    new RegExp(
+      "(?:^|; )" +
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+        "=([^;]*)"
+    )
+  );
+  // console.log(matches);
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 function ISODateToString(iso) {
