@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Document</title>
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="images/favicon-16x16.png"
-    />
+    <title>와플노트</title>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="./assets/css/service.css" type="text/css" />
     <meta charset="utf-8" />
   </head>
   <body>
-    <input type="text" id="review">
-    <button onclick="postReview()">POST</button>
-    <br>
-    <pre id="review-list"></pre>
+    <!-- NavBar -->
+    <nav>
+      <ul class="nav-container">
+        <li class="waffle-logo"><img src="images/logo.png" width="300px" height="50px"></img></li>
+        <li class="nav-item"><a href="">제품</a></li>
+        <li class="nav-item"><a href="#one" class="scrolly">기능</a></li>
+        <li class="nav-item"><a href="/service.html">고객센터</a></li>
+        <li class="nav-item"><a href="/companyinfo.html">회사소개</a></li>
+        <li class="space"></li>
+        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="
+          console.log(this.innerHTML);			
+          if(this.innerHTML === '로그아웃'){
+            var result = confirm('로그아웃 하시겠습니까?');
+            if(result){
+              deleteCookie();
+            }
+          }
+          // checkLoginStatus();
+          ">로그인</a></li>
+        <li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
+      </ul>
+    </nav>
+    <!-- NavBar -->
+
+    <div class="input_section">
+      <input class="input_box" type="text" id="review">
+      <button class="post_btn" onclick="postReview()">POST</button>
+    </div>
+
+    <div class="reviews_box">
+      <pre id="review-list"></pre>
+    </div>
+    
+    <footer id="footer">
+      <p class="copyright">
+        2020 &copy; 와플노트 All rights reserved.<br>
+      </p>
+    </footer>
   </body>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src=service.js></script>
 </html>
+
