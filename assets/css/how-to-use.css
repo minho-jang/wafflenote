@@ -1,0 +1,24 @@
+div {
+  text-align: center;
+}
+
+.use_text {
+  padding-top: 50px;
+  font-size: 50px;
+  color: #fbb93a;
+  text-align: center;
+  text-decoration: none;
+}
+
+.sub_text {
+  width: 800px;
+  margin-left: 430px;
+  padding-top: 40px;
+  font-size: 20px;
+  text-align: left;
+  color: #fbb93a;
+}
+
+.use_image {
+  width: 800px;
+}

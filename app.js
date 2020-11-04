@@ -100,19 +100,26 @@ var app = http.createServer(function (request, response) {
         });
       });
     } else if (request.url === "/review" && request.method === "GET") {
-      getReviewApi()
-      .then((res) => {
+      getReviewApi().then((res) => {
         response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
         response.end(JSON.stringify(res.data));
-      })
+      });
     } else if (request.url === "/review" && request.method === "POST") {
       request.on("data", (data) => {
         const newData = JSON.parse(data.toString());
-        postReviewApi(newData.content, newData.userId)
-        .then((res) => {
+        postReviewApi(newData.content, newData.userId).then((res) => {
           response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
           response.end(JSON.stringify(res.data));
-        })
+        });
+      });
+    } else if (request.url === "/mypage" && request.method === "POST") {
+      request.on("data", (data) => {
+        const newData = JSON.parse(data.toString());
+        mypageApi(newData.wafflenoteId).then((res) => {
+          console.log(res);
+          response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
+          response.end(JSON.stringify(res.data));
+        });
       });
     } else {
       response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
@@ -214,10 +221,18 @@ const changePasswordApi = async (wafflenote_id, code, new_pw) => {
 const getReviewApi = async () => {
   const response = await waffle.get("/review");
   return response;
-}
+};
 
 const postReviewApi = async (content, userId) => {
-  var data = { content, author: userId }
+  var data = { content, author: userId };
   const response = await waffle.post("/review", data);
   return response;
-}
+};
+
+const mypageApi = async (wafflenoteId) => {
+  var data = {
+    wafflenoteId,
+  };
+  const response = await waffle.post("/mypage", data);
+  return response;
+};

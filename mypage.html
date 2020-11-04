@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Document</title>
@@ -9,8 +10,101 @@
       href="images/favicon-16x16.png"
     />
     <meta charset="utf-8" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="mypage.js"></script>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
   </head>
   <body>
-    준비중입니다.
+    <div class="layer_agree">
+      <br />
+      <div class="agree_title">마이페이지</div>
+      <div id="wrapper">
+        <!-- content-->
+        <div id="content">
+          <!-- ID -->
+          <div style="padding-top: 20px">
+            <h3 class="join_title">
+              <label for="id">아이디</label>
+            </h3>
+            <span class="box int_id">
+              <span class="step_url"></span>
+              <input
+                type="text"
+                id="wafflenote_id"
+                class="int"
+                maxlength="30"
+                placeholder=""
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+          <!-- NAME -->
+          <div>
+            <h3 class="join_title"><label for="name">이름</label></h3>
+            <span class="box int_name">
+              <span class="step_url"></span>
+              <input
+                type="text"
+                id="name"
+                class="int"
+                maxlength="16"
+                placeholder=""
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- MOBILE -->
+          <div>
+            <h3 class="join_title"><label for="phoneNo">휴대전화</label></h3>
+            <span class="box int_mobile">
+              <input
+                type="tel"
+                id="mobile"
+                class="int"
+                maxlength="16"
+                placeholder=""
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <div>
+            <h3 class="join_title"><label for="phoneNo">노트개수</label></h3>
+            <span class="box int_mobile">
+              <input
+                type="tel"
+                id="notenum"
+                class="int"
+                maxlength="16"
+                placeholder=""
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <div class="agree_box2">
+            <b>동의 여부</b>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" checked="checked" disabled="disabled">개인정보</input>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" checked="checked" disabled="disabled">이용약관</input>
+          </div>
+
+          
+
+          <!-- JOIN BTN-->
+          <div class="btn_area">
+            <button type="button" id="btnJoin" onclick="window.location.href='find-account.html'">
+              <span>비밀번호 변경</span>
+            </button>
+          </div>
+        </div>
+        <!-- content-->
+      </div>
+      </button>
+    </div>
   </body>
+  <script>
+    mypage();
+  </script>
 </html>
