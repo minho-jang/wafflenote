@@ -45,8 +45,7 @@ const opts = {
 db(documentdbConfig.DB_URI, opts);
 
 // Routes
-app.use("/", require("./routes/user/index"));
-app.use("/", require("./routes/wafflenote/index"));
+app.use("/", require("./routes/index"));
 app.use("/api", require("./api/index"));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
