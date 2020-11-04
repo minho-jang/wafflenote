@@ -46,9 +46,10 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
   const bufToStr0 = Uint8Array.from(Buffer.from(req.files[0].buffer)).toString();
   const bufToStr1 = Uint8Array.from(Buffer.from(req.files[1].buffer)).toString();
 
+  let response;
   try {
     // 영상처리 API 요청.
-    const response = await axios({
+    response = await axios({
       method: 'post',
       url: IMAGE_PROCESSING_SERVER_URL, 
       data: {
@@ -58,7 +59,12 @@ router.post("/", frameUpload.array("frameImg"), async (req, res, next) => {
       maxContentLength: 50000000,  // about 50 MB
       maxBodyLength: 50000000  // about 50 MB
     });
-
+  } catch (err) {
+    console.log(err.response.data);
+    res.status(500).send(err.response.data);
+  }
+  
+  try {
     const nlpResult = response.data;
     if (nlpResult == 'False') {
       res.status(200).json({
