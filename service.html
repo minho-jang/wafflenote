@@ -9,26 +9,25 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <!-- NavBar -->
+    <!-- NavBar-->
     <nav>
       <ul class="nav-container">
         <li class="waffle-logo"><img src="images/logo.png" width="300px" height="50px"></img></li>
-        <li class="nav-item"><a href="/">제품</a></li>
-        <li class="nav-item"><a href="/">기능</a></li>
-        <li class="nav-item"><a href="/service.html">고객센터</a></li>
-        <li class="nav-item"><a href="/companyinfo.html">회사소개</a></li>
-        <li class="space"></li>
-        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="
-          console.log(this.innerHTML);			
-          if(this.innerHTML === '로그아웃'){
-            var result = confirm('로그아웃 하시겠습니까?');
-            if(result){
+        <li class="nav-item"><a href="">제품</a></li>
+        <li class="nav-item"><a href="#one" class="scrolly">기능</a></li>
+        <li class="nav-item"><a href="/how-to-use.html">이용</a></li>
+        <li class="nav-item"><a href="/service.html">후기</a></li>
+				<li class="space"></li>
+        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="		
+					if(this.innerHTML === '로그아웃'){
+						var result = confirm('로그아웃 하시겠습니까?');
+						if(result){
               deleteCookie();
             }
-          }
-          // checkLoginStatus();
-          ">로그인</a></li>
-        <li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
+					}
+					// checkLoginStatus();
+					">로그인</a></li>
+				<li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
       </ul>
     </nav>
     <!-- NavBar -->
