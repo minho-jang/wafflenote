@@ -7,24 +7,32 @@ const PROD_SERVER = "http://15.165.43.178:3000";
 
 const waffle = axios.create({
   baseURL: PROD_SERVER,
-});
+});;
 
 var app = http.createServer(function (request, response) {
-  if (request.url == "/") {
-    response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
+  if(request.method == "OPTIONS") {
+    response.writeHead(200, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "*",
+      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Max-Age": 86400
+    });
+    response.end();
+  } else if (request.url == "/") {
+    response.writeHead(200, { "Access-Control-Allow-Origin": "*"});
     response.end(fs.readFileSync(__dirname + "/index.html"));
   } else {
     if (request.url === "/signin") {
       request.on("data", (data) => {
         const newData = JSON.parse(data.toString());
-        // console.log(newData);
+        console.log(newData);
         signIn(newData.type, newData.wafflenote_id, newData.password).then(
           (res) => {
             var result = undefined;
             if (res.data.whoami) {
               result = res.data.whoami.toString();
             }
-            response.writeHead(200, { "Access-Control-Allow-Origin": "*" });
+            response.writeHead(200, { "Access-Control-Allow-Origin": "*"});
             response.end(result);
           }
         );
