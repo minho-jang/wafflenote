@@ -1,13 +1,13 @@
 {
   "name": "Waffle Note",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 2,
   "description": "Waffle Note",
   "background": {
     "page": "background.html",
     "persistent": false
   },
-  "permissions": ["storage", "tabs", "desktopCapture", "<all_urls>"],
+  "permissions": ["storage", "desktopCapture", "<all_urls>"],
   "icons": {
     "16": "WaffleLogo.png",
     "48": "WaffleLogo.png",
