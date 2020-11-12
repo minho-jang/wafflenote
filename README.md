@@ -21,7 +21,7 @@ b) 정확도(Accuracy): 88.3%
 c) 효과: TP와 TN 지표와, 정확도에서 두 방식 보다 높은 수치를 보인다. 두 이미지가 유사함에도 단순 픽셀 비교 방식에서 처리 할 수 없었던 경우를, 패턴 매칭 방식과 결합을 통해 더욱 정교하게 처리 할 수 있다.
 
 - 분류 성능 평가 지표
-  ![result](./application/result.png)
+  ![result](./application/images/result.png)
 
 ### python version
 
