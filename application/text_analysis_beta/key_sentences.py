@@ -52,13 +52,15 @@ def get_stopwords():
     with open('text_analysis_beta/custom_stopword_list.txt', 'r') as f:
         custom_stopwords = [x for x in f.read().split('\n') if len(x) > 0]
 
-    stopwords = custom_stopwords + default_stopwords
-    return set(stopwords)
+    stopwords = set(custom_stopwords + default_stopwords)
+    stopwords = set.union(stopwords, set(stopwords_ko))
+    return stopwords
 
 
 def get_key_sentences(text, num):
     import re
-
+    
+    print(text)
     sentences = re.split("[.?!]", text)
     sentences = [s.strip() for s in sentences]
     if len(sentences) < num:
@@ -72,14 +74,14 @@ def get_key_sentences(text, num):
     try:
         keywords, rank, graph = wordrank_extractor.extract(sentences, beta, max_iter, num_keywords=100)
 
-        stopwords = set.union(get_stopwords(), set(stopwords_ko))
-        vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)
+        stopwords = get_stopwords()
+        vocab_score = make_vocab_score(keywords, stopwords, scaling=lambda x: 1)  # scaling=lambda x: 1
         tokenizer = MaxScoreTokenizer(vocab_score)
 
         sents = keysentence(vocab_score,
                             sentences,
                             tokenizer.tokenize,  # tokenizer_mecab.nouns
-                            diversity=0.7,
+                            diversity=0.6,
                             topk=num)
         return sents
     except ValueError as e:

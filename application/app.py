@@ -54,7 +54,7 @@ def key_sentences():
         num = data['num']
 
         sents = get_key_sentences(text, num)
-        if sents[0][:20] == "KeySentencesError: ":
+        if sents[0][:19] == "KeySentencesError: ":
             raise Exception(sents[0])
 
         return jsonify({
