@@ -1,0 +1,9 @@
+.git
+.idea
+
+application/images/*.jpg
+application/images/*.png
+
+.DS_Store
+
+__pycache__
