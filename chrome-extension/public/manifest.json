@@ -1,0 +1,21 @@
+{
+  "name": "Waffle Note",
+  "version": "1.0.2",
+  "manifest_version": 2,
+  "description": "Waffle Note",
+  "background": {
+    "page": "background.html",
+    "persistent": false
+  },
+  "permissions": ["storage", "desktopCapture", "<all_urls>"],
+  "icons": {
+    "16": "WaffleLogo.png",
+    "48": "WaffleLogo.png",
+    "128": "WaffleLogo.png"
+  },
+  "browser_action": {
+    "default_icon": "WaffleLogo.png",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": "script-src 'self' https://unpkg.com https://cdnjs.cloudflare.com ; object-src 'self'"
+}
