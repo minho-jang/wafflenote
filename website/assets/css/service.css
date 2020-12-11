@@ -1,0 +1,20 @@
+.input_section {
+  margin: 2rem 0 0 2rem;
+  width: 40rem;
+  height: 7rem;
+  display: flex;
+}
+
+.input_box {
+  margin: auto
+}
+
+.post_btn {
+  margin: auto 0.5rem;
+}
+
+.reviews_box {
+  margin: 0 0 0 2rem;
+  min-height: 25rem;
+}
+

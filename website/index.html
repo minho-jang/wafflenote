@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<title>와플노트</title>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body class="is-preload">
+    <!-- NavBar-->
+    <nav>
+      <ul class="nav-container">
+        <li class="waffle-logo"><img src="images/logo.png" width="300px" height="50px"></img></li>
+        <li class="nav-item"><a href="">제품</a></li>
+        <li class="nav-item"><a href="#one" class="scrolly">기능</a></li>
+        <li class="nav-item"><a href="/how-to-use.html">이용</a></li>
+        <li class="nav-item"><a href="/service.html">후기</a></li>
+				<li class="space"></li>
+        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="
+          console.log(this.innerHTML);			
+					if(this.innerHTML === '로그아웃'){
+						var result = confirm('로그아웃 하시겠습니까?');
+						if(result){
+              deleteCookie();
+            }
+					}
+					// checkLoginStatus();
+					">로그인</a></li>
+				<li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
+      </ul>
+    </nav>
+    <!-- Header -->
+    <header id="header">
+      <div class="content">
+				<div class="wafflenote">와플노트</div>
+				<br><br><br>
+				<div class="description">강의를 손쉽게 정리하세요</div>
+				<br/><br/><br/>
+        <ul class="actions">
+          <li>
+            <a href="http://chrome.google.com/webstore/detail/waffle-note/nkbanjeggkgicdbflnbamciallippolk" target="_blank" class="button primary icon solid fa-download"
+              >Download</a
+            >
+          </li>
+          <li>
+            <a href="#one" class="button primary icon solid scrolly"
+              >Learn More</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div>
+        <img src="images/execute.png" alt="" />
+      </div>
+    </header>
+
+    <!-- One -->
+    <section id="one" class="wrapper style2 special">
+      <header class="major">
+        <h2>
+					실시간 화상강의 정리/요약/분석 서비스<br/>
+					와플노트 서비스와 함께 강의를 들으면 이후에 복습이 편리해집니다<br>
+
+        </h2>
+      </header>
+      <ul class="icons major">
+        <li>
+          <span class="icon solid fa-camera-retro"
+            ><span class="label">Shoot</span></span
+          >
+        </li>
+        <li>
+          <span class="icon solid fa-sync"
+            ><span class="label">Process</span></span
+          >
+        </li>
+        <li>
+          <span class="icon solid fa-cloud"
+            ><span class="label">Upload</span></span
+          >
+        </li>
+      </ul>
+    </section>
+
+    <!-- Two -->
+    <section id="two" class="wrapper">
+      <div class="inner alt">
+        <section class="spotlight">
+          <div class="image"><img src="images/pic1.png" width="100px" height="250px"/></div>
+          <div class="content">
+            <h3>타임라인 기반 슬라이드 및 스크립트 생성</h3>
+            <p>
+              강의의 영상 및 슬라이드 전환을 자동으로 감지하여<br>
+							강의자의 스크립트와 음성을 타임 라인 기반으로 정리해 드립니다<br>
+            </p>
+          </div>
+        </section>
+        <section class="spotlight">
+          <div class="image"><img src="images/pic2.png" width="100px" height="250px" /></div>
+          <div class="content">
+            <h3>스크립트 분석 및 요약</h3>
+            <p>
+              스크립트를 분석하고 요약합니다<br>
+							중요한 단어와 문장을 구분해 드립니다<br>
+            </p>
+          </div>
+        </section>
+        <section class="spotlight">
+          <div class="image"><img src="images/pic3.png" width="100px" height="250px" /></div>
+          <div class="content">
+            <h3>PDF 저장 및 원격 저장소</h3>
+            <p>
+              PDF로 저장할 수 있고, 내 와플노트 저장소에 저장하여 언제든지 열람이 가능합니다<br>
+							시험모드 등의 기능을 제공하며, 복습의 효율을 높일 수 있습니다<br>
+            </p>
+          </div>
+        </section>
+        <section class="special">
+          <ul class="icons labeled">
+            <li>
+              <span class="icon solid fa-camera-retro"
+                ><span class="label">강의 자동 기록</span></span
+              >
+            </li>
+            <li>
+              <span class="icon solid fa-sync"
+                ><span class="label">복습 효율성 증가</span></span
+              >
+            </li>
+            <li>
+              <span class="icon solid fa-cloud"
+                ><span class="label">접근성 용이</span></span
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="special" style="text-align: left;">
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;본 서비스는 현재 베타 버전입니다. <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;개선사항 및 불편사항에 대해 피드백 주시면 적극 반영하겠습니다. <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;이용해주셔서 감사합니다 :) <br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;개발/운영자 : 박운상, 좌동철, 장민호<br>
+          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;서비스 이용 문의 : wafflenote2020@gmail.com<br><br>
+        </section>
+      </div>
+    </section>
+
+    <!-- Three -->
+    <section id="three" class="wrapper style2 special">
+      <header class="major">
+        <a href="/terms-of-use.html"><h3>와플노트 이용약관 확인</h3></a>
+        <a href="/privacy-policy.html"><h3>개인정보처리방침 확인</h3></a>
+      </header>
+      <ul class="actions special">
+        <li>
+          <a href="#" class="button primary icon solid fa-download">Download</a>
+        </li>
+        <li><a href="#" class="button">Learn More</a></li>
+      </ul>
+    </section>
+		
+    <footer id="footer">
+			<!--
+      <ul class="icons">
+        <li>
+          <a href="#" class="icon brands fa-facebook-f"
+            ><span class="label">Facebook</span></a
+          >
+        </li>
+        <li>
+          <a href="#" class="icon brands fa-twitter"
+            ><span class="label">Twitter</span></a
+          >
+        </li>
+        <li>
+          <a href="#" class="icon brands fa-instagram"
+            ><span class="label">Instagram</span></a
+          >
+        </li>
+			</ul>
+			-->
+      <p class="copyright">
+        2020 &copy; 와플노트. All rights reserved.<br>
+  
+      </p>
+		</footer>
+		
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="./index.js"></script>
+		<!--script src="https://apis.google.com/js/platform.js?onload=init" async defer></script-->
+  </body>
+</html>

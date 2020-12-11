@@ -1,0 +1,19 @@
+{
+  "name": "html5up-fractal",
+  "version": "1.0.0",
+  "description": "Fractal by HTML5 UP\r html5up.net | @ajlkn\r Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "pm2": "^4.5.0",
+    "qs": "^6.9.4",
+    "url": "^0.11.0"
+  }
+}

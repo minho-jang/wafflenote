@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <meta
+      name="google-signin-client_id"
+      content="1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com"
+    />
+    <meta charset="utf-8" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="sign-up.js"></script>
+    <script src="includeHTML.js"></script>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
+  </head>
+  <body>
+    <div class="layer_agree">
+      <br>
+      <div class="agree_title">와플노트 이용약관 동의</div>
+      <div class="text_css" include-html="terms-of-use.html"></div>
+      <div class="agree_box">
+        동의
+        <input type="checkbox" name="agree" value="use"></input>
+      </div>
+      <br><br>
+      <div class="agree_title">개인정보 수집 및 이용 동의</div>
+      <div class="text_css" include-html="privacy-policy.html"></div>
+      <div></div>
+      <div class="agree_box">
+      동의
+      <input type="checkbox" name="agree" value="privacy"></input>
+      </div>
+      <button type="button" onclick="valueCheck()" class='continue_btn' class>계속하기</button>
+    </div>
+  </body>
+  <script>
+    includeHTML();
+  </script>
+</html>

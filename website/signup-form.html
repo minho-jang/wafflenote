@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <meta
+      name="google-signin-client_id"
+      content="1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com"
+    />
+    <meta charset="utf-8" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="sign-up.js"></script>
+    
+    <script>
+      // function init() {
+      //   gapi.load("auth2", function () {
+      //     window.gauth = gapi.auth2.init({
+      //       client_id:
+      //         "1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com",
+      //     });
+      //     gauth.then(
+      //       function () {
+      //         if (gauth.isSignedIn.get()) {
+      //           var id = document.querySelector("#id");
+      //           id.innerHTML = gauth.currentUser.get().ot.Xt;
+      //           var id = document.querySelector("#name");
+      //           id.innerHTML = gauth.currentUser.get().ot.Ad;
+      //         } else {
+      //           alert("구글 로그인 세션이 만료되었습니다. 다시 시도해 주세요.");
+      //           window.location.href = "/";
+      //         }
+      //       },
+      //       function () {
+      //         alert("구글 로그인 세션이 만료되었습니다. 다시 시도해 주세요.");
+      //         window.location.href = "/";
+      //       }
+      //     );
+      //   });
+      // }
+    </script>
+  </head>
+  <body>
+    <div class="layer_agree">
+      <!-- wrapper -->
+      <div id="wrapper">
+        <!-- content-->
+        <div id="content">
+          <!-- ID -->
+          <div style="padding-top: 20px">
+            <h3 class="join_title">
+              <label for="id">아이디</label>
+            </h3>
+            <span class="box int_id">
+              <span class="step_url"></span>
+              <input
+                type="text"
+                id="wafflenote_id"
+                class="int"
+                maxlength="30"
+                placeholder="이메일 형식으로 입력해주세요."
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+          <div style="padding-left: 10px; padding-top: 5px;" id="verify_html"><button type="button" class="verify" onclick="verifyEmail()">인증 메일 발송</button></div>
+          <!-- PASSWORD -->
+          <div>
+            <h3 class="join_title"><label for="name">비밀번호</label></h3>
+            <span class="box int_name">
+              <span class="step_url"></span>
+              <input
+                type="password"
+                id="password1"
+                class="int"
+                maxlength="20"
+                placeholder="숫자, 영문, 특자문자를 혼합하여 9자 이상 입력해주세요."
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+          <div>
+            <h3 class="join_title"><label for="name">비밀번호 확인</label></h3>
+            <span class="box int_name">
+              <span class="step_url"></span>
+              <input
+                type="password"
+                id="password2"
+                class="int"
+                maxlength="20"
+                placeholder="숫자, 영문, 특자문자를 혼합하여 9자 이상 입력해주세요."
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- NAME -->
+          <div>
+            <h3 class="join_title"><label for="name">이름</label></h3>
+            <span class="box int_name">
+              <span class="step_url"></span>
+              <input
+                type="text"
+                id="name"
+                class="int"
+                maxlength="16"
+                placeholder="한글명을 입력해주세요."
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- MOBILE -->
+          <div>
+            <h3 class="join_title"><label for="phoneNo">휴대전화</label></h3>
+            <span class="box int_mobile">
+              <input
+                type="tel"
+                id="mobile"
+                class="int"
+                maxlength="16"
+                placeholder="-을 제외한 번호를 입력해주세요. 예) 01012345678"
+              />
+            </span>
+            <span class="error_next_box"></span>
+          </div>
+
+          <!-- ORGANIZATION -->
+          <!-- div>
+            <h3 class="join_title">
+              <label for="email"
+                >소속(학교 또는 직장)<span class="optional"></span
+              ></label>
+            </h3>
+            <span class="box int_email">
+              <input
+                type="text"
+                id="organization"
+                class="int"
+                maxlength="100"
+                placeholder="선택입력"
+              />
+            </span>
+          </div -->
+
+          <div class="agree_box2">
+            <b>광고성 정보 수신여부 확인</b>>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="adv_agree" value="email">이메일</input>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="adv_agree" value="sms">SMS</input>
+          </div>
+
+          <!-- JOIN BTN-->
+          <div class="btn_area">
+            <button type="button" id="btnJoin" onclick="signUp()">
+              <span>가입하기</span>
+            </button>
+          </div>
+        </div>
+        <!-- content-->
+      </div>
+      <!-- wrapper -->
+    </div>
+    <script
+      src="https://apis.google.com/js/platform.js?onload=init"
+      async
+      defer
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="images/favicon-16x16.png"
+    />
+    <link rel="stylesheet" href="./assets/css/how-to-use.css" type="text/css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="index.js"></script>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <!-- NavBar-->
+    <nav>
+      <ul class="nav-container">
+        <li class="waffle-logo"><img src="images/logo.png" width="300px" height="50px"></img></li>
+        <li class="nav-item"><a href="">제품</a></li>
+        <li class="nav-item"><a href="#one" class="scrolly">기능</a></li>
+        <li class="nav-item"><a href="/how-to-use.html">이용</a></li>
+        <li class="nav-item"><a href="/service.html">후기</a></li>
+				<li class="space"></li>
+        <li class="signup-btn"><a href="/sign-in.html" id="loginBtn" onclick="	
+					if(this.innerHTML === '로그아웃'){
+						var result = confirm('로그아웃 하시겠습니까?');
+						if(result){
+              deleteCookie();
+            }
+					}
+					// checkLoginStatus();
+					">로그인</a></li>
+				<li class="signup-btn"><a href="/sign-up.html" id="signupBtn">회원가입</a></li>
+      </ul>
+    </nav>
+    <!-- NavBar -->
+    <div>
+      <div class="use_text"><b>와플노트 이용 가이드</b></div>
+      <div class="sub_text">
+        1 ) 와플노트 홈페이지에서 회원가입을 해주세요.<br />
+        2 ) 와플노트를 다운로드 하기 위해 크롬 웹 스토어에 접속해주세요.
+      </div>
+      <img src="./images/use1.jpg" class="use_image" />
+      <div class="sub_text">
+        3 ) "Chrome에 추가" 버튼을 통해 다운로드 해주세요. <br />
+        4 ) 확장프로그램을 클릭하면 와플노트가 다운로드 되었음을 확인할 수
+        있습니다.<br />
+        5 ) 클립을 설정하면 더 빠르게 서비스에 접근 할 수 있어요<br />
+      </div>
+      <img src="./images/use2.jpg" class="use_image" />
+      <div class="sub_text">
+        6 ) 아이콘을 클릭하여 와플노트를 실행하고 로그인을 한 후 강의시작 버튼을
+        클릭해주세요.<br />
+        7 ) 지금 듣고 계시는 강의를 클릭하고<br />
+        8 ) 공유버튼은 누르면 와플노트가 실행됩니다.<br />
+        <div style="font-size: 15px">
+          * 사용가능한 강의 플랫폼은 ZOOM, Google Meet, YouTube 등 다양하지만
+          반드시 <b>크롬 웹 브라우저에서 실행 중</b> 이어야만 합니다.
+        </div>
+      </div>
+      <img src="./images/use3.jpg" class="use_image" />
+      <div class="sub_text">
+        9 ) 강의 도중 와플노트를 확인하거나, 이전의 노트를 보고 싶으시면
+        "요약중인 노트보기" 버튼을 클릭하시면 됩니다.<br />
+        10, 11) 강의를 끝내고 싶으시면 "강의 종료"나 "중지" 버튼을
+        클릭해주세요.<br />
+      </div>
+      <img src="./images/use4.jpg" class="use_image" />
+      <br />
+      <br />
+      <br />
+      <div><a href="/" class="use_text">와플노트 이용하러 가기</a><div>
+    </div>
+  </body>
+</html>

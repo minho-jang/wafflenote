@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <meta name = "google-signin-client_id" content = "1093419023025-jmlfuase62kn4sg5si66tpslg92bacbl.apps.googleusercontent.com">
+    <meta charset="utf-8">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="sign-up.js"></script>
+    <link rel="stylesheet" href="assets/css/sign-up.css" />
+  </head>
+  <body>
+    <div class="layer">
+      <img src="./images/sign-in1.png" class="img1"></img>
+      <img src="./images/sign-in2.png" class="img2"></img>
+      <div class="info">
+        <div style="text-align: center; font-size: 23px; color:#fbb93a">회원가입을 환영합니다.</div>
+        <div><button type="button" onclick="window.location.href='signup-agree.html'" class='signup_btn'>와플노트 회원가입</button></div>
+      </div>
+      <div class='google_btn' style="padding-top: 50px;">
+        <!--div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-longtitle="true" style="width:300px; height:40px; position: relative;"></div-->
+        <button onclick="alert('< 구글인증 가입 제한 알림 창 >\n 구글 OAuth 인증 심사 중이므로, 일시적으로 구글 인증 사용이 어렵습니다.\n와플노트 회원가입을 부탁 드립니다. (기한: ~11/1)')" class="temp_btn"><img src='/images/google_btn.png' style="width:290px; padding-top:10px"></button>
+
+      </div>
+
+    </div>
+  </body>
+</html>
