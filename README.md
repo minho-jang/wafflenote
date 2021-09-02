@@ -24,5 +24,5 @@ Release Note
 - 1차 CBT 실시 (2020.10.26 ~ 2020.11.06)
 
 <br>
-Copyright &copy; 2020 by minho-jang <br>
+Copyright &copy; 2020 by NewWave <br>
 All rights reserved. 
